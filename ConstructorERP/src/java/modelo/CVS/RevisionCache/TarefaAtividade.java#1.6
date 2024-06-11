@@ -1,0 +1,162 @@
+package modelo;
+
+/**
+ *
+ * @author Marlo
+ */
+public class TarefaAtividade {
+
+    private int id;
+    private char macroNatureza;
+    private String categoria;
+    private String subcategoria;
+    private short natureza;
+    private String titulo;
+    private String[] local;
+    private String textoBis;
+    private String textoNovidades;
+    private String textoInterno;
+    private String versaoLiberacao;
+    private int idVersaoLiberacao;
+    private byte[] providencia;
+    private int idReferenciada;
+    private String naturezaDescricao;
+
+    public TarefaAtividade(int id, short natureza, String versaoLiberacao, byte[] providencia, int idReferenciada, String naturezaDescricao, int idVersalLib) {
+        this.id = id;
+        this.natureza = natureza;
+        if(naturezaDescricao.equals("Implementação") || naturezaDescricao.equals("Implementação paga") || naturezaDescricao.equals("Ordem de serviço") || naturezaDescricao.equals("Documentação")){
+            this.macroNatureza = 'I';
+        }else if(naturezaDescricao.equals("Exigência legal")){
+            this.macroNatureza = 'L';
+        }else{
+            this.macroNatureza = 'A';
+        }
+        this.versaoLiberacao = versaoLiberacao;
+        this.providencia = providencia;
+        this.idReferenciada = idReferenciada;
+        this.naturezaDescricao = naturezaDescricao;
+        this.idVersaoLiberacao = idVersalLib;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public short getNatureza() {
+        return natureza;
+    }
+
+    public void setNatureza(short natureza) {
+        this.natureza = natureza;
+    }
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String[] getLocal() {
+        return local;
+    }
+
+    public void setLocal(String[] local) {
+        this.local = local;
+    }
+
+    public char getMacroNatureza() {
+        return macroNatureza;
+    }
+
+    public void setMacroNatureza(char macroNatureza) {
+        this.macroNatureza = macroNatureza;
+    }
+
+    public byte[] getProvidencia() {
+        return providencia;
+    }
+
+    public void setProvidencia(byte[] providencia) {
+        this.providencia = providencia;
+    }
+
+    public String getSubcategoria() {
+        return subcategoria;
+    }
+
+    public void setSubcategoria(String subcategoria) {
+        this.subcategoria = subcategoria;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getTextoBis() {
+        return textoBis;
+    }
+
+    public String getTextoNovidades() {
+        return textoNovidades;
+    }
+
+    public void setTextoNovidades(String textoNovidades) {
+        this.textoNovidades = textoNovidades;
+    }
+
+    public String getTextoInterno() {
+        return textoInterno;
+    }
+
+    public void setTextoInterno(String textoInterno) {
+        this.textoInterno = textoInterno;
+    }
+    
+    public void setTextoBis(String textobis) {
+        this.textoBis = textobis;
+    }
+
+    public String getVersaoLiberacao() {
+        return versaoLiberacao;
+    }
+
+    public void setVersaoLiberacao(String versaoLiberacao) {
+        this.versaoLiberacao = versaoLiberacao;
+    }
+
+    public int getIdReferenciada() {
+        return idReferenciada;
+    }
+
+    public void setIdReferenciada(int idReferenciada) {
+        this.idReferenciada = idReferenciada;
+    }
+
+    public String getNaturezaDescricao() {
+        return naturezaDescricao;
+    }
+
+    public void setNaturezaDescricao(String naturezaDescricao) {
+        this.naturezaDescricao = naturezaDescricao;
+    }
+
+    public int getIdVersaoLiberacao() {
+        return idVersaoLiberacao;
+    }
+
+    public void setIdVersaoLiberacao(int idVersaoLiberacao) {
+        this.idVersaoLiberacao = idVersaoLiberacao;
+    }
+    
+}

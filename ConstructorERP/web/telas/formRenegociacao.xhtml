@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Registrar negociação</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formRenegociacao')}">
+            <h:form id="formNeg">
+                <center>
+                    <h1>Negociação</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="gridRenegociacao">
+                        <h:outputLabel for="parcelas" value="Parcelas(s):"/>
+                        <h:panelGroup>
+                            <p:inputText  id="parcelas" value="#{renegociacaoMB.parcelasToString()}" required="true" readonly="true"/>
+                            <p:commandButton update=":formNeg:parcelasDialog" oncomplete="PF('parcelasDialog').show()" icon="ui-icon-search" title="Selecionar parcela(s)" />
+                        </h:panelGroup>
+                        <p:message for="parcelas" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar" action="#{renegociacaoMB.adicionarParcelas}"/>
+                </center>
+                <p:dialog id="parcelasDialog" header="Selecione a(s) parcela(s)" widgetVar="parcelasDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <h:outputLabel for="clienteParcelas" value="Cliente:"/>
+                    <p:selectOneMenu styleClass="selectOnMenu" id="clienteParcelas" value="#{renegociacaoMB.cliente}" immediate="true">
+                        <p:ajax event="change" update=":formNeg:parcelasDT" />
+                        <f:selectItem itemLabel="Selecione um cliente"/>
+                        <f:selectItems value="#{clienteMB.clientes}" var="cli" itemLabel="#{cli.pessoa.name}" itemValue="#{cli}" />
+
+                        <p:column headerText="Nome">
+                            <h:outputText value="#{c.pessoa.name}" />
+                        </p:column>
+                        <p:column headerText="Cidade">
+                            <h:outputText value="#{c.pessoa.cidade.name}" />
+                        </p:column>
+                        <p:column headerText="E-mail">
+                            <h:outputText value="#{c.pessoa.email}" />
+                        </p:column>
+                    </p:selectOneMenu>
+                    <p:message for="clienteParcelas" />
+
+                    <p:dataTable id="parcelasDT" var="parc" value="#{renegociacaoMB.parcelasCliente}" selection="#{renegociacaoMB.parcelasSelecionadas}" rowKey="#{parc.id}"
+                                 paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 paginator="true" rows="10" style="margin-bottom:20px" >
+                        <f:facet name="header">
+                            Selecione as parcelas
+                        </f:facet>
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+                        <p:column headerText="Número">
+                            <h:outputText value="#{parc.numeracao}" />
+                        </p:column>
+
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{parc.valorParcela}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="CUBs" >
+                            <h:outputText value="#{parc.fatorIndice}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="4"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Vencimento" >
+                            <h:outputText value="#{parc.dataVencimento}" >
+                                <f:convertDateTime locale="pt"   timeZone="America/Sao_Paulo" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Desc." >
+                            <h:outputText value="#{parc.descricao}" />
+                        </p:column>
+
+                        <p:column headerText="Valor fixo" >
+                            <h:outputText value="#{parc.valorFixo ? 'Sim': 'Não'}" />
+                        </p:column>
+
+                        <p:column headerText="Situação" >
+                            <h:outputText value="#{parc.situacao == 0 ? 'Aberta': ''}" />
+                            <h:outputText value="#{parc.situacao == 1 ? 'Parcial': ''}"/>
+                            <h:outputText value="#{parc.situacao == 2 ? 'Paga': ''}" />
+                            <h:outputText value="#{parc.situacao == 3 ? 'Renegociada': ''}" />
+                            <h:outputText value="#{parc.situacao == 4 ? 'Cancelada': ''}" />
+                            <h:outputText value="#{parc.situacao == 5 ? 'Renegociada em C.D.': ''}" />
+                            <h:outputText value="#{parc.situacao == 6 ? 'Protestada': ''}" />
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:commandButton process="parcelasDT" icon="ui-icon-check" value="Selecionar" oncomplete="PF('parcelasDialog').hide()" update=":formNeg:parcelas" />
+                        </f:facet>
+                    </p:dataTable>
+                </p:dialog>
+            </h:form>
+            <p>&nbsp;</p>
+            <hr/>
+            <p>&nbsp;</p>
+            <h:form id="formHist">
+                <center>
+                    <h1>Histórico</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="gridHistorico">
+                        <h:outputLabel for="negociacao" value="Negociação:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="negociacao" value="#{renegociacaoMB.bean}" >
+                            <p:ajax event="change" update="parcelasNegociacaoDT" />
+                            <p:ajax event="change" update=":formDataHistoricos:tblHistoricos" />
+                            <f:selectItem itemLabel="Selecione uma negociação"/>
+                            <f:selectItems value="#{renegociacaoMB.renegociacoesAbertas}" var="neg" itemLabel="#{neg.descricao}" itemValue="#{cli}" />
+
+                            <p:column headerText="Cliente">
+                                <h:outputText value="#{neg.cliente()}" />
+                            </p:column>
+                            <p:column headerText="Unidade(s)">
+                                <h:outputText value="#{neg.apartamentos()}" />
+                            </p:column>
+                            <p:column headerText="Parcela(s)">
+                                <h:outputText value="#{neg.parcelasToString()}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="negociacao" />
+                    </h:panelGrid>
+
+                    <p:dataTable id="parcelasNegociacaoDT" var="parc" value="#{renegociacaoMB.bean.parcelas}" 
+                                 paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 paginator="true" rows="10" style="margin-bottom:20px">
+                        <p:column headerText="Número">
+                            <h:outputText value="#{parc.numeracao}" />
+                        </p:column>
+
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{parc.valorParcela}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="CUBs" >
+                            <h:outputText value="#{parc.fatorIndice}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="4"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Vencimento" >
+                            <h:outputText value="#{parc.dataVencimento}" >
+                                <f:convertDateTime locale="pt"   timeZone="America/Sao_Paulo" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Desc." >
+                            <h:outputText value="#{parc.descricao}" />
+                        </p:column>
+
+                        <p:column headerText="Valor fixo" >
+                            <h:outputText value="#{parc.valorFixo ? 'Sim': 'Não'}" />
+                        </p:column>
+
+                        <p:column headerText="Situação" >
+                            <h:outputText value="#{parc.situacao == 0 ? 'Aberta': ''}" />
+                            <h:outputText value="#{parc.situacao == 1 ? 'Parcial': ''}"/>
+                            <h:outputText value="#{parc.situacao == 2 ? 'Paga': ''}" />
+                            <h:outputText value="#{parc.situacao == 3 ? 'Renegociada': ''}" />
+                            <h:outputText value="#{parc.situacao == 4 ? 'Cancelada': ''}" />
+                            <h:outputText value="#{parc.situacao == 5 ? 'Renegociada em C.D.': ''}" />
+                            <h:outputText value="#{parc.situacao == 6 ? 'Protestada': ''}" />
+                        </p:column>
+                    </p:dataTable>
+
+                    <h:panelGrid  columns="8" id="gridRenegociacao">
+
+                        <h:outputLabel for="dataHistorico"  value="Data:"/>                    
+                        <p:calendar styleClass="calendar" id="dataHistorico" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{renegociacaoMB.historico.dataHistorico}"
+                                    mode="popup" showOn="button" required="true" maxdate="#{renegociacaoMB.hoje}" />
+                        <p:message for="dataHistorico" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="descricao" value="Descrição:"/>
+                        <p:inputTextarea id="descricao" value="#{renegociacaoMB.historico.descricao}" required="true"/>
+                        <p:message for="descricao" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar histórico" action="#{renegociacaoMB.salvarHistoricoRenegociacao}"/>
+                </center>
+            </h:form>
+
+            <h:form id="formDataHistoricos">
+                <p:dataTable id="tblHistoricos" var="hist" value="#{renegociacaoMB.bean.historicos}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                             paginator="true" rows="10" style="margin-bottom:20px" >
+
+                    <p:column headerText="Data" >
+                        <h:outputText value="#{hist.dataHistorico}">
+                            <f:convertDateTime type="date" timeZone="America/Sao_Paulo" pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Descrição">
+                        <h:outputText value="#{hist.descricao}" />
+                    </p:column>
+
+
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{historicoMB.deletar(hist)}" ajax="false" update=":formDataHistoricos">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este histórico?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+                <p>&nbsp;</p>
+                <center>
+                    <p:commandButton styleClass="button" value="Encerrar negociação" action="#{renegociacaoMB.encerrar}" style="font-weight: normal; font-size: 13pt" update=":formNeg :formHist :formDataHistoricos">
+                        <p:confirm header="Confirmação" message="Tem certeza que deseja encerrar esta negociação?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                    <h:commandButton styleClass="button" value="Gerar relatório" action="#{renegociacaoMB.imprimeRelatorio}"/>
+                </center>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

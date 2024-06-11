@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Segunda Via Boletos</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formGerarSegundaViaBoletos')}">
+            <h:form id="form">
+                <center>
+                    <h1>Segunda Via Boletos</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <p:outputLabel for="cliente" value="Cliente:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="cliente" value="#{gerarBoletosMB.clienteSelecionado}" panelStyle="width:auto;"
+                                         effect="fade" var="c" filter="true" filterMatchMode="startsWith" immediate="true">
+                            <p:ajax event="change" update=":form:parcDT "/>
+                            <f:selectItem itemLabel="Selecione um cliente"/>
+                            <f:selectItems value="#{clienteMB.clientes}" var="cli" itemLabel="#{cli.pessoa.name}" itemValue="#{cli}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{c.pessoa.name}" />
+                            </p:column>
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{c.pessoa.cidade.name}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{c.pessoa.email}" />
+                            </p:column>
+                            <p:column headerText="Protestar">
+                                <h:outputText value="#{c.formaPagamento == 1 ? 'Sim': 'Não'}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="cliente" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="parcela" value="Parcela"/>
+                        <h:panelGroup>
+                            <p:inputText id="parcela" value="#{gerarBoletosMB.parcelaSelecionada.contrato.apartamentosDesc()} - #{gerarBoletosMB.parcelaSelecionada.valorParcela}" required="true" readonly="true"/>
+                            <p:commandButton update=":form:parcDialog" oncomplete="PF('parcDialog').show()" icon="ui-icon-search" title="Selecionar parcela" />
+                        </h:panelGroup>
+                        <p:message for="parcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="boleto" value="Boleto"/>
+                        <h:panelGroup>
+                            <p:inputText id="boleto" value="#{gerarBoletosMB.boletoSelecionado.modalidade}/#{gerarBoletosMB.boletoSelecionado.numerosTitulo.nossoNumero} - #{gerarBoletosMB.boletoSelecionado.valorBoleto} - #{gerarBoletosMB.boletoSelecionado.dataVencimento}" required="true" readonly="true" />
+                            <p:commandButton update=":form:boletoDialog" oncomplete="PF('boletoDialog').show()" icon="ui-icon-search" title="Selecionar boleto" />
+                        </h:panelGroup>
+                        <p:message for="boleto" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataSegundaVia"  value="Nova Data Vencimento:"/>                    
+                        <p:calendar styleClass="calendar" id="dataSegundaVia" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{gerarBoletosMB.dataSegundaVia}"
+                                    mode="popup" showOn="button" required="true" immediate="true" mindate="#{recebimentoMB.hoje}"/>
+                        <p:message for="dataSegundaVia" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="multaJuros" value="Segunda via sem multa e juros:"/>
+                        <p:selectBooleanCheckbox  id="multaJuros" value="#{gerarBoletosMB.semMultaJuros}" />
+                        <p:message for="multaJuros" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="enviarEmail"  value="Enviar por E-mai:"/>                    
+                        <p:selectBooleanCheckbox  id="enviarEmail" value="#{gerarBoletosMB.enviarPorEmail}" />
+                        <p:message for="enviarEmail" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="especificarValor" value="Especificar Valor:"/>
+                        <h:inputText class="inputText" id="especificarValor" value="#{gerarBoletosMB.especificarValor}" converter="convertFloat" immediate="true" />
+                        <p:message for="especificarValor" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                    <h:commandButton styleClass="button" value="Gerar Segunda via" action="#{gerarBoletosMB.botaoGerarSegundaVia}"/>
+                </center>
+
+                <p:dialog id="parcDialog" header="Selecione uma parcela" widgetVar="parcDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:dataTable id="parcDT" var="parc" value="#{gerarBoletosMB.parcelasCliente}" selectionMode="single" selection="#{gerarBoletosMB.parcelaSelecionada}" rowKey="#{parc.id}"
+                                 paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 paginator="true" rows="10" style="margin-bottom:20px">
+                        <f:facet name="header">
+                            Selecione uma parcela
+                        </f:facet>
+                        <p:ajax event="rowSelect" listener="#{gerarBoletosMB.onRowSelect}" update=":form:parcela"  />
+                        <p:column headerText="Número">
+                            <h:outputText value="#{parc.numeracao}" />
+                        </p:column>
+
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{parc.valorParcela}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Saldo à pagar">
+                            <h:outputText value="#{parc.saldoParcela()}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Fat. Mult." >
+                            <h:outputText value="#{parc.fatorIndice}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="4"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column sortBy="#{parc.valorFixo}">
+                            <f:facet name="header">
+                                <h:outputText value="Correção" />
+                            </f:facet>
+                            <h:outputText value="#{parc.valorFixo ? 'Fixo': parc.tipoIndice.name}" />
+                        </p:column>
+
+                        <p:column headerText="Vencimento" >
+                            <h:outputText value="#{parc.dataVencimento}" >
+                                <f:convertDateTime locale="pt"   timeZone="America/Sao_Paulo" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Desc." >
+                            <h:outputText value="#{parc.descricao}" />
+                        </p:column>
+
+                        <p:column headerText="Valor fixo" >
+                            <h:outputText value="#{parc.valorFixo ? 'Sim': 'Não'}" />
+                        </p:column>
+
+                        <p:column headerText="Situação" >
+                            <h:outputText value="#{parc.situacao == 0 ? 'Aberta': ''}" />
+                            <h:outputText value="#{parc.situacao == 1 ? 'Parcial': ''}" />
+                            <h:outputText value="#{parc.situacao == 2 ? 'Paga': ''}" />
+                            <h:outputText value="#{parc.situacao == 3 ? 'Renegociada': ''}" />
+                            <h:outputText value="#{parc.situacao == 4 ? 'Cancelada': ''}" />
+                            <h:outputText value="#{parc.situacao == 5 ? 'Renegociada SD': ''}" />
+                            <h:outputText value="#{parc.situacao == 6 ? 'Protestada': ''}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+
+                <p:dialog id="boletoDialog" header="Selecione um boleto" widgetVar="boletoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:dataTable id="boletoDT" var="bol" value="#{gerarBoletosMB.boletosParcela}" selectionMode="single" selection="#{gerarBoletosMB.boletoSelecionado}" rowKey="#{bol.id}"
+                                 paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 paginator="true" rows="10" style="margin-bottom:20px">
+                        <f:facet name="header">
+                            Selecione um boleto
+                        </f:facet>
+                        <p:ajax event="rowSelect" listener="#{gerarBoletosMB.onRowSelect}" update=":form:boleto"  />
+                        <p:column headerText="Nosso Número">
+                            <h:outputText value="#{bol.modalidade}/#{bol.numerosTitulo.nossoNumero}" />
+                        </p:column>
+
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{bol.valorBoleto}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Vencimento" >
+                            <h:outputText value="#{bol.dataVencimento}" >
+                                <f:convertDateTime locale="pt"   timeZone="America/Sao_Paulo" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Situação" >
+                            <h:outputText value="#{bol.situacao == 0 ? 'Aberto': ''}" />
+                            <h:outputText value="#{bol.situacao == 1 ? 'Entrada Confirmada': ''}" />
+                            <h:outputText value="#{bol.situacao == 2 ? 'Pag0': ''}" />
+                            <h:outputText value="#{bol.situacao == 3 ? 'Cancelado': ''}" />
+                            <h:outputText value="#{bol.situacao == 4 ? 'Remessa à cartório': ''}" />
+                            <h:outputText value="#{bol.situacao == 5 ? 'Protestado': ''}" />
+                            <h:outputText value="#{bol.situacao == 6 ? 'Entrada Rejeitada': ''}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+
+
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

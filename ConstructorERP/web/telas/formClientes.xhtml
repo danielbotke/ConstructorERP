@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro de clientes</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo"  rendered="#{usuarioMB.temPermissao('formClientes')}">
+            <h:form id="form">
+                <center>
+                    <h1>Cadastro de Clientes</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid" >
+
+                        <p:outputLabel for="pessoa" value="Pessoa:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="pessoa" value="#{clienteMB.bean.pessoa}" panelStyle="width:auto;"
+                                         effect="fade" var="pes" filter="true" filterMatchMode="startsWith">
+                            <f:selectItem itemLabel="Selecione uma pessoa"/>
+                            <f:selectItems value="#{pessoaMB.pessoasNaoClientes}" var="p" itemLabel="#{p.name}" itemValue="#{p}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{pes.name}" />
+                            </p:column>
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{pes.cidade.name}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{pes.email}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="pessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel  for="nomeCliente" value="Editando cliente:" rendered="#{clienteMB.editando}"/>
+                        <h:inputText class="inputText" id="nomeCliente" value="#{clienteMB.bean.pessoa.name}" rendered="#{clienteMB.editando}" immediate="true" readonly="true"/>
+                        <p:message for="nomeCliente" rendered="#{clienteMB.editando}"/>
+
+                        <h:outputText value=" " rendered="#{clienteMB.editando}"/>
+                        
+                        
+                        <h:outputLabel for="formaPagamento"  value="Forma pagamento:"/>
+                        <h:selectOneMenu styleClass="selectOnMenu ui-selectonemenu-label ui-inputfield ui-corner-all" id="formaPagamento" value="#{clienteMB.bean.formaPagamento}" immediate="true">
+                            <f:selectItem itemValue="2" itemLabel="Não Protestar Boleto"/>
+                            <f:selectItem itemValue="1" itemLabel="Protestar Boletoo"/>
+                            <f:selectItem itemValue="3" itemLabel="Carteira"/>
+                        </h:selectOneMenu>
+                        <p:message for="formaPagamento" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                    <h:commandButton styleClass="button" value="Salvar Cliente" action="#{clienteMB.salvar}" />
+                </center>
+
+            </h:form>
+            <h:form>
+                <p:dataTable id="tblClientes" var="cli" value="#{clienteMB.clientes}" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+                    
+                     <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblClientes" fileName="Clientes" />
+                        </h:commandLink>
+
+                    </f:facet>
+                    
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{cli.pessoa.name}" />
+                    </p:column>
+
+                    <p:column headerText="Endereço" >
+                        <h:outputText value="#{cli.pessoa.endereco}" />
+                    </p:column>
+
+                    
+                    <p:column headerText="Telefone" >
+                        <h:outputText value="#{cli.pessoa.tel1}" />
+                    </p:column>
+                    
+                    <p:column headerText="Celular" >
+                        <h:outputText value="#{cli.pessoa.tel2}" />
+                    </p:column>
+
+                    <p:column headerText="email" >
+                        <h:outputText value="#{cli.pessoa.email}" />
+                    </p:column>
+
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Editar" styleClass="ui-icon ui-icon-pencil" action="#{clienteMB.editar(cli.id)}" ajax="false" update=":form">
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{clienteMB.deletar(cli.id)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este cliente?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

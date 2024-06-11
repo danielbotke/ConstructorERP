@@ -1,0 +1,27 @@
+<!--
+        <h:form>
+            <div class="dock">
+                <p:dock position="bottom" >
+                    <p:menuitem value="Usuário" icon="../resources/images/user.png" action="#{usuarioMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formUsuario')}"/>
+                    <p:menuitem value="Localidades" icon="../resources/images/local.png" action="#{paisMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formLocalidades')}"/>
+                    <p:menuitem value="Pessoa Física"  icon="../resources/images/pessFis.png" action="#{pessoaFisicaMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formPessoaFisica')}"/>
+                    <p:menuitem value="Pessoa Jurídica"  icon="../resources/images/pessJur.png" action="#{pessoaJuridicaMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formPessoaJuridica')}"/>
+                    <p:menuitem value="Clientes"  icon="../resources/images/client.png" action="#{clienteMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formClientes')}"/>
+                    <p:menuitem value="Prédio"  icon="../resources/images/build.png" action="#{predioMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formPredio')}"/>
+                    <p:menuitem value="Índices"  icon="../resources/images/index.png" action="#{tipoIndiceMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formIndices')}"/>
+                    <p:menuitem value="Contratos"  icon="../resources/images/contract.png" action="#{contratoMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formContrato')}"/>
+                    <p:menuitem value="Parcelas"  icon="../resources/images/parc.png" action="#{parcelaMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formParcelas')}"/>
+                    <p:menuitem value="Recebimentos"  icon="../resources/images/receive.png" action="#{recebimentoMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formRecebimento')}"/>
+                    <p:menuitem value="Gerar boletos"  icon="../resources/images/emitir.png" action="#{gerarBoletosMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formGerarBoletos')}"/>
+                    <p:menuitem value="Gerar remessa"  icon="../resources/images/remessa.png" action="#{remessaBancariaMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formGerarRemessa')}"/>
+                    <p:menuitem value="Gerenciar boletos"  icon="../resources/images/boleto.png" action="#{gerarBoletosMB.gerenciarBoletos}" ajax="false" rendered="#{usuarioMB.temPermissao('formGerencBoletos')}"/>
+                    <p:menuitem value="Negociação"  icon="../resources/images/negociation.png" action="#{renegociacaoMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formRenegociacao')}"/>
+                    <p:menuitem value="Processar retorno"  icon="../resources/images/process.png" action="#{retornoMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formProcessarRetorno')}"/>
+                    <p:menuitem value="Gerar Segunda via boleto"  icon="../resources/images/two.png" outcome="/telas/formGerarSegundaViaBoletos" ajax="false" rendered="#{usuarioMB.temPermissao('formGerarSegundaViaBoletos')}"/>
+                    <p:menuitem value="Sessão de direitos"  icon="../resources/images/sessao.png" action="#{sessaoDireitosMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formSessaoDireitos')}"/>
+                    <p:menuitem value="Relatórios"  icon="../resources/images/report.png" outcome="/telas/relatorios">
+                        <f:param name="i" value="99" />
+                    </p:menuitem>
+                </p:dock> 
+            </div>
+        </h:form>-->

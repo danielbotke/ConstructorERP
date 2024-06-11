@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Gerenciar Boletos</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formGerencRemessas')}">
+            <h:form id="form">
+                <center>
+                    <h1>Gerenciar remessas</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <p:outputLabel for="remessa" value="Remessa:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="remessa" value="#{remessaBancariaMB.numeroSelecionado}" >
+                            <p:ajax update="tblBoletos" listener="#{remessaBancariaMB.onRemessaSelecionada}" event="change"/>
+                            <f:selectItem itemLabel="Selecione uma remessa" itemValue="#{null}"/>  
+                            <f:selectItems value="#{remessaBancariaMB.remessas}" var="remessa" itemValue="#{remessa}" itemLabel="#{remessa.id}"/>
+                        </p:selectOneMenu>
+                        <p:message for="remessa" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                </center>
+                <h3>Boletos da remessa</h3>
+                <p:dataTable id="tblBoletos" var="boleto" value="#{remessaBancariaMB.boletosFiltrados}" 
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px" >
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Cliente" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.parcela.contrato.nomePrimeiroCliente()}" />
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Unidade" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.parcela.contrato.apartamentosDesc()}" />
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Numeração" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.parcela.numeracao}" />
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Valor do boleto" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.valorBoleto}"  >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Vencimento" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.dataVencimento}" >
+                            <f:convertDateTime type="date" locale="pt"   timeZone="America/Sao_Paulo" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Código" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.modalidade}/#{boleto.numerosTitulo.nossoNumero}" />
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Situação" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.situacao == 0 ? 'Aberto': ''}" />
+                        <h:outputText value="#{boleto.situacao == 1 ? 'Entrada Confirmada': ''}"/>
+                        <h:outputText value="#{boleto.situacao == 2 ? 'Pago': ''}" />
+                        <h:outputText value="#{boleto.situacao == 3 ? 'Cancelado': ''}" />
+                        <h:outputText value="#{boleto.situacao == 4 ? 'Remessa à Cartório': ''}" />
+                        <h:outputText value="#{boleto.situacao == 5 ? 'Protestado': ''}" />
+                        <h:outputText value="#{boleto.situacao == 6 ? 'Entrada Rejeitada': ''}" />
+                        <h:outputText value="#{boleto.situacao == 99 ? 'Situação desconhecida': ''}" />
+                    </p:column>
+                    <f:facet name="footer">
+                        <p:commandLink title="Excluir remessa" value="Excluir remessa"  action="#{remessaBancariaMB.deletar}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir esta remessa?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </f:facet>
+                </p:dataTable>
+   
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Gerar Remessa bancária</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formGerarRemessa')}">
+            <h:form id="formParc">
+                <h3>Boletos não arremessados:</h3>
+                <p:dataTable id="tblBoletos" var="boleto" value="#{remessaBancariaMB.boletosNaoArremessados}" rowKey="#{boleto.id}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+                    
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Unidade" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.parcela.contrato.apartamentosDesc()}" />
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Numeração" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.parcela.numeracao}" />
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Valor do boleto" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.valorBoleto}"  >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Data de vencimento" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.dataVencimento}" >
+                            <f:convertDateTime type="date" locale="pt"   timeZone="America/Sao_Paulo" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Carteira" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.carteira == 1 ? 'Registrado': ''}" />
+                        <h:outputText value="#{boleto.carteira == 2 ? 'Sem Registro': ''}"/>
+                    </p:column>
+                    
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nosso Número" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.numerosTitulo.nossoNumero}" />
+                    </p:column>
+
+                </p:dataTable>
+                <center>
+                    <h:commandButton id="carregar" styleClass="button" value="Gerar remessa" action="#{remessaBancariaMB.gerarRemessa}"/>
+                </center>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

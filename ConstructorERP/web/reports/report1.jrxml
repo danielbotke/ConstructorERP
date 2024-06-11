@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="33815e3c-ee44-4b1c-a1d0-7b7aa352a196">
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     boletogerado.`id` AS boletogerado_id,
+     boletogerado.`carteira` AS boletogerado_carteira,
+     boletogerado.`dataDocto` AS boletogerado_dataDocto,
+     boletogerado.`dataVencimento` AS boletogerado_dataVencimento,
+     boletogerado.`instrucao` AS boletogerado_instrucao,
+     boletogerado.`modalidade` AS boletogerado_modalidade,
+     boletogerado.`valorBoleto` AS boletogerado_valorBoleto,
+     boletogerado.`numerosRemessa_id` AS boletogerado_numerosRemessa_id,
+     boletogerado.`numerosTitulo_id` AS boletogerado_numerosTitulo_id,
+     boletogerado.`parcela_id` AS boletogerado_parcela_id,
+     boletogerado.`situacao` AS boletogerado_situacao,
+     cidade.`id` AS cidade_id,
+     cidade.`name` AS cidade_name,
+     cidade.`estado_id` AS cidade_estado_id
+FROM
+     `boletogerado` boletogerado,
+     `cidade` cidade]]>
+	</queryString>
+	<field name="boletogerado_id" class="java.lang.Integer"/>
+	<field name="boletogerado_carteira" class="java.lang.String"/>
+	<field name="boletogerado_dataDocto" class="java.sql.Date"/>
+	<field name="boletogerado_dataVencimento" class="java.sql.Date"/>
+	<field name="boletogerado_instrucao" class="java.lang.String"/>
+	<field name="boletogerado_modalidade" class="java.lang.String"/>
+	<field name="boletogerado_valorBoleto" class="java.lang.Double"/>
+	<field name="boletogerado_numerosRemessa_id" class="java.lang.Integer"/>
+	<field name="boletogerado_numerosTitulo_id" class="java.lang.Integer"/>
+	<field name="boletogerado_parcela_id" class="java.lang.Integer"/>
+	<field name="boletogerado_situacao" class="java.lang.Integer"/>
+	<field name="cidade_id" class="java.lang.Integer"/>
+	<field name="cidade_name" class="java.lang.String"/>
+	<field name="cidade_estado_id" class="java.lang.Integer"/>
+	<group name="boletogerado_id">
+		<groupExpression><![CDATA[$F{boletogerado_id}]]></groupExpression>
+		<groupHeader>
+			<band height="37">
+				<frame>
+					<reportElement uuid="c3cb895d-cf45-4e0a-b91e-b5dcf39d45ab" mode="Opaque" x="0" y="7" width="555" height="24" forecolor="#B89F7D" backcolor="#000000"/>
+					<textField isStretchWithOverflow="true">
+						<reportElement uuid="cdc90925-6c4e-4fdf-abcf-cc70be8ab00d" style="SubTitle" isPrintRepeatedValues="false" x="2" y="0" width="479" height="24" forecolor="#FFFFFF"/>
+						<textElement>
+							<font isBold="false"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{boletogerado_id}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="6"/>
+		</groupFooter>
+	</group>
+	<group name="boletogerado_dataDocto">
+		<groupExpression><![CDATA[$F{boletogerado_dataDocto}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement uuid="b3f37d8e-290a-4087-8729-caaab7e93e6a" positionType="Float" x="0" y="4" width="555" height="26" forecolor="#000000"/>
+					<textElement>
+						<font fontName="Times New Roman" size="16" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{boletogerado_dataDocto}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="132" splitType="Stretch">
+			<image>
+				<reportElement uuid="75470e38-7ed4-484e-a04f-956c89a65bb7" x="456" y="0" width="99" height="132"/>
+				<imageExpression><![CDATA["cherry.jpg"]]></imageExpression>
+			</image>
+			<frame>
+				<reportElement uuid="5bb64593-f3fb-48e2-99d9-b43eb00af5f5" mode="Opaque" x="0" y="0" width="451" height="95" backcolor="#000000"/>
+				<staticText>
+					<reportElement uuid="24b124b5-67f5-478e-83e5-c8237573e656" style="Title" x="0" y="0" width="370" height="66"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Cherry Title]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="0b0c25a6-d773-43a6-9bea-4a7e4af9da04" style="SubTitle" x="157" y="66" width="249" height="29"/>
+					<textElement>
+						<font size="22" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Cherry SubTitle]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement uuid="9a621595-fd72-4dca-a2e5-f9a7a9e78a5b" mode="Opaque" x="0" y="100" width="451" height="32" forecolor="#000000" backcolor="#CC0000"/>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement uuid="3c9d1ba4-1e64-43c3-bd50-920a0629294a" x="307" y="12" width="144" height="20" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e9cd43a5-4793-4db9-bf80-ff16e8fe55e0" style="Column header" x="0" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[boletogerado_carteira]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bd7ef29b-67bf-401d-8804-59e6385e2cac" style="Column header" x="46" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[boletogerado_dataVencimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5066109e-5911-4a28-af93-d4aa4341fa7c" style="Column header" x="92" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[boletogerado_instrucao]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eebdad05-b42c-4411-85c5-277eb30c7982" style="Column header" x="138" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[boletogerado_modalidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d6845581-3b96-424d-8946-d355b535f91f" style="Column header" x="184" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[boletogerado_valorBoleto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2971596a-c182-476e-b298-7d599b863801" style="Column header" x="230" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[boletogerado_numerosRemessa_id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09b18c01-bd0f-4df1-ab27-49d5605c094a" style="Column header" x="276" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[boletogerado_numerosTitulo_id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="71663f2d-2305-4eee-866e-54c58ba5700f" style="Column header" x="322" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[boletogerado_parcela_id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e61350b0-0294-4c09-b3c8-a72a1b5b3136" style="Column header" x="368" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[boletogerado_situacao]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="42a5f970-2b8b-4bf6-94ae-346187e27cb7" style="Column header" x="414" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[cidade_id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="20cf92a7-cbc7-482b-b94c-637e7b64931a" style="Column header" x="460" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[cidade_name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="38180777-79b4-4852-b3c2-af61a602156a" style="Column header" x="506" y="7" width="46" height="18" forecolor="#000000"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[cidade_estado_id]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<frame>
+				<reportElement uuid="b2ef8bc7-1b7b-4ab1-8d38-12a49c627b09" style="Row" mode="Opaque" x="0" y="0" width="555" height="18"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="2df1f24d-35c7-4f4a-bafd-2aaf796b041e" style="Detail" positionType="Float" x="0" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{boletogerado_carteira}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="7e7fac64-4b8d-4d5a-8d68-c86b6493f69f" style="Detail" positionType="Float" x="46" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{boletogerado_dataVencimento}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="ce3d3e94-3166-40aa-8c5b-312b1c62f8a3" style="Detail" positionType="Float" x="92" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{boletogerado_instrucao}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="fb105242-7705-4186-a5ff-f232cec085d6" style="Detail" positionType="Float" x="138" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{boletogerado_modalidade}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="22a77077-98c8-4f42-935d-4273b9f6aa5b" style="Detail" positionType="Float" x="184" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{boletogerado_valorBoleto}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="d914e981-f37f-46fb-8637-d1374d4d9de6" style="Detail" positionType="Float" x="230" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{boletogerado_numerosRemessa_id}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1f9d0ccd-f9c6-47ae-a5af-b752cf0f2473" style="Detail" positionType="Float" x="276" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{boletogerado_numerosTitulo_id}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="8a537eb3-6742-408e-aa7e-32577a71c9ca" style="Detail" positionType="Float" x="322" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{boletogerado_parcela_id}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="5b035087-fd86-4499-94c1-ea28947cd412" style="Detail" positionType="Float" x="368" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{boletogerado_situacao}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="a2d203ae-7589-4495-9c39-f5660c0e9dca" style="Detail" positionType="Float" x="414" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cidade_id}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="96133037-1d63-4809-8a39-5c4a4cc8e70d" style="Detail" positionType="Float" x="460" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cidade_name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="ac8b76fa-27fc-4619-8d2f-ee7092e2610e" style="Detail" positionType="Float" x="506" y="0" width="46" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cidade_estado_id}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="7" splitType="Stretch">
+			<line>
+				<reportElement uuid="b85a6dab-6133-412f-9b2b-b0f17fa615ec" positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement uuid="0bf0c1d7-ad01-484c-a217-428553618861" mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#000000"/>
+				<textField evaluationTime="Report">
+					<reportElement uuid="ee1862d5-02b1-47f3-a983-00e8df256427" style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="f1412bd1-6a49-4b46-81e6-424c27894bb1" style="Column header" x="433" y="0" width="80" height="20" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement uuid="6881ca96-b4f9-4913-ba1e-99686b8062eb" style="Column header" x="2" y="1" width="197" height="20" forecolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

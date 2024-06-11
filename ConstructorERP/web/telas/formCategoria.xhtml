@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro categorias</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formCategoria')}">
+            <h:form>
+                <center>
+                    <h1>Centro de Custos</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel for="nmCategoria" value="Nome:"/>
+                        <h:inputText class="inputText" id="nmCategoria" value="#{categoriaMB.bean.name}" />
+                        <p:message for="nmCategoria" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="categoriaPai" value="Categoria pai:"/>
+                        <p:treeTable id="categoriaPai" value="#{categoriaMB.root}" var="cat" style="margin-top:0" scrollable="true" scrollHeight="150" scrollWidth="250" selectionMode="single"
+                                     selection="#{categoriaMB.selectedNode}">
+                            <p:column style="width: 250px">
+                                <h:outputText value="#{cat.name}" />
+                            </p:column>
+                        </p:treeTable>
+                        <p:message for="categoriaPai" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="considerarM2" value="Consid. cálculo m²:"/>
+                        <p:selectBooleanCheckbox  id="considerarM2" value="#{categoriaMB.bean.considerarCalculoValorM2}"  />
+                        <p:message for="considerarM2" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar Categoria" action="#{categoriaMB.salvar}"/>
+                </center>
+            </h:form>
+            <h:form>
+                <p:treeTable value="#{categoriaMB.root}" var="cat">
+                    <f:facet name="header">
+                        Categorias
+                    </f:facet>
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{cat.name}" />
+                    </p:column>
+                    <p:column style="width:24px">
+                        <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" action="#{categoriaMB.editar(cat)}" ajax="false">
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{categoriaMB.deletar(cat)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir esta categoria?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+
+                </p:treeTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+

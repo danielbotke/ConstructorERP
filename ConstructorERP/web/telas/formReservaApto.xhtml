@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title>Reservar apartamento (24h)</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo"  rendered="#{usuarioMB.temPermissao('formReservarApto')}">
+            <h:form id="form">
+                <center>
+                    <h1>Reservar apartamento (24h)</h1>
+                    <p>&nbsp;</p>
+                    
+                    <h:outputLabel for="blocos" value="Emp./Bloco:"/>
+                    <p:selectOneMenu styleClass="selectOnMenu" id="blocos" value="#{apartamentoContratoMB.blocoSelecionado}" >
+                        <p:ajax event="change" update="aptosList" />
+                            <f:selectItem itemLabel="Selecione um bloco" itemValue="#{null}"/> 
+                            <f:selectItems value="#{blocoMB.blocosDisponiveisVenda}" var="bloco" itemValue="#{bloco}" itemLabel="#{bloco.predio.name} - #{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    <p:dataGrid value="#{apartamentoContratoMB.apartamentosBlocoDisponiveis}" columns="4" layout="grid"
+                                rows="12" paginator="true" id="aptosList" var="apto"
+                                paginatorTemplate="  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                rowsPerPageTemplate="20" >
+
+
+                        <p:panel style="text-align:center">
+                            <p:commandLink   value="#{apto.name}" oncomplete="PF('reservaDialog').show()" title="Reservar Unidade" disabled="#{apto.reservado == true}" immediate="true">
+                                <f:setPropertyActionListener value="#{apto}" target="#{reservaAptoMB.apartamentoSelecionado}" />
+                            </p:commandLink>
+                            <p:panel style="text-align:center" rendered="#{apto.reservado == true and usuarioMB.temPermissao('formAdmReservarApto')}">
+                                <center>
+                                    <h:outputText value="Corretor: #{apto.ultimaReserva.nomeCorretor} - #{apto.ultimaReserva.telCorretor} - #{apto.ultimaReserva.emailUsuario} "/>
+                                    <br/>
+                                    <h:outputText value="Cliente: #{apto.ultimaReserva.nomeCliente}"/>
+                                    <br/>
+                                    <p:commandLink    title="Cancelar reserva"   styleClass="ui-icon ui-icon-closethick" immediate="true" action="#{reservaAptoMB.cancelarReserva}" style="text-decoration: none; color: red;" ajax="false">
+                                        <f:setPropertyActionListener value="#{apto.ultimaReserva}" target="#{reservaAptoMB.reservaSelecionado}" />
+                                        <p:confirm header="Confirmação" message="Tem certeza que deseja cancelar esta reserva?" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+                                </center>
+                            </p:panel>
+                        </p:panel>
+
+                    </p:dataGrid>
+
+                    <p:dialog header="Dados da reserva" widgetVar="reservaDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+
+                        <h:panelGrid  columns="8" id="grid" >
+
+                            <h:outputLabel for="nmCliente" value="Nome cliente:"/>
+                            <h:inputText class="inputText" id="nmCliente" value="#{reservaAptoMB.bean.nomeCliente}" required="true"/>
+                            <p:message for="nmCliente" />
+
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                            <h:outputLabel for="cpfCliente" value="CPF Cliente:"/>
+                            <p:inputMask styleClass="inputMask" converter="convertMask" id="cpfCliente" value="#{reservaAptoMB.bean.CPFCliente}" mask="999.999.999-99" required="true" >
+                                <f:validator validatorId="custom.CPFValidator" />
+                            </p:inputMask>
+                            <p:message for="cpfCliente" />
+
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                            <h:outputLabel for="nmCorretor" value="Nome corretor:"/>
+                            <h:inputText class="inputText" id="nmCorretor" value="#{reservaAptoMB.bean.nomeCorretor}" required="true"/>
+                            <p:message for="nmCorretor" />
+
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                            <h:outputLabel for="telCorretor" value="Telefone Corretor:"/>
+                            <p:inputMask styleClass="inputMask" converter="convertMask" id="telCorretor" value="#{reservaAptoMB.bean.telCorretor}" mask="(999) 9999-9999?9" required="true"/>
+                            <p:message for="telCorretor" />
+
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        </h:panelGrid>
+
+                        <center>
+                            <h:commandButton styleClass="button" value="Reservar" action="#{reservaAptoMB.reservarApto}" />
+                        </center>
+
+
+
+                    </p:dialog>
+
+                </center>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Consultar saldo devedor</title>
+    </h:head>
+    <ui:composition template="relatorios.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formRelatorioSaldoDevedor')}">
+            <h:form id="formRel">
+                <center>
+                    <h1>Consultar saldo devedor</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <p:outputLabel for="cliente" value="Cliente:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="cliente" value="#{relatorioSaldoClienteMB.cliente}" panelStyle="width:auto;"
+                                         effect="fade" var="c" filter="true" filterMatchMode="startsWith" immediate="true">
+                            <p:ajax event="change" update=":formDataRel:saldoPorCliente"/>
+                             <f:selectItem itemLabel="Selecione um cliente"/>
+                            <f:selectItems value="#{clienteMB.clientes}" var="cli" itemLabel="#{cli.pessoa.name}" itemValue="#{cli}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{c.pessoa.name}" />
+                            </p:column>
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{c.pessoa.cidade.name}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{c.pessoa.email}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="cliente" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="predios" value="Predio:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{relatorioSaldoClienteMB.predio}"  required="false"  >
+                            <p:ajax event="change" update=":formDataRel:saldoPorCliente"/>
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                    
+                    <h:commandButton styleClass="button" value="Carregar" action="#{relatorioSaldoClienteMB.carregar}" >
+                    </h:commandButton>
+                </center>
+
+            </h:form>
+            <h:form id="formDataRel">
+                <p:dataTable id="saldoPorCliente" var="cli" value="#{relatorioSaldoClienteMB.clientes}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="saldoPorCliente" fileName="Saldo por Cliente" />
+                        </h:commandLink>
+
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/pdf.png" width="24"/>
+                            <p:dataExporter type="pdf" target="saldoPorCliente" fileName="Saldo por Cliente"/>
+                        </h:commandLink>
+
+                    </f:facet>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nome" />
+                        </f:facet>
+                        <h:outputText value="#{cli.pessoa.name}" />
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="E-mail" />
+                        </f:facet>
+                        <h:outputText value="#{cli.pessoa.email}" >
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Telefone 1" />
+                        </f:facet>
+                        <h:outputText value="#{cli.pessoa.tel1}" >
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Telefone 2" />
+                        </f:facet>
+                        <h:outputText value="#{cli.pessoa.tel2}" >
+                        </h:outputText>
+                    </p:column>
+  
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Saldo devedor" />
+                        </f:facet>
+                        <h:outputText value="#{cli.saldoDevedor}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+
+                </p:dataTable>
+               
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

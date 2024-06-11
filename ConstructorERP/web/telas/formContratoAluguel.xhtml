@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Contrato de Aluguel</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formAluguel')}">
+            <h:form id="form">
+                <center>
+                    <h1>Contrato de Aluguel</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="gridNota1">
+
+                        <h:outputLabel for="clientes" value="Cliente(s):"/>
+                        <h:panelGroup>
+                            <p:inputText  id="clientes" value="#{contratoAluguelMB.clientes}" required="true" readonly="true"/>
+                            <p:commandButton update=":form:clientesDialog" oncomplete="PF('clientesDialog').show()" icon="ui-icon-search" title="Selecionar cliente(s)" />
+                        </h:panelGroup>
+                        <p:message for="clientes" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="apto" value="Unidade:"/>
+                        <h:panelGroup>
+                            <p:inputText id="apto" value="#{contratoAluguelMB.apartamentoSelecionado.bloco.predio.name} #{contratoAluguelMB.apartamentoSelecionado.name}#{contratoAluguelMB.apartamentoSelecionado.bloco.identificacao}" required="true" readonly="true"/>
+                            <p:commandButton update=":form:aptosDialog" oncomplete="PF('aptosDialog').show()" icon="ui-icon-search" title="Selecionar apartamento(s)" />
+                        </h:panelGroup>
+                        <p:message for="apto" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+
+                        <h:outputLabel for="dataInicio"  value="Data Inicio:"/>                    
+                        <p:calendar styleClass="calendar" id="dataInicio" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{contratoAluguelMB.bean.dataInicio}"
+                                    mode="popup" showOn="button" rendered="true">
+                        </p:calendar>
+                        <p:message for="dataInicio" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="DataFim"  value="Data Fim:"/>                    
+                        <p:calendar styleClass="calendar" id="DataFim" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{contratoAluguelMB.bean.dataFim}"
+                                    mode="popup" showOn="button" rendered="true">
+                        </p:calendar>
+                        <p:message for="DataFim" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlAluguel" value="Valor Aluguel:"/>
+                        <h:inputText class="inputText" id="vlAluguel" value="#{contratoAluguelMB.bean.valorAluguel}" converter="convertFloat"  rendered="true">
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlAluguel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="diaMesParcela" value="Dia de vencimento:"/>
+                        <h:inputText class="inputText" id="diaMesParcela" value="#{contratoAluguelMB.bean.diaMesVencimento}" required="true"  immediate="true" />
+                        <p:message for="diaMesParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    </h:panelGrid>
+                    <h:commandButton styleClass="button" value="Salvar" action="#{contratoAluguelMB.salvar}"/>
+
+                    <p:dialog id="aptosDialog" header="Selecione um apartamento" widgetVar="aptosDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <h:outputLabel for="predios" value="Predio:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{apartamentoContratoMB.predioSelecionado}" >
+                            <p:ajax update="blocos" listener="#{apartamentoContratoMB.onPredioSelecionado}" event="change"/>
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <h:outputLabel for="blocos" value="Bloco:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="blocos" value="#{apartamentoContratoMB.blocoSelecionado}" >
+                            <p:ajax event="change" update="aptosDT" />
+                            <f:selectItem itemLabel="Selecione um bloco" itemValue="#{null}"/> 
+                            <f:selectItems value="#{apartamentoContratoMB.blocosPredio}" var="bloco" itemValue="#{bloco}" itemLabel="#{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocos" />
+                        <p:dataTable id="aptosDT" var="apto" value="#{apartamentoContratoMB.apartamentosBlocoDisponiveis}" selection="#{contratoAluguelMB.apartamentoSelecionado}" rowKey="#{apto.id}"
+                                     paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     paginator="true" rows="10" style="margin-bottom:20px">
+                            <f:facet name="header">
+                                Selecione um apartamento
+                            </f:facet>
+                            <p:column selectionMode="single" style="width:16px;text-align:center"/>
+                            <p:column headerText="Predio">
+                                <h:outputText value="#{apto.bloco.predio.name}" />
+                            </p:column>
+                            <p:column headerText="Bloco">
+                                <h:outputText value="#{apto.bloco.identificacao}" />
+                            </p:column>
+                            <p:column headerText="Unidade">
+                                <h:outputText value="#{apto.name}" />
+                            </p:column>
+                            <p:column headerText="[Area total">
+                                <h:outputText value="#{apto.areaTotal}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton process="aptosDT" icon="ui-icon-check" value="Selecionar" oncomplete="PF('aptosDialog').hide()" update=":form:apto" />
+                            </f:facet>
+                        </p:dataTable>
+                    </p:dialog>
+                    <p:dialog id="clientesDialog" header="Selecione o(s) cliente(s)" widgetVar="clientesDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+                        <p:dataTable id="clientesDT" var="c" value="#{clienteMB.clientes}" selection="#{contratoAluguelMB.clientesSelecionados}" rowKey="#{c.id}"
+                                     paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     paginator="true" rows="10" style="margin-bottom:20px">
+                            <f:facet name="header">
+                                Selecione o(s) cliente(s)
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{c.pessoa.name}" />
+                            </p:column>
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{c.pessoa.cidade.name} - #{c.pessoa.cidade.estado.sigla}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{c.pessoa.email}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton process="clientesDT" icon="ui-icon-check" value="Selecionar" oncomplete="PF('clientesDialog').hide()" update=":form:clientes"/>
+                            </f:facet>
+                        </p:dataTable>
+                    </p:dialog>
+                </center>
+
+
+            </h:form>
+
+            <h:form id="formDataContrato">
+                <p:dataTable id="tblContratos" var="contrato" value="#{contratoAluguelMB.contratos}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="10" style="margin-bottom:20px" sortMode="multiple">
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblContratos" fileName="Contratos" />
+                        </h:commandLink>
+                    </f:facet>
+                    <p:column headerText="Cliente" sortBy="#{contrato.nomePrimeiroCliente()}">
+                        <h:outputText value="#{contrato.nomePrimeiroCliente()}" />
+                    </p:column>
+
+                    <p:column headerText="Unidade"  sortBy="#{contrato.unidade.name}">
+                        <h:outputText value="#{contrato.unidadeDesc()}" />
+                    </p:column>
+
+                    <p:column headerText="Valor aluguel" sortBy="#{contrato.valorAluguel}">
+                        <h:outputText value="#{contrato.valorAluguel}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Início - Fim" sortBy="#{contrato.dataInicio}">
+                        <h:outputText value="#{contrato.dataInicio}">
+                            <f:convertDateTime type="date" />
+                        </h:outputText>
+                        <h:outputText value=" - "/>
+                        <h:outputText value="#{contrato.dataFim}">
+                            <f:convertDateTime type="date" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Situação" sortBy="#{contrato.status}">
+                        <h:outputText value="#{contrato.status == 0 ? 'Em andamento': ''}" />
+                        <h:outputText value="#{contrato.status == 1 ? 'Encerrado': ''}"/>
+                    </p:column>
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" action="#{contratoAluguelMB.editar(contrato)}" ajax="false">
+                            <f:param name="contract" value="#{contrato.id}"/> 
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{contratoAluguelMB.deletar(contrato)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este contrato?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Encerrar" styleClass="ui-icon ui-icon-cancel" action="#{contratoAluguelMB.encerrar(contrato)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja encerrar este contrato?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+
+                </p:dataTable>
+
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

@@ -1,0 +1,369 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Parcelas à pagar</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formParcelaAPagar')}">
+            <h:form id="formRel">
+                <center>
+                    <h1>Parcelas à pagar</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <p:outputLabel for="fornecedor" value="Fornecedor:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="fornecedor" value="#{parcelaAPagarMB.fornecedor}" panelStyle="width:auto;"
+                                         effect="fade" var="forn" filter="true" filterMatchMode="startsWith" immediate="true" >
+                            <f:selectItem itemLabel="Selecione um fornecedor"/>
+                            <f:selectItems value="#{fornecedorMB.fornecedores}" var="f" itemLabel="#{f.pessoa.name}" itemValue="#{f}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{forn.pessoa.name}" />
+                            </p:column>
+
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{forn.pessoa.cidade.name}" />
+                            </p:column>
+
+                            <p:column headerText="Categoria">
+                                <h:outputText value="#{forn.categoria.name}" />
+                            </p:column>
+
+                            <p:column headerText="Observação">
+                                <h:outputText value="#{forn.observacao}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="fornecedor" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="centroCustosFiltro" value="Centro de Custo:"/>
+                        <p:treeTable id="centroCustosFiltro" value="#{categoriaMB.root}" var="cat" style="margin-top:0" scrollable="true" scrollHeight="150" scrollWidth="250" selectionMode="single"
+                                     selection="#{parcelaAPagarMB.selectedNodeFiltro}" >
+                            <p:column style="width: 250px">
+                                <h:outputText value="#{cat.name}" />
+                            </p:column>
+                        </p:treeTable>
+                        <p:message for="centroCustosFiltro" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                         <h:outputLabel for="blocos" value="Emp./Bloco:"/>
+                         <p:selectOneMenu styleClass="selectOnMenu" id="blocos" value="#{parcelaAPagarMB.blocoSelecionado}" >
+                            <f:selectItem itemLabel="Selecione um bloco" itemValue="#{null}"/> 
+                            <f:selectItems value="#{blocoMB.blocos}" var="bloco" itemValue="#{bloco}" itemLabel="#{bloco.predio.name} - #{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="codNF" value="Código NF:"/>
+                        <h:inputText class="inputText" id="codNF" value="#{parcelaAPagarMB.codNotaFiltro}"  converter="convertFloat" immediate="true" />
+                        <p:message for="codNF" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="dataInicioRel"  value="De:"/>                    
+                        <p:calendar styleClass="calendar" id="dataInicioRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{parcelaAPagarMB.de}"
+                                    mode="popup" showOn="button" >
+                        </p:calendar>
+                        <p:message for="dataInicioRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataFimRel"  value="Até:"/>                    
+                        <p:calendar styleClass="calendar" id="dataFimRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{parcelaAPagarMB.ate}"
+                                    mode="popup" showOn="button" >
+                        </p:calendar>
+                        <p:message for="dataFimRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="exibirParcelasPagas"  value="Parcelas à exibir"/>                    
+                        <p:inputSwitch id="exibirParcelasPagas" value="#{parcelaAPagarMB.exibirParcelasPagas}" onLabel="Fechadas" offLabel="Abertas"/>
+                        <p:message for="exibirParcelasPagas" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                    <h:commandButton styleClass="button" value="Carregar" action="#{parcelaAPagarMB.carregar}" />
+                </center>
+
+            </h:form>
+            <h:form id="formParcelasPagar">
+
+
+                <p:dataTable id="tblAbertas" var="parcelaAberta" value="#{parcelaAPagarMB.parcelasAbertas}" selection="#{parcelaAPagarMB.parcelasSelecionadas}" rowKey="#{parcelaAberta.id}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="10" style="margin-bottom:20px" sortMode="multiple">
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblAbertas" fileName="Parcelas à pagar" />
+                        </h:commandLink>
+
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/pdf.png" width="24"/>
+                            <p:dataExporter type="pdf" target="tblAbertas" fileName="Parcelas à pagar"/>
+                        </h:commandLink>
+
+                    </f:facet>
+
+                    <f:facet name="header">
+                        Parcelas à pagar
+                        <p:commandButton id="addItem" update=":formNovaParcela:novaParcelaDialog"  actionListener="#{parcelaAPagarMB.newParcela()}" oncomplete="PF('novaParcelaDialog').show()" icon="ui-icon-plus" title="Nova parcela" />
+                    </f:facet>
+
+
+                    <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+
+                    <p:column sortBy="#{parcelaAberta.dataVencimento}">
+                        <f:facet name="header">
+                            <h:outputText value="Vencto." />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.dataVencimento}"  >
+                            <f:convertDateTime type="date" locale="pt"   timeZone="America/Sao_Paulo" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.valorTotal}">
+                        <f:facet name="header">
+                            <h:outputText value="Valor" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.valorTotal}"  >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.nota.codigo}">
+                        <f:facet name="header">
+                            <h:outputText value="Nota" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.nota.codigo}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.nota.fornecedor.pessoaFornecedor.name}">
+                        <f:facet name="header">
+                            <h:outputText value="Fornec." />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.nota.fornecedor.pessoaFornecedor.name}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.descricao}">
+                        <f:facet name="header">
+                            <h:outputText value="Desc." />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.descricao}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.situacao}">
+                        <f:facet name="header">
+                            <h:outputText value="Situação" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.situacao == 0 ? 'Aberta': ''}" />
+                        <h:outputText value="#{parcelaAberta.situacao == 1 ? 'Parcial': ''}" />
+                        <h:outputText value="#{parcelaAberta.situacao == 2 ? 'Paga': ''}" />
+                        <h:outputText value="#{parcelaAberta.situacao == 3 ? 'Renegociada': ''}" />
+                        <h:outputText value="#{parcelaAberta.situacao == 4 ? 'Cancelada': ''}" />
+                        <h:outputText value="#{parcelaAberta.situacao == 5 ? 'Protestada': ''}" />
+                    </p:column>
+
+                    <p:column headerText="C.C/Bloco" sortBy="#{parcelaAberta.categoriaParcelaAvulsa.name}">
+                        <h:outputText value="#{parcelaAberta.categoriaParcelaAvulsa.name} - #{parcelaAberta.bloco.predio.name} - #{parcelaAberta.bloco.identificacao}" />
+                    </p:column>
+                    
+                    <p:column sortBy="#{parcelaAberta.dataPagamento}">
+                        <f:facet name="header">
+                            <h:outputText value="Data pagto." />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.dataPagamento}"  >
+                            <f:convertDateTime type="date" locale="pt"   timeZone="America/Sao_Paulo" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column style="width:24px" >
+                        <p:commandLink id="editParc" update=":formNovaParcela:novaParcelaDialog"  actionListener="#{parcelaAPagarMB.editParcela(parcelaAberta)}" oncomplete="PF('novaParcelaDialog').show()" styleClass="ui-icon ui-icon-pencil" title="Editar parcela" >
+                        </p:commandLink>
+                    </p:column>
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="Parcela Paga" styleClass="ui-icon ui-icon-check" action="#{parcelaAPagarMB.paga(parcelaAberta)}" ajax="false"/>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{parcelaAPagarMB.deletar(parcelaAberta)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir esta parcela?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                    
+                    <f:facet name="footer">
+                        <p:commandButton process="tblAbertas" styleClass="button" value="Salvar como pagas" action="#{parcelaAPagarMB.pagarTodas}" ajax="false"/>
+                    </f:facet>
+                </p:dataTable>
+
+                <center>
+                    <h:panelGrid columns="8" id="totalizadores">
+
+                        <h:outputLabel for="dataPagamento"  value="Data Pagamento:"/>                    
+                        <p:calendar styleClass="calendar" id="dataPagamento" locale="pt" pattern="dd/MM/yyyy" value="#{parcelaAPagarMB.dataPagamento}" immediate="true" navigator="true" mode="popup" showOn="button"/>
+                        <p:message for="dataPagamento" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="totalParcelasAbertas" value="Total parcelas em aberto:"/>
+                        <h:inputText class="inputText" id="totalParcelasAbertas" value="#{parcelaAPagarMB.total}" readonly="true" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:inputText>
+                        <p:message for="totalParcelasAbertas" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+
+                </center>
+                
+              
+
+            </h:form>
+            <h:form id="formNovaParcela">
+                <p:dialog id="novaParcelaDialog" header="Adicionar" widgetVar="novaParcelaDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+
+                    <h:panelGrid  columns="8" id="parcelaNota" >
+
+                        <h:outputLabel for="vencimentoParcela" value="Vencimento:"/>
+                        <p:calendar styleClass="calendar" id="vencimentoParcela" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{parcelaAPagarMB.parcelaEditando.dataVencimento}"
+                                    mode="popup" showOn="button" />
+                        <p:message for="vencimentoParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlParcela" value="Valor:"/>
+                        <h:inputText class="inputText" id="vlParcela" value="#{parcelaAPagarMB.parcelaEditando.valorParcela}"  converter="convertFloat" immediate="true" >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2"/> 
+                        </h:inputText>
+                        <p:message for="vlParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlISS" value="ISS:"/>
+                        <h:inputText class="inputText" id="vlISS" value="#{parcelaAPagarMB.parcelaEditando.ISS}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlISS" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlMDO" value="MDO:"/>
+                        <h:inputText class="inputText" id="vlMDO" value="#{parcelaAPagarMB.parcelaEditando.MDO}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlMDO" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlINSS" value="INSS:"/>
+                        <h:inputText class="inputText" id="vlINSS" value="#{parcelaAPagarMB.parcelaEditando.INSS}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2"  />
+                        </h:inputText>
+                        <p:message for="vlINSS" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlFGTS" value="FGTS:"/>
+                        <h:inputText class="inputText" id="vlFGTS" value="#{parcelaAPagarMB.parcelaEditando.FGTS}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlFGTS" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlExtra" value="Extra:"/>
+                        <h:inputText class="inputText" id="vlExtra" value="#{parcelaAPagarMB.parcelaEditando.extra}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlExtra" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlAjusteContabil" value="Ajuste contábil:"/>
+                        <h:inputText class="inputText" id="vlAjusteContabil" value="#{parcelaAPagarMB.parcelaEditando.ajusteContabil}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlAjusteContabil" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="vlAlmoco" value="Almoço:"/>
+                        <h:inputText class="inputText" id="vlAlmoco" value="#{parcelaAPagarMB.parcelaEditando.almoco}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlAlmoco" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="vlTotal" value="Total:"/>
+                        <h:inputText class="inputText" id="vlTotal" value="#{parcelaAPagarMB.parcelaEditando.valorTotal}" converter="convertFloat"  disabled="true">
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlTotal" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="salario" value="Salario:"/>
+                        <p:selectBooleanCheckbox  id="salario" value="#{parcelaAPagarMB.parcelaEditando.salario}" />
+                        <p:message for="salario" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+
+
+                        <h:outputLabel for="descParcela" value="Descrição:"/>
+                        <p:inputTextarea id="descParcela" value="#{parcelaAPagarMB.parcelaEditando.descricao}" />
+                        <p:message for="descParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="centroCustos" value="Centro de Custo:"/>
+                        <p:treeTable id="centroCustos" value="#{categoriaMB.root}" var="cat" style="margin-top:0" scrollable="true" scrollHeight="150" scrollWidth="250" selectionMode="single"
+                                     selection="#{parcelaAPagarMB.selectedNode}" required="true">
+                            <p:column style="width: 250px">
+                                <h:outputText value="#{cat.name}" />
+                            </p:column>
+                        </p:treeTable>
+                        <p:message for="centroCustos" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="blocos" value="Emp./Bloco:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="blocos" value="#{parcelaAPagarMB.blocoSelecionado}" required="true">
+                            <f:selectItem itemLabel="Selecione um bloco" itemValue="#{null}"/> 
+                            <f:selectItems value="#{blocoMB.blocos}" var="bloco" itemValue="#{bloco}" itemLabel="#{bloco.predio.name} - #{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid> 
+                    <p:commandButton icon="ui-icon-check" value="Salvar" onsuccess="PF('novaParcelaDialog').hide()"   action="#{parcelaAPagarMB.addParcela}" ajax="false"  />
+                </p:dialog>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

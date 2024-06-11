@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Fluxo de Caixa</title>
+        <style type="text/css">
+            .negativo{
+                background-color: #ff8080 !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+        </style>
+    </h:head>
+    <ui:composition template="relatorios.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formRelatorioDespesasPorCentroCusto')}">
+            <h:form id="formSaldoCaixa">
+                <center>
+                    <h1>Fluxo de Caixa</h1>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel for="periodo"  value="Período:"/>
+                        <h:selectOneMenu styleClass="selectOnMenu ui-selectonemenu-label ui-inputfield ui-corner-all" id="periodo" value="#{saldoCaixaMB.periodo}" onchange="submit()"
+                                         valueChangeListener="#{saldoCaixaMB.alterarPeriodo}"   >
+                            <f:selectItem itemValue="0" itemLabel="Mês atual"/>
+                            <f:selectItem itemValue="1" itemLabel="30 dias"/>
+                            <f:selectItem itemValue="2" itemLabel="15 dias"/>
+                            <f:selectItem itemValue="3" itemLabel="Semana atual"/>
+                        </h:selectOneMenu>
+                        <p:message for="periodo" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="vlSaldoAtual" value="Caixa atual:"/>
+                        <h:inputText class="inputText" id="vlSaldoAtual" value="#{saldoCaixaMB.bean.saldo}" converter="convertFloat" >
+                            <f:convertNumber locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlSaldoAtual" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlPrevisao" value="Previsão receb.:"/>
+                        <h:inputText class="inputText" id="vlPrevisao" value="#{saldoCaixaMB.previsaoReceb}" converter="convertFloat" >
+                            <f:convertNumber locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlPrevisao" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="vlAPagar" value="Contas a pagar:"/>
+                        <h:inputText class="inputText" id="vlAPagar" value="#{saldoCaixaMB.APagar}" converter="convertFloat" >
+                            <f:convertNumber locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlAPagar" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlSaldo" value="Saldo final:"/>
+                        <h:inputText class="inputText" id="vlSaldo" value="#{saldoCaixaMB.saldo}" converter="convertFloat" >
+                            <f:convertNumber locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlSaldo" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Calcular" action="#{saldoCaixaMB.calcular}"/>
+                </center>
+
+                <p:dataTable id="tblFluxoCaixa" var="dia" value="#{saldoCaixaMB.tabelaFluxoCaixa}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="20" style="margin-bottom:20px" sortMode="multiple"
+                             rowStyleClass="#{dia.saldo le 0 ? 'negativo' : null}">
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblNotas" fileName="Fluxo de Caixa" />
+                        </h:commandLink>
+
+                    </f:facet>
+
+                    <p:column headerText="Data" sortBy="#{dia.diaFluxo}">
+                        <h:outputText value="#{dia.diaFluxo}">
+                            <f:convertDateTime type="date" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Recebimento">
+                        <p:tree value="#{dia.recebido}" var="node"  style="border:none; color:#0000b3 !important">
+                            <p:treeNode>
+                                <h:outputText value="#{node}" />
+                            </p:treeNode>
+                        </p:tree>
+                         <h:outputText value="#{dia.recebimento}"  rendered="#{dia.recebimento > 0}">
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Pagamento">
+                        <p:tree value="#{dia.pago}" var="node" style="border:none; color:#e60000">
+                            <p:treeNode>
+                                <h:outputText value="#{node}" />
+                            </p:treeNode>
+                        </p:tree>
+                        <h:outputText value="#{dia.pagamentos}" rendered="#{dia.pagamentos > 0}">
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Saldo">
+                        <h:outputText value="#{dia.saldo}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                </p:dataTable>
+
+                <p:chart type="line" model="#{saldoCaixaMB.grafico}" style="height:1000px;"/>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

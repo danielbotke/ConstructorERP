@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cessão de direitos</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formCessaoDireitos')}">
+            <h:form id="form">
+                <center>
+                    <h1>Realizar cessão de direitos</h1>
+                    <p>&nbsp;</p>
+                    
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage value="../resources/images/loading.gif" />
+                    </p:dialog>
+                    
+                    <h:panelGrid  columns="8" id="gridContrato">
+                        <h:outputLabel for="contrato" value="Cedente(s):"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="contrato" value="#{sessaoDireitosMB.bean.contrato}" panelStyle="width:auto;"
+                                         effect="fade" var="c" filter="true" filterMatchMode="startsWith" immediate="true">
+                            <f:selectItem itemLabel="Selecione um contrato"/>
+                            <f:selectItems value="#{contratoMB.contratosEmAndamento}" var="contract" itemLabel="#{contract.nomePrimeiroCliente()} - #{contract.apartamentosDesc()}" itemValue="#{contract}" />
+
+                            <p:column headerText="Cliente">
+                                <h:outputText value="#{c.nomePrimeiroCliente()}" />
+                            </p:column>
+                            <p:column headerText="Unidade">
+                                <h:outputText value="#{c.apartamentosDesc()}" />
+                            </p:column>
+                            <p:column headerText="Data contrato">
+                                <h:outputText value="#{c.dataContrato}" >
+                                    <f:convertDateTime type="date" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Valor contrato">
+                                <h:outputText value="#{c.valorTotal}" >
+                                    <f:convertNumber locale="pt_BR" maxFractionDigits="4"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="contrato" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="clientes" value="Cessionário(s):"/>
+                        <h:panelGroup>
+                            <p:inputText  id="clientes" value="#{sessaoDireitosMB.clientes}" required="true" readonly="true"/>
+                            <p:commandButton update=":form:clientesDialog" oncomplete="PF('clientesDialog').show()" icon="ui-icon-search" title="Selecionar cliente(s)" />
+                        </h:panelGroup>
+                        <p:message for="clientes" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                         <h:outputLabel for="dataSessao"  value="Data da Cessão:"/>                    
+                         <p:calendar required="true" styleClass="calendar" id="dataSessao" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{sessaoDireitosMB.bean.dataSessao}"
+                                    mode="popup" showOn="button" maxdate="#{sessaoDireitosMB.hoje}"/>
+                        <p:message for="dataSessao" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel  for="saldoRenegociada" value="Saldo renegociado:"/>
+                        <p:selectBooleanCheckbox  id="saldoRenegociada" value="#{sessaoDireitosMB.bean.saldoRenegociado}" />
+                        <p:message for="saldoRenegociada" />
+                        
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                    
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    <p:commandButton styleClass="button" value="Salvar cessão de direitos" action="#{sessaoDireitosMB.salvar}" update=":form"  >
+                        <p:confirm header="Confirmação" message="Tem certeza que deseja cadastrar esta cessão de direitos? O contrato passará a ser do novo cliente selecionado, se marcada a opção de renegociação as parcelas abertas serão fechadas, e será necessário cadastrar novas parcelas para o saldo do contrato." icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </center>
+                <p:dialog id="clientesDialog" header="Selecione o(s) cliente(s)" widgetVar="clientesDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+                    <p:dataTable id="clientesDT" var="c" value="#{clienteMB.clientes}" selection="#{sessaoDireitosMB.clientesSelecionados}" rowKey="#{c.id}"
+                                 paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 paginator="true" rows="10" style="margin-bottom:20px">
+                        <f:facet name="header">
+                            Selecione o(s) cliente(s)
+                        </f:facet>
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                        <p:column headerText="Nome">
+                            <h:outputText value="#{c.pessoa.name}" />
+                        </p:column>
+                        <p:column headerText="Cidade">
+                            <h:outputText value="#{c.pessoa.cidade.name} - #{c.pessoa.cidade.estado.sigla}" />
+                        </p:column>
+                        <p:column headerText="E-mail">
+                            <h:outputText value="#{c.pessoa.email}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton process="clientesDT" icon="ui-icon-check" value="Selecionar" oncomplete="PF('clientesDialog').hide()" update=":form :formDataSessaoDireitos"/>
+                        </f:facet>
+                    </p:dataTable>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="formDataSessaoDireitos">
+                <p:dataTable var="sessao" value="#{sessaoDireitosMB.sessoesDireito}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px" >
+                    <p:column headerText="Código">
+                        <h:outputText value="#{sessao.id}" />
+                    </p:column>
+
+                    <p:column headerText="Contrato">
+                        <h:outputText value="#{sessao.contrato.id}" />
+                    </p:column>
+
+                    <p:column headerText="Unidade" >
+                        <h:outputText value="#{sessao.contrato.apartamentosDesc()}" />
+                    </p:column>
+
+                    <p:column headerText="Cliente antigo" >
+                        <h:outputText value="#{sessao.nomePrimeiroClienteAntigo()}" />
+                    </p:column>
+
+                    <p:column headerText="Data cessão" >
+                        <h:outputText value="#{sessao.dataSessao}">
+                            <f:convertDateTime type="date" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Saldo renegociado" >
+                        <h:outputText value="#{sessao.saldoRenegociado == true ? 'Sim': 'Não'}" />
+                    </p:column>
+
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{sessaoDireitosMB.deletar(sessao)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir esta cessão de direitos? O contrato voltará a ser do cliente anterior a cessão de direitos, porém as parcelas continuarão com a situação após a cessão de direitos." icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

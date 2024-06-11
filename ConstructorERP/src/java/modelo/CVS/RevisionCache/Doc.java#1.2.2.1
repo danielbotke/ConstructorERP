@@ -1,0 +1,130 @@
+package modelo;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+/**
+ *
+ * @author Marlo
+ */
+public class Doc implements Serializable {
+
+    private Produto produto;
+    private String nomeProduto; // temporário
+    private String versaoReal;
+    private String versaoCompatibilidade;
+    private Date data;
+    private Date dataLibBeta;
+    private String edicao;
+    private List<TipoVersao> versoes;
+    private List<TarefaAtividade> tarefas;
+    private List<Autotexto> noticias;
+    private String html;
+    private String modulo;
+    private Processo processo;
+
+    public List<TipoVersao> getVersoes() {
+        return versoes;
+    }
+
+    public void setVersoes(List<TipoVersao> versoes) {
+        this.versoes = versoes;
+    }
+
+    public String getEdicao() {
+        return edicao;
+    }
+
+    public void setEdicao(String edicao) {
+        this.edicao = edicao;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public Date getDataLibBeta() {
+        return dataLibBeta;
+    }
+
+    public void setDataLibBeta(Date dataLibBeta) {
+        this.dataLibBeta = dataLibBeta;
+    }
+    
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public String getNomeProduto() {
+        return nomeProduto;
+    }
+
+    public void setNomeProduto(String nomeProduto) {
+        this.nomeProduto = nomeProduto;
+    }
+
+    public String getVersaoReal() {
+        return versaoReal;
+    }
+
+    public void setVersaoReal(String versaoReal) {
+        this.versaoReal = versaoReal;
+    }
+
+    public String getVersaoCompatibilidade() {
+        return versaoCompatibilidade;
+    }
+
+    public void setVersaoCompatibilidade(String versaoCompatibilidade) {
+        this.versaoCompatibilidade = versaoCompatibilidade;
+    }
+
+    public List<TarefaAtividade> getTarefas() {
+        return tarefas;
+    }
+
+    public void setTarefas(List<TarefaAtividade> tarefas) {
+        this.tarefas = tarefas;
+    }
+
+    public List<Autotexto> getNoticias() {
+        return noticias;
+    }
+
+    public void setNoticias(List<Autotexto> noticias) {
+        this.noticias = noticias;
+    }
+
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
+    }
+
+    public String getModulo() {
+        return modulo;
+    }
+
+    public void setModulo(String modulo) {
+        this.modulo = modulo;
+    }
+
+    public Processo getProcesso() {
+        return processo;
+    }
+
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
+    }
+}

@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Controle de despesas</title>
+    </h:head>
+    <ui:composition template="relatorios.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formRelatorioDespesasPorCentroCusto')}">
+            <h:form id="formRel">
+                <center>
+
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage value="../resources/images/loading.gif" />
+                    </p:dialog>
+
+                    <h1>Controle de despesas</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <h:outputLabel for="predios" value="Predio:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{controleDespesasMB.predio}" >
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="blocos" value="Empreendimento/Bloco:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="blocos" value="#{controleDespesasMB.bloco}" >
+                            <f:selectItem itemLabel="Selecione um bloco" itemValue="#{null}"/> 
+                            <f:selectItems value="#{blocoMB.blocos}" var="bloco" itemValue="#{bloco}" itemLabel="#{bloco.predio.name} - #{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="centroCustos" value="Centro de Custo:"/>
+                        <p:treeTable id="centroCustos" value="#{categoriaMB.root}" var="cat" style="margin-top:0" scrollable="true" scrollHeight="150" scrollWidth="250" selectionMode="single"
+                                     selection="#{controleDespesasMB.selectedNode}">
+                            <p:column style="width: 250px">
+                                <h:outputText value="#{cat.name}" />
+                            </p:column>
+                        </p:treeTable>
+                        <p:message for="centroCustos" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataInicioRel"  value="De:"/>                    
+                        <p:calendar styleClass="calendar" id="dataInicioRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{controleDespesasMB.de}"
+                                    mode="popup" showOn="button" required="false">
+                        </p:calendar>
+                        <p:message for="dataInicioRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataFimRel"  value="Até:"/>                    
+                        <p:calendar styleClass="calendar" id="dataFimRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{controleDespesasMB.ate}"
+                                    mode="popup" showOn="button"  required="false">
+                        </p:calendar>
+                        <p:message for="dataFimRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Carregar" action="#{controleDespesasMB.carregar}"  />
+                    <p>&nbsp;</p>
+                </center>
+
+            </h:form>
+            <h:form id="formDataRel">
+                <p:dataTable id="tblDespesas" var="item" value="#{controleDespesasMB.totais}"
+                             paginatorTemplate="{Exporters} {Chart}" paginator="true" rows="10000" style="margin-bottom:20px">
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblDespesas" fileName="Despesas" />
+                        </h:commandLink>
+
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/pdf.png" width="24"/>
+                            <p:dataExporter type="pdf" target="tblDespesas" fileName="Despesas"/>
+                        </h:commandLink>
+                    </f:facet>
+                    <f:facet name="{Chart}">
+                        <p:commandLink id="chartTotalGeral"   actionListener="#{controleDespesasMB.createGraficoPizzaTotalGeral()}"  oncomplete="PF('graficoTotalGeralDialog').show()"  title="Gráfico total geral" ajax="false">
+                            <p:graphicImage value="../resources/images/report.png" width="24"/>
+                        </p:commandLink>
+                    </f:facet>
+
+                    <p:column headerText="Centro de Custo">
+                        <h:outputText value="#{item[1]} - #{item[2]} - #{item[0]}" />
+                    </p:column>
+
+                    <p:column headerText="%" >
+                        <h:outputText value="#{controleDespesasMB.percent(item[3], item[4])}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="4" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Por Apto." >
+                        <h:outputText value="#{controleDespesasMB.porAP(item[3], item[4])}" >
+                            <f:convertNumber currencySymbol="R$" type="currency" locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Total">
+                        <h:outputText value="#{item[3]}" >
+                            <f:convertNumber currencySymbol="R$" type="currency" locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+
+                <p:dialog id="graficoTotalGeralDialog"   header="Gráfico total geral" widgetVar="graficoTotalGeralDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+
+                    <p:chart id="graficoTotalGeral"  type="pie" model="#{controleDespesasMB.graficoPizzaTotalGeral}" style="width:55em;height:30em" />
+                    
+                    <h:commandButton styleClass="button" value="Carregar" action="#{controleDespesasMB.createGraficoPizzaTotalGeral()}"  />
+                    <p>&nbsp;</p>
+                    <script>
+                        function pieExtender() {
+                            this.cfg.highlighter = {
+                                show: true, tooltipLocation: 'n', 
+                                useAxesFormatters: false, 
+                                formatString: "%s - %'d" 
+                            };
+                        }
+                    </script>
+
+                </p:dialog>
+
+            </h:form>
+
+            <center>
+                <h:inputTextarea style="width: 100%; height: 300px" value="#{controleDespesasMB.totaisBloco}" readonly="true"/>
+            </center>
+
+            <h:form id="formDataRelMeses">
+                <p:dataTable id="tblDespesasMeses" var="item" value="#{historicoDespesasMB.historicosDespesas}"
+                             paginatorTemplate="{Exporters} {Chart2}" paginator="true" rows="10000" style="margin-bottom:20px" sortBy="#{item.mesAno}">
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblDespesasMeses" fileName="Despesas por mês" />
+                        </h:commandLink>
+
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/pdf.png" width="24"/>
+                            <p:dataExporter type="pdf" target="tblDespesasMeses" fileName="Despesas por mês"/>
+                        </h:commandLink>
+
+                    </f:facet>
+
+                    <f:facet name="{Chart2}">
+                        <p:commandLink id="chartTotalMes" update=":formDataRelMeses:graficoTotalMesDialog"  onclick="PF('graficoTotalGeralMes').show()"  title="Gráfico total mês" ajax="false" >
+                            <p:graphicImage value="../resources/images/report.png" width="24"/>
+                        </p:commandLink>
+                    </f:facet>
+
+
+
+                    <f:facet name="header">
+                        <p:commandButton id="atualizarMeses" update=":formDataRelMeses:tblDespesasMeses"  actionListener="#{controleDespesasMB.atualizarHistoricosDesesas}"  value="Atualizar" title="Atualizar" />
+                    </f:facet>
+
+                    <p:column headerText="Centro de Custo" >
+                        <h:outputText value="#{item.bloco.predio.name} - #{item.bloco.identificacao} - #{item.centroCusto.name}" />
+                    </p:column>
+
+                    <p:column headerText="Mês/ano"  >
+                        <h:outputText value="#{item.mesAno}" >
+                            <f:convertDateTime pattern="MMM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Valor" >
+                        <h:outputText value="#{item.valor}" >
+                            <f:convertNumber currencySymbol="R$" type="currency" locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:summaryRow>
+                        <p:column colspan="2" style="text-align:right">
+                            <h:outputText value="Total:" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{item.totalPeriodo}">
+                                <f:convertNumber type="currency" currencySymbol="R$" locale="pt_BR"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:summaryRow>
+                </p:dataTable>
+
+                <p:dialog id="graficoTotalMesDialog" header="Gráfico total mês" widgetVar="graficoTotalMesDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+
+                    <p:chart id="graficoTotalMes"  type="pie" model="#{controleDespesasMB.graficoPizzaTotalMes}" style="width:55em;height:30em" />
+
+                    <h:outputLabel for="datas" value="Mês/Ano:"/>
+                    <p:selectOneMenu styleClass="selectOnMenu" id="datas" value="#{controleDespesasMB.dataGraficoSelecionada}"   >
+                        <f:selectItem itemLabel="Selecione um mês" itemValue="#{null}"/> 
+                        <f:selectItems value="#{controleDespesasMB.mesesHistorico}" var="data" itemValue="#{data}" itemLabel="#{data.month}/#{data.year}"/>
+                    </p:selectOneMenu>
+                    <p:message for="datas" />
+
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    
+                    <h:commandButton styleClass="button" value="Carregar" action="#{controleDespesasMB.createGraficoPizzaTotalMes()}"  />
+                    <p>&nbsp;</p>
+
+                    <script>
+                        function pieExtender() {
+                            this.cfg.highlighter = {
+                                show: true, tooltipLocation: 'n', 
+                                useAxesFormatters: false, 
+                                formatString: "%s - %'d" 
+                            };
+                        }
+                    </script>
+
+                </p:dialog>
+
+
+
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

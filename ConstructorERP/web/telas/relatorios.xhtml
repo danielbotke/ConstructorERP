@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro de Predio</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="menuRel" >
+
+            <p:tabMenu activeIndex="#{param.i}" id="menuRel">
+
+                <p:menuitem  style="font-size: 11pt" value="Parc. À Receber"  outcome="/telas/formRelatorioParcelas" rendered="#{usuarioMB.temPermissao('formRelatorioParcelas')}">
+                    <f:param name="i" value="0" />
+                </p:menuitem>
+                <p:menuitem style="font-size: 11pt" value="Recebimentos"  outcome="/telas/formRelatorioRecebimentos" rendered="#{usuarioMB.temPermissao('formRelatorioRecebimentos')}">
+                    <f:param name="i" value="1" />
+                </p:menuitem>
+                <p:menuitem style="font-size: 11pt" value="Saldo por Cliente"  outcome="/telas/formRelatorioSaldoDevedor" rendered="#{usuarioMB.temPermissao('formRelatorioSaldoDevedor')}">
+                    <f:param name="i" value="2" />
+                </p:menuitem>
+                <p:menuitem style="font-size: 11pt" value="Saldo por contrato"  outcome="/telas/formRelatorioSaldoContrato" rendered="#{usuarioMB.temPermissao('formRelatorioSaldoContrato')}">
+                    <f:param name="i" value="3" />
+                </p:menuitem>
+                <p:menuitem style="font-size: 11pt" value="Controle de despesas"  outcome="/telas/formControleDespesas" rendered="#{usuarioMB.temPermissao('formRelatorioDespesasPorCentroCusto')}">
+                    <f:param name="i" value="4" />
+                </p:menuitem>
+                <p:menuitem style="font-size: 11pt" value="Fluxo de caixa"  outcome="/telas/formControleDeCaixa" rendered="#{usuarioMB.temPermissao('formRelatorioDespesasPorCentroCusto')}">
+                    <f:param name="i" value="5" />
+                </p:menuitem>
+
+                <p:menuitem style="font-size: 11pt" value="Controle de ISS"  outcome="/telas/formControleISS" rendered="#{usuarioMB.temPermissao('formRelatorioControleISS')}">
+                    <f:param name="i" value="6" />
+                </p:menuitem>
+                
+                <p:menuitem style="font-size: 11pt" value="Ganho Financeiro"  outcome="/telas/formRelatorioGanhoFinanceiro" rendered="#{usuarioMB.temPermissao('formRelatorioGanhoFinanceiro')}">
+                    <f:param name="i" value="7" />
+                </p:menuitem>
+                
+                
+
+
+            </p:tabMenu>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Envio de E-mail</title>
+    </h:head> 
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo"  rendered="#{usuarioMB.temPermissao('formEnviarCampanha')}">
+            <h:form id="form">
+                <center>
+                    <h1>Envio de e-mail em massa</h1>
+                    <p>&nbsp;</p>
+                    
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage value="../resources/images/loading.gif" />
+                    </p:dialog>
+                    
+                    <h:panelGrid  columns="8" id="grid1">
+                        <p:outputLabel for="cliente" value="Cliente:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="cliente" value="#{enviarEmailMB.clienteFiltro}" panelStyle="width:auto;"
+                                         effect="fade" var="c" filter="true" filterMatchMode="startsWith" immediate="true">
+                            <f:selectItem itemLabel="Selecione um cliente"/>
+                            <f:selectItems value="#{clienteMB.clientes}" var="cli" itemLabel="#{cli.pessoa.name}" itemValue="#{cli}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{c.pessoa.name}" />
+                            </p:column>
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{c.pessoa.cidade.name}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{c.pessoa.email}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="cliente" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="predios" value="Predio:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{enviarEmailMB.predioFiltro}"  >
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="blocos" value="Bloco:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="blocos" value="#{enviarEmailMB.blocoFiltro}"  >
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{blocoMB.blocos}" var="bloco" itemValue="#{bloco}" itemLabel="#{bloco.predio.name} - #{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="contratosAtivos"  value="Apenas contratos ativos:"/>                    
+                        <p:selectBooleanCheckbox  id="contratosAtivos" value="#{enviarEmailMB.apenasContratosAtivos}" />
+                        <p:message for="contratosAtivos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="somenteClientes"  value="Somente clientes:"/>                    
+                        <p:selectBooleanCheckbox  id="somenteClientes" value="#{enviarEmailMB.somenteClientes}" />
+                        <p:message for="somenteClientes" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="somenteFornecedores"  value="Somente Fornecedores:"/>                    
+                        <p:selectBooleanCheckbox  id="somenteFornecedores" value="#{enviarEmailMB.somenteFornecedores}" />
+                        <p:message for="somenteFornecedores" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+
+                    <h:commandButton id="filtrar" styleClass="button" value="Filtrar" action="#{enviarEmailMB.filtrarPessoas}"/>
+
+
+                </center>
+
+                
+            </h:form>
+            <h:form id="formEmail">
+                
+                <h3>Pessoas filtradas</h3>
+                <p:dataTable id="tblPessoas" var="pessoa" value="#{enviarEmailMB.pessoasFiltradas}" selection="#{enviarEmailMB.pessoasSelecionados}" rowKey="#{pessoa.id}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px" >
+                    <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+                    <p:column headerText="Nome" sortBy="#{pessoa.name}">
+                        <h:outputText value="#{pessoa.name}"  />
+                    </p:column>
+
+                    <p:column headerText="E-mail" sortBy="#{pessoa.email}">
+                        <h:outputText value="#{pessoa.email}"  />
+                    </p:column>
+
+                    <f:facet name="footer">
+                        <h:commandButton  value="Selecionar todas" action="#{enviarEmailMB.selecionarTodas}" />
+                    </f:facet>
+
+
+                </p:dataTable>
+                <center>
+
+                    <h:panelGrid  columns="8" id="grid2">
+
+                        <h:outputLabel for="nomeRemetente" value="Nome do remetente:"/>
+                        <h:inputText class="inputText" id="nomeRemetente" value="#{enviarEmailMB.nomeRemetente}" required="true" immediate="true"/>
+                        <p:message for="nomeRemetente" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="assuntoEmail" value="Assunto:"/>
+                        <h:inputText class="inputText" id="assuntoEmail" value="#{enviarEmailMB.assuntoEmail}" required="true" immediate="true"/>
+                        <p:message for="assuntoEmail" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        
+                        <h:outputLabel for="emailEnvio" value="Email envio:"/>
+                        <h:inputText class="inputText" id="emailEnvio" value="#{enviarEmailMB.emailDeEnvio}" required="true" immediate="true"/>
+                        <p:message for="emailEnvio" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="senhaEmailEnvio" value="Senha:"/>
+                        <h:inputSecret class="inputText"  id="senhaEmailEnvio" value="#{enviarEmailMB.password}" required="true" immediate="true"/>
+                        <p:message for="senhaEmailEnvio" />
+                        
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="colocarAssinatura"  value="Colocar assinatura:"/>                    
+                        <p:selectBooleanCheckbox  id="colocarAssinatura" value="#{enviarEmailMB.colocarAssinatura}" />
+                        <p:message for="colocarAssinatura" />
+
+                        
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+
+
+
+                    </h:panelGrid>
+
+
+                    <p:editor id="editor" widgetVar="emailEditor" value="#{enviarEmailMB.htmlConteudoEmail}" width="600" />
+
+                    <h:panelGrid columns="2" style="margin-top: 10px">
+
+                        <p:commandButton value="Limpar" type="button" onclick="PF('emailEditor').clear();" icon="ui-icon-close" />
+                        <p:commandButton  process="tblPessoas" styleClass="button" value="Enviar e-mails" action="#{enviarEmailMB.enviarEmail}" ajax="false" oncomplete="PF(':formEmail:carregar').click()" icon="ui-icon-mail-closed"/>
+
+                    </h:panelGrid>
+                </center>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

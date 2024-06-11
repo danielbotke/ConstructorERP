@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="88fb37d4-4ff1-42f8-8c16-b2eb948a84ac">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="45"/>
+	<subDataset name="Table Dataset 1" uuid="fdfb89d7-2321-47cb-9197-6be03fb6db72"/>
+	<subDataset name="Table Dataset 2" uuid="3267c956-06b5-46e5-9e2e-293863cc9bd6"/>
+	<queryString>
+		<![CDATA[SELECT
+     contrato.`id` AS contrato_id,
+     contrato.`dataContrato` AS contrato_dataContrato,
+     contrato.`motivoDistrato` AS contrato_motivoDistrato,
+     contrato.`status` AS contrato_status,
+     contrato.`totalCUBs` AS contrato_totalCUBs,
+     contrato.`valorTotal` AS contrato_valorTotal,
+     contrato.`CUB_id` AS contrato_CUB_id,
+     apartamento.`id` AS apartamento_id,
+     apartamento.`distratado` AS apartamento_distratado,
+     apartamento.`name` AS apartamento_name,
+     apartamento.`vendido` AS apartamento_vendido,
+     apartamento.`bloco_id` AS apartamento_bloco_id,
+     apartamento.`areaComum` AS apartamento_areaComum,
+     apartamento.`areaPrivativa` AS apartamento_areaPrivativa,
+     apartamento.`areaTotal` AS apartamento_areaTotal,
+     apartamento.`coeficienteProporc` AS apartamento_coeficienteProporc,
+     apartamento.`custoEstivativo` AS apartamento_custoEstivativo,
+     apartamento.`fracaoIdeal` AS apartamento_fracaoIdeal,
+     apartamento.`contratoApart_id` AS apartamento_contratoApart_id,
+     bloco.`id` AS bloco_id,
+     bloco.`identificacao` AS bloco_identificacao,
+     bloco.`predio_id` AS bloco_predio_id,
+     predio.`id` AS predio_id,
+     predio.`name` AS predio_name,
+     cliente_contrato.`contratos_id` AS cliente_contrato_contratos_id,
+     cliente_contrato.`clientes_id` AS cliente_contrato_clientes_id,
+     cliente_contrato.`clientes_order` AS cliente_contrato_clientes_order,
+     cliente.`id` AS cliente_id,
+     cliente.`pessoa_id` AS cliente_pessoa_id,
+     cliente.`saldoDevedor` AS cliente_saldoDevedor,
+     cliente.`formaPagamento` AS cliente_formaPagamento,
+     pessoafisica.`id` AS pessoafisica_id,
+     pessoafisica.`CEP` AS pessoafisica_CEP,
+     pessoafisica.`bairro` AS pessoafisica_bairro,
+     pessoafisica.`email` AS pessoafisica_email,
+     pessoafisica.`endereco` AS pessoafisica_endereco,
+     pessoafisica.`name` AS pessoafisica_name,
+     pessoafisica.`tel1` AS pessoafisica_tel1,
+     pessoafisica.`tel2` AS pessoafisica_tel2,
+     pessoafisica.`cidade_id` AS pessoafisica_cidade_id,
+     pessoafisica.`CEPCom` AS pessoafisica_CEPCom,
+     pessoafisica.`CEPComConjuge` AS pessoafisica_CEPComConjuge,
+     pessoafisica.`CEPConjuge` AS pessoafisica_CEPConjuge,
+     pessoafisica.`CPF` AS pessoafisica_CPF,
+     pessoafisica.`CPFConjuge` AS pessoafisica_CPFConjuge,
+     pessoafisica.`RG` AS pessoafisica_RG,
+     pessoafisica.`RGConjuge` AS pessoafisica_RGConjuge,
+     pessoafisica.`TelCom` AS pessoafisica_TelCom,
+     pessoafisica.`TelComConjuge` AS pessoafisica_TelComConjuge,
+     pessoafisica.`bairroCom` AS pessoafisica_bairroCom,
+     pessoafisica.`bairroComConjuge` AS pessoafisica_bairroComConjuge,
+     pessoafisica.`bairroConjuge` AS pessoafisica_bairroConjuge,
+     pessoafisica.`celConjuge` AS pessoafisica_celConjuge,
+     pessoafisica.`dataCasam` AS pessoafisica_dataCasam,
+     pessoafisica.`dataCasamConjuge` AS pessoafisica_dataCasamConjuge,
+     pessoafisica.`dataNasc` AS pessoafisica_dataNasc,
+     pessoafisica.`dataNascConjuge` AS pessoafisica_dataNascConjuge,
+     pessoafisica.`emailConjuge` AS pessoafisica_emailConjuge,
+     pessoafisica.`empresa` AS pessoafisica_empresa,
+     pessoafisica.`empresaConjuge` AS pessoafisica_empresaConjuge,
+     pessoafisica.`enderecoCom` AS pessoafisica_enderecoCom,
+     pessoafisica.`enderecoComConjuge` AS pessoafisica_enderecoComConjuge,
+     pessoafisica.`enderecoConjuge` AS pessoafisica_enderecoConjuge,
+     pessoafisica.`estadoCivil` AS pessoafisica_estadoCivil,
+     pessoafisica.`estadoCivilConjuge` AS pessoafisica_estadoCivilConjuge,
+     pessoafisica.`nacionalidade` AS pessoafisica_nacionalidade,
+     pessoafisica.`nacionalidadeConjuge` AS pessoafisica_nacionalidadeConjuge,
+     pessoafisica.`nameConjuge` AS pessoafisica_nameConjuge,
+     pessoafisica.`profissao` AS pessoafisica_profissao,
+     pessoafisica.`profissaoConjuge` AS pessoafisica_profissaoConjuge,
+     pessoafisica.`telResConjuge` AS pessoafisica_telResConjuge,
+     pessoafisica.`cidadeCom_id` AS pessoafisica_cidadeCom_id,
+     pessoafisica.`cidadeComConjuge_id` AS pessoafisica_cidadeComConjuge_id,
+     pessoafisica.`cidadeConjuge_id` AS pessoafisica_cidadeConjuge_id,
+     pessoafisica.`sexo` AS pessoafisica_sexo,
+     pessoafisica.`sexoConjuge` AS pessoafisica_sexoConjuge,
+     pessoafisica.`representada_id` AS pessoafisica_representada_id,
+     pessoafisica.`regBens` AS pessoafisica_regBens,
+     pessoajuridica.`id` AS pessoajuridica_id,
+     pessoajuridica.`CEP` AS pessoajuridica_CEP,
+     pessoajuridica.`bairro` AS pessoajuridica_bairro,
+     pessoajuridica.`email` AS pessoajuridica_email,
+     pessoajuridica.`endereco` AS pessoajuridica_endereco,
+     pessoajuridica.`name` AS pessoajuridica_name,
+     pessoajuridica.`tel1` AS pessoajuridica_tel1,
+     pessoajuridica.`tel2` AS pessoajuridica_tel2,
+     pessoajuridica.`cidade_id` AS pessoajuridica_cidade_id,
+     pessoajuridica.`CNPJ` AS pessoajuridica_CNPJ,
+     pessoajuridica.`inscricaoEstadual` AS pessoajuridica_inscricaoEstadual,
+     indice.`id` AS indice_id,
+     indice.`dataIndice` AS indice_dataIndice,
+     indice.`valorIndice` AS indice_valorIndice,
+     indice.`tipoIndice_id` AS indice_tipoIndice_id,
+     cidade.`id` AS cidade_id,
+     cidade.`name` AS cidade_name,
+     cidade.`estado_id` AS cidade_estado_id,
+     estado.`id` AS estado_id,
+     estado.`name` AS estado_name,
+     estado.`sigla` AS estado_sigla,
+     estado.`pais_id` AS estado_pais_id,
+     pais.`id` AS pais_id,
+     pais.`name` AS pais_name,
+     parcela.`id` AS parcela_id,
+     parcela.`dataVencimento` AS parcela_dataVencimento,
+     parcela.`descricao` AS parcela_descricao,
+     parcela.`entrada` AS parcela_entrada,
+     parcela.`paga` AS parcela_paga,
+     parcela.`qntCUB` AS parcela_qntCUB,
+     parcela.`situacao` AS parcela_situacao,
+     parcela.`valorParcela` AS parcela_valorParcela,
+     parcela.`grupoParcelas_id` AS parcela_grupoParcelas_id,
+     parcela.`contratoParc_id` AS parcela_contratoParc_id,
+     parcela.`saldoParcela` AS parcela_saldoParcela,
+     parcela.`saldoDaParcela` AS parcela_saldoDaParcela,
+     parcela.`recebendo` AS parcela_recebendo,
+     parcela.`cubsPagos` AS parcela_cubsPagos,
+     parcela.`numeracao` AS parcela_numeracao,
+     parcela.`boletoGerado` AS parcela_boletoGerado,
+     grupoparcelas.`id` AS grupoparcelas_id,
+     grupoparcelas.`CUBPorParcela` AS grupoparcelas_CUBPorParcela,
+     grupoparcelas.`dataInicioParcelas` AS grupoparcelas_dataInicioParcelas,
+     grupoparcelas.`diaMesVencimento` AS grupoparcelas_diaMesVencimento,
+     grupoparcelas.`diasEntreParcelas` AS grupoparcelas_diasEntreParcelas,
+     grupoparcelas.`identificador` AS grupoparcelas_identificador,
+     grupoparcelas.`primeiroDiaDaSemana` AS grupoparcelas_primeiroDiaDaSemana,
+     grupoparcelas.`primeiroDiaUtil` AS grupoparcelas_primeiroDiaUtil,
+     grupoparcelas.`qntParcelas` AS grupoparcelas_qntParcelas,
+     grupoparcelas.`contrato_id` AS grupoparcelas_contrato_id
+FROM
+     `contrato` contrato INNER JOIN `apartamento` apartamento ON contrato.`id` = apartamento.`contratoApart_id`
+     INNER JOIN `bloco` bloco ON apartamento.`bloco_id` = bloco.`id`
+     INNER JOIN `predio` predio ON bloco.`predio_id` = predio.`id`
+     INNER JOIN `cliente_contrato` cliente_contrato ON contrato.`id` = cliente_contrato.`contratos_id`
+     INNER JOIN `indice` indice ON contrato.`CUB_id` = indice.`id`
+     INNER JOIN `parcela` parcela ON contrato.`id` = parcela.`contratoParc_id`
+     INNER JOIN `grupoparcelas` grupoparcelas ON contrato.`id` = grupoparcelas.`contrato_id`
+     AND grupoparcelas.`id` = parcela.`grupoParcelas_id`
+     INNER JOIN `cliente` cliente ON cliente_contrato.`clientes_id` = cliente.`id`
+     INNER JOIN `pessoafisica` pessoafisica ON cliente.`pessoa_id` = pessoafisica.`id`
+     INNER JOIN `pessoajuridica` pessoajuridica ON cliente.`pessoa_id` = pessoajuridica.`id`
+     INNER JOIN `cidade` cidade ON pessoajuridica.`cidade_id` = cidade.`id`
+     AND cidade.`id` = pessoafisica.`cidadeComConjuge_id`
+     AND cidade.`id` = pessoafisica.`cidadeCom_id`
+     AND cidade.`id` = pessoafisica.`cidade_id`
+     AND cidade.`id` = pessoafisica.`cidadeConjuge_id`
+     INNER JOIN `estado` estado ON cidade.`estado_id` = estado.`id`
+     INNER JOIN `pais` pais ON estado.`pais_id` = pais.`id`]]>
+	</queryString>
+	<field name="contrato_id" class="java.lang.Integer"/>
+	<field name="contrato_dataContrato" class="java.sql.Date"/>
+	<field name="contrato_motivoDistrato" class="java.lang.String"/>
+	<field name="contrato_status" class="java.lang.Integer"/>
+	<field name="contrato_totalCUBs" class="java.lang.Float"/>
+	<field name="contrato_valorTotal" class="java.lang.Float"/>
+	<field name="contrato_CUB_id" class="java.lang.Integer"/>
+	<field name="apartamento_id" class="java.lang.Integer"/>
+	<field name="apartamento_distratado" class="java.lang.Boolean"/>
+	<field name="apartamento_name" class="java.lang.String"/>
+	<field name="apartamento_vendido" class="java.lang.Boolean"/>
+	<field name="apartamento_bloco_id" class="java.lang.Integer"/>
+	<field name="apartamento_areaComum" class="java.lang.Float"/>
+	<field name="apartamento_areaPrivativa" class="java.lang.Float"/>
+	<field name="apartamento_areaTotal" class="java.lang.Float"/>
+	<field name="apartamento_coeficienteProporc" class="java.lang.Float"/>
+	<field name="apartamento_custoEstivativo" class="java.lang.Float"/>
+	<field name="apartamento_fracaoIdeal" class="java.lang.Float"/>
+	<field name="apartamento_contratoApart_id" class="java.lang.Integer"/>
+	<field name="bloco_id" class="java.lang.Integer"/>
+	<field name="bloco_identificacao" class="java.lang.String"/>
+	<field name="bloco_predio_id" class="java.lang.Integer"/>
+	<field name="predio_id" class="java.lang.Integer"/>
+	<field name="predio_name" class="java.lang.String"/>
+	<field name="cliente_contrato_contratos_id" class="java.lang.Integer"/>
+	<field name="cliente_contrato_clientes_id" class="java.lang.Integer"/>
+	<field name="cliente_contrato_clientes_order" class="java.lang.Integer"/>
+	<field name="cliente_id" class="java.lang.Integer"/>
+	<field name="cliente_pessoa_id" class="java.lang.Integer"/>
+	<field name="cliente_saldoDevedor" class="java.lang.Double"/>
+	<field name="cliente_formaPagamento" class="java.lang.Integer"/>
+	<field name="pessoafisica_id" class="java.lang.Integer"/>
+	<field name="pessoafisica_CEP" class="java.lang.Integer"/>
+	<field name="pessoafisica_bairro" class="java.lang.String"/>
+	<field name="pessoafisica_email" class="java.lang.String"/>
+	<field name="pessoafisica_endereco" class="java.lang.String"/>
+	<field name="pessoafisica_name" class="java.lang.String"/>
+	<field name="pessoafisica_tel1" class="java.lang.String"/>
+	<field name="pessoafisica_tel2" class="java.lang.String"/>
+	<field name="pessoafisica_cidade_id" class="java.lang.Integer"/>
+	<field name="pessoafisica_CEPCom" class="java.lang.Integer"/>
+	<field name="pessoafisica_CEPComConjuge" class="java.lang.Integer"/>
+	<field name="pessoafisica_CEPConjuge" class="java.lang.Integer"/>
+	<field name="pessoafisica_CPF" class="java.lang.String"/>
+	<field name="pessoafisica_CPFConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_RG" class="java.lang.String"/>
+	<field name="pessoafisica_RGConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_TelCom" class="java.lang.String"/>
+	<field name="pessoafisica_TelComConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_bairroCom" class="java.lang.String"/>
+	<field name="pessoafisica_bairroComConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_bairroConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_celConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_dataCasam" class="java.sql.Timestamp"/>
+	<field name="pessoafisica_dataCasamConjuge" class="java.sql.Timestamp"/>
+	<field name="pessoafisica_dataNasc" class="java.sql.Timestamp"/>
+	<field name="pessoafisica_dataNascConjuge" class="java.sql.Timestamp"/>
+	<field name="pessoafisica_emailConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_empresa" class="java.lang.String"/>
+	<field name="pessoafisica_empresaConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_enderecoCom" class="java.lang.String"/>
+	<field name="pessoafisica_enderecoComConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_enderecoConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_estadoCivil" class="java.lang.Integer"/>
+	<field name="pessoafisica_estadoCivilConjuge" class="java.lang.Integer"/>
+	<field name="pessoafisica_nacionalidade" class="java.lang.String"/>
+	<field name="pessoafisica_nacionalidadeConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_nameConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_profissao" class="java.lang.String"/>
+	<field name="pessoafisica_profissaoConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_telResConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_cidadeCom_id" class="java.lang.Integer"/>
+	<field name="pessoafisica_cidadeComConjuge_id" class="java.lang.Integer"/>
+	<field name="pessoafisica_cidadeConjuge_id" class="java.lang.Integer"/>
+	<field name="pessoafisica_sexo" class="java.lang.String"/>
+	<field name="pessoafisica_sexoConjuge" class="java.lang.String"/>
+	<field name="pessoafisica_representada_id" class="java.lang.Integer"/>
+	<field name="pessoafisica_regBens" class="java.lang.Integer"/>
+	<field name="pessoajuridica_id" class="java.lang.Integer"/>
+	<field name="pessoajuridica_CEP" class="java.lang.Integer"/>
+	<field name="pessoajuridica_bairro" class="java.lang.String"/>
+	<field name="pessoajuridica_email" class="java.lang.String"/>
+	<field name="pessoajuridica_endereco" class="java.lang.String"/>
+	<field name="pessoajuridica_name" class="java.lang.String"/>
+	<field name="pessoajuridica_tel1" class="java.lang.String"/>
+	<field name="pessoajuridica_tel2" class="java.lang.String"/>
+	<field name="pessoajuridica_cidade_id" class="java.lang.Integer"/>
+	<field name="pessoajuridica_CNPJ" class="java.lang.String"/>
+	<field name="pessoajuridica_inscricaoEstadual" class="java.lang.String"/>
+	<field name="indice_id" class="java.lang.Integer"/>
+	<field name="indice_dataIndice" class="java.sql.Date"/>
+	<field name="indice_valorIndice" class="java.lang.Float"/>
+	<field name="indice_tipoIndice_id" class="java.lang.Integer"/>
+	<field name="cidade_id" class="java.lang.Integer"/>
+	<field name="cidade_name" class="java.lang.String"/>
+	<field name="cidade_estado_id" class="java.lang.Integer"/>
+	<field name="estado_id" class="java.lang.Integer"/>
+	<field name="estado_name" class="java.lang.String"/>
+	<field name="estado_sigla" class="java.lang.String"/>
+	<field name="estado_pais_id" class="java.lang.Integer"/>
+	<field name="pais_id" class="java.lang.Integer"/>
+	<field name="pais_name" class="java.lang.String"/>
+	<field name="parcela_id" class="java.lang.Integer"/>
+	<field name="parcela_dataVencimento" class="java.sql.Date"/>
+	<field name="parcela_descricao" class="java.lang.String"/>
+	<field name="parcela_entrada" class="java.lang.Boolean"/>
+	<field name="parcela_paga" class="java.lang.Boolean"/>
+	<field name="parcela_qntCUB" class="java.lang.Float"/>
+	<field name="parcela_situacao" class="java.lang.Integer"/>
+	<field name="parcela_valorParcela" class="java.lang.Float"/>
+	<field name="parcela_grupoParcelas_id" class="java.lang.Integer"/>
+	<field name="parcela_contratoParc_id" class="java.lang.Integer"/>
+	<field name="parcela_saldoParcela" class="java.lang.Double"/>
+	<field name="parcela_saldoDaParcela" class="java.lang.Double"/>
+	<field name="parcela_recebendo" class="java.lang.Boolean"/>
+	<field name="parcela_cubsPagos" class="java.lang.Float"/>
+	<field name="parcela_numeracao" class="java.lang.String"/>
+	<field name="parcela_boletoGerado" class="java.lang.Boolean"/>
+	<field name="grupoparcelas_id" class="java.lang.Integer"/>
+	<field name="grupoparcelas_CUBPorParcela" class="java.lang.Float"/>
+	<field name="grupoparcelas_dataInicioParcelas" class="java.sql.Date"/>
+	<field name="grupoparcelas_diaMesVencimento" class="java.lang.Integer"/>
+	<field name="grupoparcelas_diasEntreParcelas" class="java.lang.Integer"/>
+	<field name="grupoparcelas_identificador" class="java.lang.String"/>
+	<field name="grupoparcelas_primeiroDiaDaSemana" class="java.lang.Integer"/>
+	<field name="grupoparcelas_primeiroDiaUtil" class="java.lang.Boolean"/>
+	<field name="grupoparcelas_qntParcelas" class="java.lang.Integer"/>
+	<field name="grupoparcelas_contrato_id" class="java.lang.Integer"/>
+	<group name="contrato_id">
+		<groupExpression><![CDATA[$F{contrato_id}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement uuid="c3dd84f0-af29-446c-8fc4-a9a2f25f6028" x="0" y="15" width="555" height="50"/>
+				<textElement textAlignment="Center">
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ESPELHO DA PROPOSTA
+CONDOMÍNIO RESIDENCIAL E COMERCIAL VILLA VERDE
+APARTAMENTO:  - TORRE: “B”]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="5" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="7" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="513" splitType="Stretch">
+			<line>
+				<reportElement uuid="18c729a8-6cdb-43c4-9e3a-b63c4499d81e" x="0" y="6" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="9" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMPRADOR:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="49" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="29" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[END. RES.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="69" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="89" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMPRESA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="109" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[END. COM.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="129" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="149" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NACIONALIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="169" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="189" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CPF: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="209" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMAIL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="29" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BAIRRO: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="49" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FONE: 
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="69" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="89" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="109" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BAIRRO: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="129" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FONE/FAX:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="149" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROFISSÃO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="169" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATA NASCIMENTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="189" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO CIVIL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="209" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DTA CASAMENTO:]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="18c729a8-6cdb-43c4-9e3a-b63c4499d81e" x="-1" y="228" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="9" width="437" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pessoafisica_name}$F{pessoajuridica_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="251" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[END. RES.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="391" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATA NASCIMENTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="271" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FONE: 
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="311" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="251" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BAIRRO: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="411" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CPF: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="311" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMPRESA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="371" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NACIONALIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="331" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BAIRRO: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="231" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CÔNJUGE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="291" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="331" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[END. COM.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="271" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="291" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="371" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROFISSÃO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="351" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="411" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMAIL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="290" y="351" width="126" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FONE/FAX:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09c00f6d-f66f-4ed0-8567-9cb2dd82142e" x="2" y="391" width="115" height="20"/>
+				<textElement>
+					<font fontName="Century Gothic" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIDADE:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="29" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pessoafisica_endereco}$F{pessoajuridica_endereco}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="49" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="69" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="89" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="109" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="129" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="149" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="169" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="189" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="208" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="29" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="49" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="417" y="69" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="417" y="89" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="417" y="109" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="417" y="129" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="149" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="169" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="188" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="208" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="251" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="271" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="291" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="311" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="331" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="351" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="371" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="391" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="411" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="251" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="271" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="391" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="417" y="371" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="351" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="331" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="311" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="416" y="291" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="417" y="411" width="138" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a06ce2c-5e10-4dc0-8b0d-1db3d7db3972" x="117" y="231" width="438" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{}$F{}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="137" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

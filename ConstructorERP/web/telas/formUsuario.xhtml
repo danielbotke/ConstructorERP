@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro de usuários</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo"  rendered="#{usuarioMB.temPermissao('formUsuario')}">
+            <h:form>
+                <center>
+                    <h1>Cadastro de usuários</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid" >
+
+                        <h:outputLabel for="usuCliente" value="Nome:"/>
+                        <h:inputText class="inputText" id="usuCliente" value="#{usuarioMB.bean.nome}" required="true"/>
+                        <p:message for="usuCliente" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="usuEmail" value="Email:"/>
+                        <h:inputText class="inputText" id="usuEmail" value="#{usuarioMB.bean.email}" required="true"/>
+                        <p:message for="usuEmail" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="pwd1" value="Senha:" />
+                        <p:password id="pwd1" value="#{usuarioMB.bean.senha}" match="pwd2" label="Senha" required="#{!usuarioMB.editando}" />
+                        <p:message for="pwd1" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="pwd2" value="Confirmar senha:" />
+                        <p:password id="pwd2" value="#{usuarioMB.bean.senha}" label="Confirmar senha" required="#{!usuarioMB.editando}" />
+                        <p:message for="pwd2" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <h3>Permissão cadastros gerais:</h3>
+                    <h:panelGrid  columns="3" id="gridPermissoesGerais" >
+
+                        <h:outputLabel for="telaUsuario" value="Cadastro de usuário:"/>
+                        <p:selectBooleanCheckbox  id="telaUsuario" value="#{usuarioMB.bean.usuario}" />
+                        <p:message for="telaUsuario" />
+
+                        <h:outputLabel for="telaLocali" value="Cadastro de Localidades:"/>
+                        <p:selectBooleanCheckbox  id="telaLocali" value="#{usuarioMB.bean.localidades}" />
+                        <p:message for="telaLocali" />
+
+                        <h:outputLabel for="telaPesFis" value="Cadastro de pessoa física:"/>
+                        <p:selectBooleanCheckbox  id="telaPesFis" value="#{usuarioMB.bean.pessoaFisica}" />
+                        <p:message for="telaPesFis" />
+
+                        <h:outputLabel for="telaPesJur" value="Cadastro de pessoa jurídica:"/>
+                        <p:selectBooleanCheckbox  id="telaPesJur" value="#{usuarioMB.bean.pessoaJuridica}" />
+                        <p:message for="telaPesJur" />
+
+
+                        <h:outputLabel for="telaPredios" value="Cadastro de prédios:"/>
+                        <p:selectBooleanCheckbox  id="telaPredios" value="#{usuarioMB.bean.predio}" />
+                        <p:message for="telaPredios" />
+
+                        <h:outputLabel for="telaCampanha" value="Enviar Campanha:"/>
+                        <p:selectBooleanCheckbox  id="telaCampanha" value="#{usuarioMB.bean.enviarCampanha}" />
+                        <p:message for="telaCampanha" />
+
+
+                        <h:outputLabel for="reservarApto" value="Reservar Aptos:"/>
+                        <p:selectBooleanCheckbox  id="reservarApto" value="#{usuarioMB.bean.reservarApto}" />
+                        <p:message for="reservarApto" />
+                        
+                        <h:outputLabel for="cadastroImobiliaria" value="Imobiliaria/Corretor:"/>
+                        <p:selectBooleanCheckbox  id="cadastroImobiliaria" value="#{usuarioMB.bean.imobiliaria}" />
+                        <p:message for="cadastroImobiliaria" />
+                        
+                        <h:outputLabel for="admReservarApto" value="Administrar Reservar Aptos:"/>
+                        <p:selectBooleanCheckbox  id="admReservarApto" value="#{usuarioMB.bean.administrarReservarApto}" />
+                        <p:message for="admReservarApto" />
+
+
+                    </h:panelGrid>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <h3>Permissão contas à receber:</h3>
+                    <h:panelGrid  columns="3" id="gridPermissoesContasReceber" >
+
+
+                        <h:outputLabel for="telaClientes" value="Cadastro de clientes:"/>
+                        <p:selectBooleanCheckbox  id="telaClientes" value="#{usuarioMB.bean.cliente}" />
+                        <p:message for="telaClientes" />
+
+                        <h:outputLabel for="telaIndices" value="Cadastro de índices:"/>
+                        <p:selectBooleanCheckbox  id="telaIndices" value="#{usuarioMB.bean.indice}" />
+                        <p:message for="telaIndices" />
+
+                        <h:outputLabel for="telaContrato" value="Cadastro de contratos:"/>
+                        <p:selectBooleanCheckbox  id="telaContrato" value="#{usuarioMB.bean.contrato}" />
+                        <p:message for="telaContrato" />
+                        
+                        <h:outputLabel for="telaContratoAluguel" value="Cadastro de contratos de aluguel:"/>
+                        <p:selectBooleanCheckbox  id="telaContratoAluguel" value="#{usuarioMB.bean.contratoAluguel}" />
+                        <p:message for="telaContratoAluguel" />
+                        
+                        <h:outputLabel for="telaParcelas" value="Cadastro de parcelas:"/>
+                        <p:selectBooleanCheckbox  id="telaParcelas" value="#{usuarioMB.bean.parcelas}" />
+                        <p:message for="telaParcelas" />
+
+                        <h:outputLabel for="telaReceb" value="Cadastro de recebimentos:"/>
+                        <p:selectBooleanCheckbox  id="telaReceb" value="#{usuarioMB.bean.recebimento}" />
+                        <p:message for="telaReceb" />
+
+                        <h:outputLabel for="telaGerarBoletos" value="Gerar Boletos:"/>
+                        <p:selectBooleanCheckbox  id="telaGerarBoletos" value="#{usuarioMB.bean.gerarBoleto}" />
+                        <p:message for="telaGerarBoletos" />
+
+                        <h:outputLabel for="telaGerarRemessa" value="Gerar Remessa:"/>
+                        <p:selectBooleanCheckbox  id="telaGerarRemessa" value="#{usuarioMB.bean.gerarRemessa}" />
+                        <p:message for="telaGerarRemessa" />
+
+                        <h:outputLabel for="telaGerencBoletos" value="Gerenciar boletos:"/>
+                        <p:selectBooleanCheckbox  id="telaGerencBoletos" value="#{usuarioMB.bean.gerenciarBoletos}" />
+                        <p:message for="telaGerencBoletos" />
+
+                        <h:outputLabel for="telaGerencRemessas" value="Gerenciar remessas:"/>
+                        <p:selectBooleanCheckbox  id="telaGerencRemessas" value="#{usuarioMB.bean.gerencRemessas}" />
+                        <p:message for="telaGerencRemessas" />
+
+                        <h:outputLabel for="telaProcessarRetorno" value="Processar retorno:"/>
+                        <p:selectBooleanCheckbox  id="telaProcessarRetorno" value="#{usuarioMB.bean.processarRetorno}" />
+                        <p:message for="telaProcessarRetorno" />
+
+                        <h:outputLabel for="tela2aViaBoletos" value="Gerar Segunda via boleto:"/>
+                        <p:selectBooleanCheckbox  id="tela2aViaBoletos" value="#{usuarioMB.bean.gerarSegundaViaBoletos}" />
+                        <p:message for="tela2aViaBoletos" />
+
+                        <h:outputLabel for="telaNegociacao" value="Negociação:"/>
+                        <p:selectBooleanCheckbox  id="telaNegociacao" value="#{usuarioMB.bean.renegociacao}" />
+                        <p:message for="telaNegociacao" />
+
+                        <h:outputLabel for="telaSessaoDireitos" value="Cessão de direitos"/>
+                        <p:selectBooleanCheckbox  id="telaSessaoDireitos" value="#{usuarioMB.bean.cessaoDireitos}" />
+                        <p:message for="telaSessaoDireitos" />
+
+                        <h:outputLabel for="telaRelParc" value="Relatório de parcelas:"/>
+                        <p:selectBooleanCheckbox  id="telaRelParc" value="#{usuarioMB.bean.relParcela}" />
+                        <p:message for="telaRelParc" />
+
+                        <h:outputLabel for="telaRelReceb" value="Relatório de recebimentos:"/>
+                        <p:selectBooleanCheckbox  id="telaRelReceb" value="#{usuarioMB.bean.relReceb}" />
+                        <p:message for="telaRelReceb" />
+
+                        <h:outputLabel for="telaRelSaldoDevedor" value="Relatório saldo devedor:"/>
+                        <p:selectBooleanCheckbox  id="telaRelSaldoDevedor" value="#{usuarioMB.bean.relSaldoDevedor}" />
+                        <p:message for="telaRelSaldoDevedor" />
+
+                        <h:outputLabel for="telaRelSaldoContrato" value="Relatório saldo contrato:"/>
+                        <p:selectBooleanCheckbox  id="telaRelSaldoContrato" value="#{usuarioMB.bean.relSaldoContrato}" />
+                        <p:message for="telaRelSaldoContrato" />
+                        
+                        <h:outputLabel for="telaRelGanhoFiannceiro" value="Relatório ganho financeiro:"/>
+                        <p:selectBooleanCheckbox  id="telaRelGanhoFiannceiro" value="#{usuarioMB.bean.relGanhoFinanceiro}" />
+                        <p:message for="telaRelGanhoFiannceiro" />
+
+
+                    </h:panelGrid>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <h3>Permissão contas à pagar:</h3>
+                    <h:panelGrid  columns="3" id="gridPermissoesContasAPagar" >
+
+                        <h:outputLabel for="telaUnidades" value="Unidades:"/>
+                        <p:selectBooleanCheckbox  id="telaUnidades" value="#{usuarioMB.bean.unidade}" />
+                        <p:message for="telaUnidades" />
+
+                        <h:outputLabel for="telaCategoria" value="Categorias:"/>
+                        <p:selectBooleanCheckbox  id="telaCategoria" value="#{usuarioMB.bean.categoria}" />
+                        <p:message for="telaCategoria" />
+
+                        <h:outputLabel for="telaFornecedor" value="Fornecedores:"/>
+                        <p:selectBooleanCheckbox  id="telaFornecedor" value="#{usuarioMB.bean.fornecedor}" />
+                        <p:message for="telaFornecedor" />
+
+                        <h:outputLabel for="telaDespesas" value="Despesasa:"/>
+                        <p:selectBooleanCheckbox  id="telaDespesas" value="#{usuarioMB.bean.notaFiscalCompra}" />
+                        <p:message for="telaDespesas" />
+
+                        <h:outputLabel for="telaParcelaPagar" value="Parcelas à pagar:"/>
+                        <p:selectBooleanCheckbox  id="telaParcelaPagar" value="#{usuarioMB.bean.parcelasAPagar}" />
+                        <p:message for="telaParcelaPagar" />
+
+                        <h:outputLabel for="controleDespesas" value="Controle de Despesas:"/>
+                        <p:selectBooleanCheckbox  id="controleDespesas" value="#{usuarioMB.bean.relDespesasPorCentroCusto}" />
+                        <p:message for="controleDespesas" />
+
+                        <h:outputLabel for="controleISS" value="Controle de ISS:"/>
+                        <p:selectBooleanCheckbox  id="controleISS" value="#{usuarioMB.bean.relControleISS}" />
+                        <p:message for="controleISS" />
+
+                    </h:panelGrid>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <h:commandButton styleClass="button" value="Salvar Usuario" action="#{usuarioMB.salvar}" />
+                </center>
+
+            </h:form>
+            <h:form>
+                <p:dataTable var="usu" value="#{usuarioMB.usuarios}" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{usu.nome}" />
+                    </p:column>
+
+                    <p:column headerText="Email" >
+                        <h:outputText value="#{usu.email}" />
+                    </p:column>
+
+                    <p:column headerText="Data cadastro" >
+                        <h:outputText value="#{usu.dataCadastro}" >
+                            <f:convertDateTime locale="pt_BR"  timeZone="GMT-3" pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+
+
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Editar" styleClass="ui-icon ui-icon-pencil" action="#{usuarioMB.editar(usu)}" ajax="false"/>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{usuarioMB.deletar(usu)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este cliente?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro de fornecedores</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formFornecedor')}">
+            <h:form id="form">
+                <center>
+                    <h1>Cadastro de Fornecedores</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid" >
+
+                        <p:outputLabel for="pessoa" value="Pessoa:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="pessoa" value="#{fornecedorMB.bean.pessoa}" panelStyle="width:auto;"
+                                         effect="fade" var="pes" filter="true" filterMatchMode="startsWith">
+                            <f:selectItem itemLabel="Selecione uma pessoa"/>
+                            <f:selectItems value="#{pessoaMB.pessoasNaoFornecedores}" var="p" itemLabel="#{p.name}" itemValue="#{p}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{pes.name}" />
+                            </p:column>
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{pes.cidade.name}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{pes.email}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="pessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel  for="nomeFornecedor" value="Editando fornecedor:" rendered="#{fornecedorMB.editando}"/>
+                        <h:inputText class="inputText" id="nomeFornecedor" value="#{fornecedorMB.bean.pessoa.name}" rendered="#{fornecedorMB.editando}" immediate="true" readonly="true"/>
+                        <p:message for="nomeFornecedor" rendered="#{fornecedorMB.editando}"/>
+
+                        <h:outputText value=" " rendered="#{fornecedorMB.editando}"/>
+                        
+                        <h:outputLabel for="categoria" value="Categoria:"/>
+                        <p:treeTable id="categoria" value="#{fornecedorMB.root}" var="cat"
+                                selectionMode="single"
+                                selection="#{fornecedorMB.selectedNode}" required="true" widgetVar="categoria" scrollable="true" scrollHeight="100" style="width: 300px;">
+                            <p:column headerText="categoria" >
+                                <h:outputText value="#{cat.name}" />
+                            </p:column>>
+                        </p:treeTable>
+                        <p:message for="categoria" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel  for="obsFornecedor" value="Observação:" />
+                        <p:inputTextarea id="obsFornecedor" value="#{fornecedorMB.bean.observacao}" />
+                        <p:message for="obsFornecedor" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                    <h:commandButton styleClass="button" value="Salvar Fornecedor" action="#{fornecedorMB.salvar}" />
+                </center>
+
+            </h:form>
+            <h:form>
+                <p:dataTable var="forn" value="#{fornecedorMB.fornecedores}" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{forn.pessoa.name}" />
+                    </p:column>
+
+                    <p:column headerText="Endereço" >
+                        <h:outputText value="#{forn.pessoa.endereco}" />
+                    </p:column>
+
+                    <p:column headerText="Celular" >
+                        <h:outputText value="#{forn.pessoa.tel2}" />
+                    </p:column>
+
+                    <p:column headerText="email" >
+                        <h:outputText value="#{forn.pessoa.email}" />
+                    </p:column>
+
+                    <p:column headerText="Categoria" >
+                        <h:outputText value="#{forn.categoria.name}" />
+                    </p:column>
+                    
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Editar" styleClass="ui-icon ui-icon-pencil" action="#{fornecedorMB.editar(forn.id)}" ajax="false" update=":form">
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{fornecedorMB.deletar(forn.id)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este fornecedor?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

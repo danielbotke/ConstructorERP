@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro unidades</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" >
+            <h:form>
+                <center>
+                    <h1>Cadastro de unidades</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel for="nmUnidade" value="Nome:"/>
+                        <h:inputText class="inputText" id="nmUnidade" value="#{unidadeMB.bean.name}" />
+                        <p:message for="nmUnidade" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="siglaUnidade" value="Sigla:"/>
+                        <h:inputText class="inputText" id="siglaUnidade" value="#{unidadeMB.bean.sigla}" maxlength="4" />
+                        <p:message for="siglaUnidade" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar Unidade" action="#{unidadeMB.salvar}"/>
+                </center>
+            </h:form>
+            <h:form id="formDt">
+                <p:dataTable id="unidadeDT" var="unid" value="#{unidadeMB.unidades}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{unid.name}" />
+                    </p:column>
+
+                    <p:column headerText="Sigla" >
+                        <h:outputText value="#{unid.sigla}" />
+                    </p:column>
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" action="#{unidadeMB.editar(unid)}" ajax="false">
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{unidadeMB.deletar(unid)}" ajax="false" >
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir esta unidade?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+

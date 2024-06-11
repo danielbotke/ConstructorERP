@@ -1,0 +1,361 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro de Pessoa Física</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo"  rendered="#{usuarioMB.temPermissao('formPessoaFisica')}">
+            <h:form>
+                <center>
+                    <h1>Cadastro de Pessoa Física</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid" >
+
+                        <h:outputLabel for="nmPessoa" value="Nome:"/>
+                        <h:inputText class="inputText" id="nmPessoa" value="#{pessoaFisicaMB.bean.name}" required="true"/>
+                        <p:message for="nmPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="sexoPessoa"  value="Sexo:"/>
+                        <h:selectOneMenu styleClass="selectOnMenu ui-selectonemenu-label ui-inputfield ui-corner-all" id="sexoPessoa" value="#{pessoaFisicaMB.bean.sexo}" >
+                            <f:selectItem itemValue="M" itemLabel="Masculino"/>
+                            <f:selectItem itemValue="F" itemLabel="Feminino"/>
+                        </h:selectOneMenu>
+                        <p:message for="sexoPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="endPessoa" value="Endereço:"/>
+                        <h:inputText class="inputText" id="endPessoa" value="#{pessoaFisicaMB.bean.endereco}" required="true"/>
+                        <p:message for="endPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="bairroPessoa" value="Bairro:"/>
+                        <h:inputText class="inputText" id="bairroPessoa" value="#{pessoaFisicaMB.bean.bairro}"  required="true"/>
+                        <p:message for="bairroPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cepPessoa" value="CEP:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask"  id="cepPessoa" value="#{pessoaFisicaMB.bean.CEP}" mask="99999-999" required="true"/>
+                        <p:message for="cepPessoa" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cidades" value="Cidade:"/>
+                        <p:selectOneMenu filter="true" styleClass="selectOnMenu" id="cidades" value="#{pessoaFisicaMB.bean.cidade}" required="true">
+                            <f:selectItems value="#{cidadeMB.cidades}" var="cidade" itemLabel="#{cidade.name} - #{cidade.estado.sigla}"/>
+                        </p:selectOneMenu>
+                        <p:message for="cidades" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="celPessoa" value="Celular:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="celPessoa" value="#{pessoaFisicaMB.bean.tel2}" mask="(999) 9999-9999?9"/>
+                        <p:message for="celPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="telPessoa" value="Tel. Residecial:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="telPessoa" value="#{pessoaFisicaMB.bean.tel1}" mask="(999) 9999-9999?9"/>
+                        <p:message for="telPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="emailPessoa" value="E-mail:"/>
+                        <h:inputText class="inputText" id="emailPessoa" value="#{pessoaFisicaMB.bean.email}" />
+                        <p:message for="emailPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cpfPessoa" value="CPF:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="cpfPessoa" value="#{pessoaFisicaMB.bean.CPF}" mask="999.999.999-99" required="true">
+                            <f:validator validatorId="custom.CPFValidator" />
+                        </p:inputMask>
+                        <p:message for="cpfPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="rgPessoa" value="RG:"/>
+                        <h:inputText class="inputText" id="rgPessoa" value="#{pessoaFisicaMB.bean.RG}" required="true"/>
+                        <p:message for="rgPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataNascPessoa"  value="Data nascimento:"/>                    
+                        <p:calendar styleClass="calendar" id="dataNascPessoa" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{pessoaFisicaMB.bean.dataNasc}"
+                                    mode="popup" showOn="button" required="true" maxdate="#{pessoaFisicaMB.maiorIdade}"/>
+                        <p:message for="dataNascPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="estCivilPessoa"  value="Estado civil:"/>
+                        <h:selectOneMenu styleClass="selectOnMenu ui-selectonemenu-label ui-inputfield ui-corner-all" id="estCivilPessoa" value="#{pessoaFisicaMB.bean.estadoCivil}" >
+                            <f:selectItem itemValue="1"  itemLabel="Solteiro(a)"/>
+                            <f:selectItem itemValue="2" itemLabel="Casado(a)" />
+                            <f:selectItem itemValue="3" itemLabel="Divorciado(a)"/>
+                            <f:selectItem itemValue="4" itemLabel="Viúvo(a)"/>
+                            <f:selectItem itemValue="5" itemLabel="União Estável"/>
+                        </h:selectOneMenu>
+                        <p:message for="estCivilPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="profPessoa" value="Profissão:"/>
+                        <h:inputText class="inputText" id="profPessoa" value="#{pessoaFisicaMB.bean.profissao}" />
+                        <p:message for="profPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>    
+
+                        <h:outputLabel for="empPessoa" value="Empresa:"/>
+                        <h:inputText class="inputText" id="empPessoa" value="#{pessoaFisicaMB.bean.empresa}" />
+                        <p:message for="empPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="telComPessoa" value="Tel. Comercial:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="telComPessoa" value="#{pessoaFisicaMB.bean.telCom}" mask="(999) 9999-9999?9"/>
+                        <p:message for="telComPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="nacPessoa" value="Nacionalidade:"/>
+                        <h:inputText class="inputText" id="nacPessoa" value="#{pessoaFisicaMB.bean.nacionalidade}" />
+                        <p:message for="nacPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="endCom" value="Endereço Comercial:"/>
+                        <h:inputText class="inputText" id="endCom" value="#{pessoaFisicaMB.bean.enderecoCom}" />
+                        <p:message for="endCom" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cepComPessoa" value="CEP:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask"  id="cepComPessoa" value="#{pessoaFisicaMB.bean.CEPCom}" mask="99999-999"/>
+                        <p:message for="cepComPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="bairroComPessoa" value="Bairro:"/>
+                        <h:inputText class="inputText" id="bairroComPessoa" value="#{pessoaFisicaMB.bean.bairroCom}" />
+                        <p:message for="bairroComPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cidadesCom"  value="Cidade:"/>
+                        <p:selectOneMenu filter="true" styleClass="selectOnMenu" id="cidadesCom" value="#{pessoaFisicaMB.bean.cidadeCom}">
+                            <f:selectItem itemLabel="Selecione uma cidade" itemValue="#{null}"/>
+                            <f:selectItems value="#{cidadeMB.cidades}" var="cidadeCom" itemLabel="#{cidadeCom.name} - #{cidadeCom.estado.sigla}"/>
+                        </p:selectOneMenu>
+                        <p:message for="cidadesCom" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataCasPessoa"  value="Data de casamento:"/>                    
+                        <p:calendar styleClass="calendar" id="dataCasPessoa" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{pessoaFisicaMB.bean.dataCasam}"
+                                    mode="popup" showOn="button" maxdate="#{pessoaFisicaMB.hoje}"/>
+                        <p:message for="dataCasPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="regBensPessoa" value="Regime de Bens:"/>
+                        <h:selectOneMenu styleClass="selectOnMenu ui-selectonemenu-label ui-inputfield ui-corner-all" id="regBensPessoa" value="#{pessoaFisicaMB.bean.regBens}" >
+                            <f:selectItem itemValue="0" itemLabel="Selecione"/>
+                            <f:selectItem itemValue="1" itemLabel="Comunão Parcial"/>
+                            <f:selectItem itemValue="2" itemLabel="Comunhão Universal" />
+                            <f:selectItem itemValue="3" itemLabel="Separação de bens"/>
+                            <f:selectItem itemValue="4" itemLabel="Participação final nos aquestos"/>
+                        </h:selectOneMenu>
+                        <p:message for="regBensPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <tr><td colspan="8" style="text-align: center"><h3>Dados do Cônjuge</h3></td></tr>
+
+                        <h:outputLabel for="nmConjugePessoa" value="Nome:"/>
+                        <h:inputText class="inputText" id="nmConjugePessoa" value="#{pessoaFisicaMB.bean.nameConjuge}" />
+                        <p:message for="nmConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="sexoConjPessoa"  value="Sexo:"/>
+                        <h:selectOneMenu styleClass="selectOnMenu ui-selectonemenu-label ui-inputfield ui-corner-all" id="sexoConjPessoa" value="#{pessoaFisicaMB.bean.sexoConjuge}" >
+                            <f:selectItem itemValue="*" itemLabel="Selecione"/>
+                            <f:selectItem itemValue="M" itemLabel="Masculino"/>
+                            <f:selectItem itemValue="F" itemLabel="Feminino"/>
+                        </h:selectOneMenu>
+                        <p:message for="sexoConjPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="endConjugePessoa" value="Endereço:"/>
+                        <h:inputText class="inputText" id="endConjugePessoa" value="#{pessoaFisicaMB.bean.enderecoConjuge}" />
+                        <p:message for="endConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="bairroConjugePessoa" value="Bairro:"/>
+                        <h:inputText class="inputText" id="bairroConjugePessoa" value="#{pessoaFisicaMB.bean.bairroConjuge}"  />
+                        <p:message for="bairroConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cepConjugePessoa" value="CEP:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="cepConjugePessoa" value="#{pessoaFisicaMB.bean.CEPConjuge}" mask="99999-999" />
+                        <p:message for="cepConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cidadesConjuge" value="Cidade:"/>
+                        <p:selectOneMenu filter="true" styleClass="selectOnMenu" id="cidadesConjuge" value="#{pessoaFisicaMB.bean.cidadeConjuge}" >
+                            <f:selectItem itemLabel="Selecione uma cidade" itemValue="#{null}"/>
+                            <f:selectItems value="#{cidadeMB.cidades}" var="cidade" itemLabel="#{cidade.name}  - #{cidade.estado.sigla}" />
+                        </p:selectOneMenu>
+                        <p:message for="cidadesConjuge" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="celConjugePessoa" value="Celular:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="celConjugePessoa" value="#{pessoaFisicaMB.bean.celConjuge}" mask="(999) 9999-9999?9" />
+                        <p:message for="celConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="telConjugePessoa" value="Tel. Residecial:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="telConjugePessoa" value="#{pessoaFisicaMB.bean.telResConjuge}" mask="(999) 9999-9999?9" />
+                        <p:message for="telConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cpfConjugePessoa" value="CPF:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="cpfConjugePessoa" value="#{pessoaFisicaMB.bean.CPFConjuge}" mask="999.999.999-99" />
+                        <p:message for="cpfConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="rgConjugePessoa" value="RG:"/>
+                        <h:inputText class="inputText" id="rgConjugePessoa" value="#{pessoaFisicaMB.bean.RGConjuge}" />
+                        <p:message for="rgConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataNascConjugePessoa"  value="Data nascimento:"/>                    
+                        <p:calendar styleClass="calendar" id="dataNascConjugePessoa" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{pessoaFisicaMB.bean.dataNascConjuge}"
+                                    mode="popup" showOn="button" />
+                        <p:message for="dataNascConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="emailConjugePessoa" value="E-mail:"/>
+                        <h:inputText class="inputText" id="emailConjugePessoa" value="#{pessoaFisicaMB.bean.emailConjuge}" />
+                        <p:message for="emailConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="empConjugePessoa" value="Empresa:"/>
+                        <h:inputText class="inputText" id="empConjugePessoa" value="#{pessoaFisicaMB.bean.empresaConjuge}" />
+                        <p:message for="empConjugePessoa" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="profConjugePessoa" value="Profissão:"/>
+                        <h:inputText class="inputText" id="profConjugePessoa" value="#{pessoaFisicaMB.bean.profissaoConjuge}" />
+                        <p:message for="profConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="telComConjugePessoa" value="Tel. Comercial:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="telComConjugePessoa" value="#{pessoaFisicaMB.bean.telComConjuge}" mask="(999) 9999-9999?9" />
+                        <p:message for="telComConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="nacConjugePessoa" value="Nacionalidade:"/>
+                        <h:inputText class="inputText"  id="nacConjugePessoa" value="#{pessoaFisicaMB.bean.nacionalidadeConjuge}" />
+                        <p:message for="nacConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="endComConjuge" value="Endereço Comercial:"/>
+                        <h:inputText class="inputText" id="endComConjuge" value="#{pessoaFisicaMB.bean.enderecoComConjuge}" />
+                        <p:message for="endComConjuge" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cepComConjugePessoa" value="CEP:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="cepComConjugePessoa" value="#{pessoaFisicaMB.bean.CEPComConjuge}" mask="99999-999" />
+                        <p:message for="cepComConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="bairroComConjugePessoa" value="Bairro:"/>
+                        <h:inputText class="inputText" id="bairroComConjugePessoa" value="#{pessoaFisicaMB.bean.bairroComConjuge}" />
+                        <p:message for="bairroComConjugePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cidadesComConjuge"  value="Cidade:"/>
+                        <p:selectOneMenu filter="true" styleClass="selectOnMenu" id="cidadesComConjuge" value="#{pessoaFisicaMB.bean.cidadeComConjuge}" >
+                            <f:selectItem itemLabel="Selecione uma cidade" itemValue="#{null}"/>
+                            <f:selectItems value="#{cidadeMB.cidades}" var="cidadeCom" itemLabel="#{cidadeCom.name}  - #{cidadeCom.estado.sigla}"/>
+                        </p:selectOneMenu>
+                        <p:message for="cidadesComConjuge" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    </h:panelGrid>
+                    <h:commandButton styleClass="button" value="Salvar Pessoa" action="#{pessoaFisicaMB.salvar}" />
+                </center>
+
+            </h:form>
+            <h:form>
+                <p:dataTable var="p" value="#{pessoaFisicaMB.pessoaFisicas}" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{p.name}" />
+                    </p:column>
+
+                    <p:column headerText="Endereço" >
+                        <h:outputText value="#{p.endereco}" />
+                    </p:column>
+
+                    <p:column headerText="Celular" >
+                        <h:outputText value="#{p.tel2}" />
+                    </p:column>
+
+                    <p:column headerText="email" >
+                        <h:outputText value="#{p.email}" />
+                    </p:column>
+
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Editar" styleClass="ui-icon ui-icon-pencil" action="#{pessoaFisicaMB.editar(p)}" ajax="false"/>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{pessoaFisicaMB.deletar(p)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este cliente?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

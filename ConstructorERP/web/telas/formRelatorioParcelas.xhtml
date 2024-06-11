@@ -1,0 +1,314 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Consultar parcelas</title>
+    </h:head>
+    <ui:composition template="relatorios.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formRelatorioParcelas')}">
+            <h:form id="formRel">
+                <center>
+                    <h1>Consultar parcelas</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <p:outputLabel for="cliente" value="Cliente:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="cliente" value="#{relatorioParcelasMB.cliente}" panelStyle="width:auto;"
+                                         effect="fade" var="c" filter="true" filterMatchMode="startsWith" immediate="true">
+                            <f:selectItem itemLabel="Selecione um cliente"/>
+                            <f:selectItems value="#{clienteMB.clientes}" var="cli" itemLabel="#{cli.pessoa.name}" itemValue="#{cli}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{c.pessoa.name}" />
+                            </p:column>
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{c.pessoa.cidade.name}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{c.pessoa.email}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="cliente" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="predios" value="Predio:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{relatorioParcelasMB.predio}"  >
+                            <p:ajax update="blocos" listener="#{relatorioParcelasMB.onPredioSelecionado}" event="change"/>
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="blocos" value="Bloco:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="blocos" value="#{relatorioParcelasMB.bloco}" >
+                            <p:ajax event="change" listener="#{relatorioParcelasMB.onBlocoSelecionado}" update="apartamento" />
+                            <f:selectItem itemLabel="Selecione um bloco" itemValue="#{null}"/> 
+                            <f:selectItems value="#{relatorioParcelasMB.blocosPredio}" var="bloco" itemValue="#{bloco}" itemLabel="#{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="apartamento" value="Apartamento:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="apartamento" value="#{relatorioParcelasMB.apartamento}" >
+                           <f:selectItem itemLabel="Selecione um apartamento" itemValue="#{null}"/> 
+                           <f:selectItems value="#{relatorioParcelasMB.apartamentosBloco}" var="apto" itemValue="#{apto}" itemLabel="#{apto.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="apartamento" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataInicioRel"  value="De:"/>                    
+                        <p:calendar styleClass="calendar" id="dataInicioRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{relatorioParcelasMB.de}"
+                                    mode="popup" showOn="button" required="true">
+                        </p:calendar>
+                        <p:message for="dataInicioRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataFimRel"  value="Até:"/>                    
+                        <p:calendar styleClass="calendar" id="dataFimRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{relatorioParcelasMB.ate}"
+                                    mode="popup" showOn="button" required="true">
+                        </p:calendar>
+                        <p:message for="dataFimRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                    <h:commandButton styleClass="button" value="Carregar" action="#{relatorioParcelasMB.carregar}" />
+                </center>
+
+            </h:form>
+            <h:form id="formDataRel">
+                <h3>Parcelas pagas</h3>
+                <p:dataTable id="tblPagas" var="parcelaPaga" value="#{relatorioParcelasMB.parcelasPagas}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="10" style="margin-bottom:20px" sortMode="multiple">
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblPagas" fileName="Parcelas pagas" />
+                        </h:commandLink>
+
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/pdf.png" width="24"/>
+                            <p:dataExporter type="pdf" target="tblPagas" fileName="Parcelas pagas"/>
+                        </h:commandLink>
+
+                    </f:facet>
+
+                    <p:column sortBy="#{parcelaPaga.contrato.apartamentosDesc()}">
+                        <f:facet name="header">
+                            <h:outputText value="Unidade" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaPaga.contrato.apartamentosDesc()} - #{parcelaPaga.contrato.nomePrimeiroCliente()}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaPaga.numeracao}">
+                        <f:facet name="header">
+                            <h:outputText value="Numeração" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaPaga.numeracao}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaPaga.valorParcela}">
+                        <f:facet name="header">
+                            <h:outputText value="Valor" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaPaga.valorParcela}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaPaga.fatorIndice}">
+                        <f:facet name="header">
+                            <h:outputText value="Fat. Mult." />
+                        </f:facet>
+                        <h:outputText value="#{parcelaPaga.fatorIndice}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="4"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaPaga.dataVencimento}">
+                        <f:facet name="header">
+                            <h:outputText value="Vencimento" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaPaga.dataVencimento}" >
+                            <f:convertDateTime type="date" locale="pt"   timeZone="America/Sao_Paulo" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaPaga.descricao}">
+                        <f:facet name="header">
+                            <h:outputText value="Desc." />
+                        </f:facet>
+                        <h:outputText value="#{parcelaPaga.descricao}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaPaga.valorFixo}">
+                        <f:facet name="header">
+                            <h:outputText value="Correção" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaPaga.valorFixo ? 'Fico': parcelaPaga.tipoIndice.name}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaPaga.situacao}">
+                        <f:facet name="header">
+                            <h:outputText value="Situação" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaPaga.situacao == 0 ? 'Aberta': ''}" />
+                        <h:outputText value="#{parcelaPaga.situacao == 1 ? 'Parcial': ''}"/>
+                        <h:outputText value="#{parcelaPaga.situacao == 2 ? 'Paga': ''}" />
+                        <h:outputText value="#{parcelaPaga.situacao == 3 ? 'Renegociada': ''}" />
+                        <h:outputText value="#{parcelaPaga.situacao == 4 ? 'Cancelada': ''}" />
+                        <h:outputText value="#{parcelaPaga.situacao == 5 ? 'Renegociada SD': ''}" />
+                        <h:outputText value="#{parcelaPaga.situacao == 6 ? 'Protestada': ''}" />
+                    </p:column>
+
+
+                </p:dataTable>
+                <h3>Parcelas em aberto</h3>
+                <p:dataTable id="tblAbertas" var="parcelaAberta" value="#{relatorioParcelasMB.parcelasAbertas}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="10" style="margin-bottom:20px" sortMode="multiple">
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblAbertas" fileName="Parcelas Abertas" />
+                        </h:commandLink>
+
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/pdf.png" width="24"/>
+                            <p:dataExporter type="pdf" target="tblAbertas" fileName="Parcelas Abertas"/>
+                        </h:commandLink>
+
+                    </f:facet>
+
+                    <p:column sortBy="#{parcelaAberta.contrato.apartamentosDesc()}">
+                        <f:facet name="header">
+                            <h:outputText value="Unidade" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.contrato.apartamentosDesc()} - #{parcelaAberta.contrato.nomePrimeiroCliente()}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.numeracao}">
+                        <f:facet name="header">
+                            <h:outputText value="Numeração" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.numeracao}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.valorParcela}">
+                        <f:facet name="header">
+                            <h:outputText value="Valor da parcela" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.valorParcela}"  >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Saldo à pagar" sortBy="#{parcelaAberta.saldoParcela()}">
+                        <h:outputText value="#{parcelaAberta.saldoParcela()}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.fatorIndice}">
+                        <f:facet name="header">
+                            <h:outputText value="Fat. Mult." />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.fatorIndice}"  >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="4"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.dataVencimento}">
+                        <f:facet name="header">
+                            <h:outputText value="Data de vencimento" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.dataVencimento}" >
+                            <f:convertDateTime type="date" locale="pt"   timeZone="America/Sao_Paulo" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.descricao}">
+                        <f:facet name="header">
+                            <h:outputText value="Decrição" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.descricao}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.valorFixo}">
+                        <f:facet name="header">
+                            <h:outputText value="Correção" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.valorFixo ? 'Fixo': parcelaAberta.tipoIndice.name}" />
+                    </p:column>
+
+                    <p:column sortBy="#{parcelaAberta.situacao}">
+                        <f:facet name="header">
+                            <h:outputText value="Situação" />
+                        </f:facet>
+                        <h:outputText value="#{parcelaAberta.situacao == 0 ? 'Aberta': ''}" />
+                        <h:outputText value="#{parcelaAberta.situacao == 1 ? 'Parcial': ''}"/>
+                        <h:outputText value="#{parcelaAberta.situacao == 2 ? 'Paga': ''}" />
+                        <h:outputText value="#{parcelaAberta.situacao == 3 ? 'Renegociada': ''}" />
+                        <h:outputText value="#{parcelaAberta.situacao == 4 ? 'Cancelada': ''}" />
+                        <h:outputText value="#{parcelaAberta.situacao == 5 ? 'Renegociada SD': ''}" />
+                        <h:outputText value="#{parcelaAberta.situacao == 6 ? 'Protestada': ''}" />
+                    </p:column>
+                </p:dataTable>
+
+                <center>
+                    <p:chart id="grafico" type="pie" model="#{relatorioParcelasMB.totalizadores}" style="width:400px;height:300px" />
+
+                    <h:panelGrid columns="7" id="totalizadores">
+
+                        <h:outputLabel for="totalParcelasPagas" value="Total parcelas pagas:"/>
+                        <h:inputText class="inputText" id="totalParcelasPagas" value="#{relatorioParcelasMB.totalParcelasPagas}" readonly="true" >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:inputText>
+                        <p:message for="totalParcelasPagas" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="totalCUBParcelasPagas" value="Total CUBs pagos:"/>
+                        <h:inputText class="inputText" id="totalCUBParcelasPagas" value="#{relatorioParcelasMB.totalFatorIndiceParcelasPagas}" readonly="true" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="totalCUBParcelasPagas" />
+
+                        <h:outputLabel for="totalParcelasAtrasadas" value="Total parcelas em aberto:"/>
+                        <h:inputText class="inputText" id="totalParcelasAtrasadas" value="#{relatorioParcelasMB.totalParcelasAbertas}" readonly="true" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:inputText>
+                        <p:message for="totalParcelasAtrasadas" />
+
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+                        <h:outputLabel for="totalCUBParcelasAbertas" value="Total CUBs em aberto:"/>
+                        <h:inputText class="inputText" id="totalCUBParcelasAbertas" value="#{relatorioParcelasMB.totalCUBParcelasAbertas}" readonly="true" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                        </h:inputText>
+                        <p:message for="totalCUBParcelasAbertas" />
+
+
+                    </h:panelGrid>
+                </center>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

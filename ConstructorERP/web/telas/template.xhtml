@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <link rel="shortcut icon" type="image/x-icon" href="../resources/fvicon.ico"/>
+        <meta http-equiv="X-UA-Compatible" content="IE-10; IE=9; IE=8; IE=EDGE" /> 
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Sistema M7</title>
+        <link href="../styles.css" type="text/css" rel="stylesheet"/>
+        <script src="../resources/pt_locale.js"/>
+    </h:head>
+
+    <h:body> 
+
+        <f:view encoding="ISO-8859-1">
+            <div class="topoCentral" >
+                <h:graphicImage id="menuBtn" value="../resources/images/menu.png" class="btnMenu" title="Menu" rendered="#{!usuarioMB.temPermissao('isImobiliaria')}" />
+                <a href="index.jsf" style="display: inline;"><img src="../resources/images/logoM7.png" class="logoWeb" alt="Logo"/></a>
+
+                <p:overlayPanel id="menuPanel" for="menuBtn" showEffect="drop" hideEffect="drop" dismissable="true" style="left: 0px; top: 5.5%;">
+                    <h:form>
+                        <p:menu styleClass="menu">
+                            <p:submenu label="Cadastros" >
+                                <p:menuitem value="Usuário" icon="ui-icon-carat-1-e" action="#{usuarioMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formUsuario')}"/>
+                                <p:menuitem value="Localidades" icon="ui-icon-carat-1-e" action="#{paisMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formLocalidades')}"/>
+                                <p:menuitem value="Pessoa Física"  icon="ui-icon-carat-1-e" action="#{pessoaFisicaMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formPessoaFisica')}"/>
+                                <p:menuitem value="Pessoa Jurídica"  icon="ui-icon-carat-1-e" action="#{pessoaJuridicaMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formPessoaJuridica')}"/>
+                                <p:menuitem value="Empreendimentos"  icon="ui-icon-carat-1-e" action="#{predioMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formPredio')}"/>
+                                <p:menuitem value="Relatórios"  icon="ui-icon-carat-1-e" outcome="/telas/relatorios" rendered="#{usuarioMB.temPermissao('formRelatorioParcelas') or 
+                                                                                                                                 usuarioMB.temPermissao('formRelatorioRecebimentos') or
+                                                                                                                                 usuarioMB.temPermissao('formRelatorioSaldoDevedor') or
+                                                                                                                                 usuarioMB.temPermissao('formRelatorioSaldoContrato') or
+                                                                                                                                 usuarioMB.temPermissao('formRelatorioDespesasPorCentroCusto') or
+                                                                                                                                 usuarioMB.temPermissao('formRelatorioControleISS')}">
+                                    <f:param name="i" value="99" />
+                                </p:menuitem>
+                                <p:menuitem value="Enviar campanha"  icon="ui-icon-carat-1-e" outcome="/telas/formEnvioEmail" rendered="#{usuarioMB.temPermissao('formEnviarCampanha')}"/>
+                                <p:menuitem value="Reservar apartamento"  icon="ui-icon-carat-1-e" outcome="/telas/formReservaApto" rendered="#{usuarioMB.temPermissao('formReservarApto')}"/>
+
+                            </p:submenu>
+                            <p:submenu label="Contas à receber" >
+                                <p:menuitem value="Clientes"  icon="ui-icon-carat-1-e" action="#{clienteMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formClientes')}"/>
+                                <p:menuitem value="Índices"  icon="ui-icon-carat-1-e" action="#{tipoIndiceMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formIndices')}"/>
+                                <p:menuitem value="Contratos de Venda"  icon="ui-icon-carat-1-e" action="#{contratoMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formContrato')}"/>
+                                <p:menuitem value="Contratos de Aluguel"  icon="ui-icon-carat-1-e" action="#{contratoAluguelMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formContratoAluguel')}"/>
+                                <p:menuitem value="Cessão de direitos"  icon="ui-icon-carat-1-e" action="#{sessaoDireitosMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formCessaoDireitos')}"/>
+                                <p:menuitem value="Parcelas à receber"  icon="ui-icon-carat-1-e" action="#{parcelaMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formParcelas')}"/>
+                                <p:menuitem value="Recebimentos"  icon="ui-icon-carat-1-e" action="#{recebimentoMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formRecebimento')}"/>
+                                <p:menuitem value="Gerar boletos"  icon="ui-icon-carat-1-e" action="#{gerarBoletosMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formGerarBoletos')}"/>
+                                <p:menuitem value="Gerar Segunda via boleto"  icon="ui-icon-carat-1-e" outcome="/telas/formGerarSegundaViaBoletos" ajax="false" rendered="#{usuarioMB.temPermissao('formGerarSegundaViaBoletos')}"/>
+                                <p:menuitem value="Gerenciar boletos"  icon="ui-icon-carat-1-e" action="#{gerarBoletosMB.gerenciarBoletos}" ajax="false" rendered="#{usuarioMB.temPermissao('formGerencBoletos')}"/>
+                                <p:menuitem value="Gerar remessa"  icon="ui-icon-carat-1-e" action="#{remessaBancariaMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formGerarRemessa')}"/>
+                                <p:menuitem value="Gerenciar remessas"  icon="ui-icon-carat-1-e" outcome="/telas/formGerencRemessas" ajax="false" rendered="#{usuarioMB.temPermissao('formGerencRemessas')}"/>
+                                <p:menuitem value="Processar retorno"  icon="ui-icon-carat-1-e" action="#{retornoMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formProcessarRetorno')}"/>
+                            </p:submenu>
+                            <p:submenu label="Contas à pagar" >
+                                <p:menuitem value="Centro de Custo"  icon="ui-icon-carat-1-e" action="#{categoriaMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formCategoria')}"/>
+                                <p:menuitem value="Fornecedores"  icon="ui-icon-carat-1-e" action="#{fornecedorMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formFornecedor')}"/>
+                                <p:menuitem value="Despesas"  icon="ui-icon-carat-1-e" action="#{notaFiscalCompraMB.novoDespesas}" ajax="false" rendered="#{usuarioMB.temPermissao('formNotaFiscalCompra')}"/>
+                                <p:menuitem value="Parcelas à pagar"  icon="ui-icon-carat-1-e" action="#{parcelaAPagarMB.novo}" ajax="false" rendered="#{usuarioMB.temPermissao('formParcelaAPagar')}"/>
+                            </p:submenu>
+                        </p:menu>
+                    </h:form>
+                </p:overlayPanel>
+            </div>
+            <ui:insert name="menuRel"/>
+
+
+
+            <div class="corpo">
+                <h:form id="mensage">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                    <p:growl id="msgs" showDetail="true" />
+                </h:form>
+                <ui:insert name="corpo">
+                
+                </ui:insert>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+            </div>
+        </f:view>
+
+    </h:body>
+</html>

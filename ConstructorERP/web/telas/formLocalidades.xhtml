@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro de localidades</title>
+    </h:head>
+    <ui:composition template="template.xhtml" >
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formLocalidades')}">
+            <h:form>
+                <center>
+                    <h2>Cadastro de Paises</h2>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="6" id="grid">
+                        <h:outputLabel value="País:"/>
+                        <h:inputText class="inputText" id="pais" value="#{paisMB.bean.name}" required="true"/>
+                        <p:message for="pais" />
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar País" action="#{paisMB.salvar}"/>
+                </center>
+            </h:form>
+            <p>&nbsp;</p>
+            <hr/>
+            <p>&nbsp;</p>
+            <h:form>
+                <center>
+                    <h2>Cadastro de Estados</h2>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel value="País:"/>
+                        <p:selectOneMenu filter="true" styleClass="selectOnMenu" id="paises" value="#{estadoMB.bean.pais}" >
+                            <f:selectItems value="#{paisMB.paises}" var="pais" itemLabel="#{pais.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="paises" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel value="Nome:"/>
+                        <h:inputText class="inputText" id="nmEstado" value="#{estadoMB.bean.name}" />
+                        <p:message for="nmEstado" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel value="Sigla:"/>
+                        <h:inputText class="inputText" id="sgEstado" value="#{estadoMB.bean.sigla}" />
+                        <p:message for="sgEstado" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar Estado" action="#{estadoMB.salvar}"/>
+                </center>
+            </h:form>
+            <p>&nbsp;</p>
+            <hr/>
+            <p>&nbsp;</p>
+            <h:form>
+                <center>
+                    <h2>Cadastro de Cidades</h2>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <h:outputLabel value="Estado:"/>
+                        <p:selectOneMenu filter="true" styleClass="selectOnMenu" id="estados" value="#{cidadeMB.bean.estado}" required="true">
+                            <f:selectItems value="#{estadoMB.estados}" var="estado" itemLabel="#{estado.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="estados" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel value="Nome:"/>
+                        <h:inputText class="inputText" id="nmCidade" value="#{cidadeMB.bean.name}" />
+                        <p:message for="nmCidade" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar Cidade" action="#{cidadeMB.salvar}"/>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+

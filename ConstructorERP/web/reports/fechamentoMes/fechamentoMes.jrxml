@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="85ac2819-0869-4d91-b913-99cfd0f84891">
+	<property name="ireport.zoom" value="1.0000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="dataIni" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataFim" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT distinct r.id, r.dataPagamento as 'dataRecebimento', 
+r.valorRecebido + r.valorMulta + r.valorJuros as 'totalRecebido', 
+CASE WHEN r.formaPagamento = 1 THEN 'Boleto' 
+     WHEN r.formaPagamento = 2 THEN 'Em mãos'
+     WHEN r.formaPagamento = 3 THEN 'Depósito'
+     WHEN r.formaPagamento = 4 THEN 'Bem'
+     WHEN r.formaPagamento = 5 THEN 'Permuta'
+     WHEN r.formaPagamento = 6 THEN 'Serviço'
+ ELSE 'Outros' END as 'formaPagamento',
+p.dataVencimento as 'dataVencimento', 
+p.numeracao as 'numeracao',
+CASE WHEN p.situacao = 1 THEN 'Parcial' 
+     WHEN p.situacao = 2 THEN 'Paga' 
+ ELSE '' END as 'situacaoParc',
+a.name as 'apart',
+b.identificacao as 'bloco',
+pr.name as 'predio'
+FROM recebimento r left join parcela p on r.parcela_id = p.id left join contrato c on p.contratoParc_id = c.id left join apartamento a on c.id = a.contratoApart_id left join bloco b on a.bloco_id = b.id left join predio pr on b.predio_id = pr.id
+where
+r.dataPagamento >= $P{dataIni} and  r.dataPagamento <= $P{dataFim}
+group by r.id
+order by pr.name, CAST(a.name as SIGNED), b.identificacao, p.numeracao]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="dataRecebimento" class="java.sql.Timestamp"/>
+	<field name="totalRecebido" class="java.lang.Double"/>
+	<field name="formaPagamento" class="java.lang.String"/>
+	<field name="dataVencimento" class="java.sql.Date"/>
+	<field name="numeracao" class="java.lang.String"/>
+	<field name="situacaoParc" class="java.lang.String"/>
+	<field name="apart" class="java.lang.String"/>
+	<field name="bloco" class="java.lang.String"/>
+	<field name="predio" class="java.lang.String"/>
+	<variable name="totalRecebidoPredio" class="java.lang.Double" resetType="Group" resetGroup="predio" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalRecebido}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double( 0 )]]></initialValueExpression>
+	</variable>
+	<variable name="totalRecebidoMes" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalRecebido}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double( 0 )]]></initialValueExpression>
+	</variable>
+	<group name="predio">
+		<groupExpression><![CDATA[$F{predio}]]></groupExpression>
+		<groupHeader>
+			<band height="53">
+				<frame>
+					<reportElement uuid="89f3c69d-acb2-4d94-863c-f90212a3dbbc" mode="Opaque" x="0" y="7" width="555" height="24" forecolor="#B89F7D" backcolor="#000000"/>
+					<textField isStretchWithOverflow="true">
+						<reportElement uuid="d0c50654-0529-4639-b1b2-60922b1fc974" style="SubTitle" isPrintRepeatedValues="false" x="2" y="0" width="479" height="24" forecolor="#FFFFFF"/>
+						<textElement>
+							<font isBold="false"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{predio}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<staticText>
+					<reportElement uuid="06c353c3-0b6c-4e94-bfb1-c493a205b10b" style="Column header" x="2" y="31" width="111" height="18" forecolor="#000000"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Ap.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="06c353c3-0b6c-4e94-bfb1-c493a205b10b" style="Column header" x="113" y="31" width="57" height="18" forecolor="#000000"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Parc.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="06c353c3-0b6c-4e94-bfb1-c493a205b10b" style="Column header" x="170" y="31" width="111" height="18" forecolor="#000000"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Vencimento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="06c353c3-0b6c-4e94-bfb1-c493a205b10b" style="Column header" x="281" y="31" width="98" height="18" forecolor="#000000"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Valor recebido]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="06c353c3-0b6c-4e94-bfb1-c493a205b10b" style="Column header" x="442" y="31" width="67" height="18" forecolor="#000000"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Data receb.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="06c353c3-0b6c-4e94-bfb1-c493a205b10b" style="Column header" x="379" y="31" width="63" height="18" forecolor="#000000"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Forma]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="06c353c3-0b6c-4e94-bfb1-c493a205b10b" style="Column header" x="509" y="31" width="44" height="18" forecolor="#000000"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Sit.]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00">
+					<reportElement uuid="ef2f24e3-c392-4a07-bc3c-4097ba5df0cf" style="Detail" positionType="Float" x="281" y="2" width="152" height="18"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalRecebidoPredio}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+					<reportElement uuid="36063d02-218a-4554-a0b8-4df33ca0ead3" style="Detail" positionType="Float" x="170" y="2" width="111" height="18"/>
+					<textElement>
+						<font size="14" isBold="true" isUnderline="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total " + $F{predio} + ":"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="133" splitType="Stretch">
+			<frame>
+				<reportElement uuid="e724a83e-b2fe-449b-8f63-e83f5805c578" mode="Opaque" x="0" y="0" width="410" height="95" backcolor="#000000"/>
+				<staticText>
+					<reportElement uuid="699bacb2-e5ab-415c-86f3-d1d9ed76b325" style="Title" x="35" y="0" width="344" height="66"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Fechamento mês
+                    ]]></text>
+				</staticText>
+				<textField pattern="MMM-yy">
+					<reportElement uuid="f6f2d999-fcba-4252-851e-1d8998eb2254" style="SubTitle" x="159" y="66" width="249" height="29"/>
+					<textElement>
+						<font size="22" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{dataIni}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<elementGroup>
+				<frame>
+					<reportElement uuid="b5940559-9d27-4109-9bcc-54eb499ce8af" mode="Opaque" x="0" y="100" width="555" height="32" forecolor="#000000" backcolor="#E30B0B"/>
+					<textField pattern="dd-MMM-yy">
+						<reportElement uuid="652c4352-470f-4828-a740-32d8eaa2742f" x="409" y="12" width="144" height="20" forecolor="#FFFFFF"/>
+						<textElement textAlignment="Right">
+							<font size="12"/>
+						</textElement>
+						<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+					</textField>
+				</frame>
+			</elementGroup>
+			<image>
+				<reportElement uuid="2280eb1f-abd6-47ae-a1cb-2a5280b89309" x="420" y="16" width="135" height="62"/>
+				<imageExpression><![CDATA["logoM7.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<frame>
+				<reportElement uuid="0373d50f-9883-4766-8a0e-7e1c95788cf8" style="Row" mode="Opaque" x="0" y="0" width="555" height="18"/>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+					<reportElement uuid="7d6e84bb-d3ca-41b5-824e-b70449fb51d9" style="Detail" positionType="Float" x="442" y="0" width="67" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{dataRecebimento}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="67f5cc17-e6a8-4a96-bea0-bc0e1084be5d" style="Detail" positionType="Float" x="113" y="0" width="57" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{numeracao}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="01d746b1-ee74-4b1d-93a0-fa0b5736751b" style="Detail" positionType="Float" x="2" y="0" width="111" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{apart}+$F{bloco}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+					<reportElement uuid="36063d02-218a-4554-a0b8-4df33ca0ead3" style="Detail" positionType="Float" x="170" y="0" width="111" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{dataVencimento}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00">
+					<reportElement uuid="ef2f24e3-c392-4a07-bc3c-4097ba5df0cf" style="Detail" positionType="Float" x="281" y="0" width="98" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{totalRecebido}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+					<reportElement uuid="7d6e84bb-d3ca-41b5-824e-b70449fb51d9" style="Detail" positionType="Float" x="379" y="0" width="54" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{formaPagamento}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+					<reportElement uuid="7d6e84bb-d3ca-41b5-824e-b70449fb51d9" style="Detail" positionType="Float" x="509" y="0" width="44" height="18"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{situacaoParc}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<summary>
+		<band height="24" splitType="Immediate">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement uuid="ef2f24e3-c392-4a07-bc3c-4097ba5df0cf" style="Detail" positionType="Float" x="281" y="6" width="152" height="18"/>
+				<textElement>
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalRecebidoMes}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+				<reportElement uuid="36063d02-218a-4554-a0b8-4df33ca0ead3" style="Detail" positionType="Float" x="170" y="6" width="111" height="18"/>
+				<textElement>
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total Geral:"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

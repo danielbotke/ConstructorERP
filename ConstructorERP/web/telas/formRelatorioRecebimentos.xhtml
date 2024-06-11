@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Consultar recebimentos</title>
+    </h:head>
+    <ui:composition template="relatorios.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formRelatorioRecebimentos')}">
+            <h:form id="formRel">
+                <center>
+                    <h1>Consultar recebimentos</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <p:outputLabel for="cliente" value="Cliente:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="cliente" value="#{relatorioRecebimentosMB.cliente}" panelStyle="width:auto;"
+                                         effect="fade" var="c" filter="true" filterMatchMode="startsWith" immediate="true">
+                            <f:selectItem itemLabel="Selecione um cliente"/>
+                            <f:selectItems value="#{clienteMB.clientes}" var="cli" itemLabel="#{cli.pessoa.name}" itemValue="#{cli}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{c.pessoa.name}" />
+                            </p:column>
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{c.pessoa.name}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{c.pessoa.email}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="cliente" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="predios" value="Predio:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{relatorioRecebimentosMB.predio}" >
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataInicioRel"  value="De:"/>                    
+                        <p:calendar styleClass="calendar" id="dataInicioRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{relatorioRecebimentosMB.de}"
+                                    mode="popup" showOn="button" required="true">
+                        </p:calendar>
+                        <p:message for="dataInicioRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataFimRel"  value="Até:"/>                    
+                        <p:calendar styleClass="calendar" id="dataFimRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{relatorioRecebimentosMB.ate}"
+                                    mode="popup" showOn="button"  required="true">
+                        </p:calendar>
+                        <p:message for="dataFimRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Carregar" action="#{relatorioRecebimentosMB.carregar}" />
+                    <p>&nbsp;</p>
+                    <h:commandButton styleClass="button" value="Gerar relatório fechamento" action="#{relatorioRecebimentosMB.imprimeRelatorio}"/>
+                </center>
+
+            </h:form>
+            <h:form id="formDataRel">
+                <p:dataTable id="tblRecebEmDia" var="recebimento" value="#{relatorioRecebimentosMB.recebimentos}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="10" style="margin-bottom:20px" sortMode="multiple">
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblRecebEmDia" fileName="Recebimentos" />
+                        </h:commandLink>
+
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/pdf.png" width="24"/>
+                            <p:dataExporter type="pdf" target="tblRecebEmDia" fileName="Recebimentos"/>
+                        </h:commandLink>
+
+                    </f:facet>
+
+                    <p:column headerText="Parcela" sortBy="#{recebimento.parcela.parcelaDesc()}">
+                        <h:outputText value="#{recebimento.parcela.parcelaDesc()} - #{recebimento.parcela.contrato.nomePrimeiroCliente()}" />
+                    </p:column>
+
+                    <p:column headerText="Data de pagamento"  sortBy="#{recebimento.dataPagamento}">
+                        <h:outputText value="#{recebimento.dataPagamento}" >
+                            <f:convertDateTime type="date" locale="pt"   timeZone="America/Sao_Paulo" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Valor recebido" sortBy="#{recebimento.valorTotalSemDesconto()}">
+                        <h:outputText value="#{recebimento.valorTotalSemDesconto()}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Valor desconto" sortBy="#{recebimento.valorDesconto}">
+                        <h:outputText value="#{recebimento.valorDesconto}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Forma" sortBy="#{recebimento.formaPagamento}">
+                        <h:outputText value="#{recebimento.formaPagamento == 1 ? 'Boleto': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 2 ? 'Dinheiro/Cheque': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 3 ? 'Depósito': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 4 ? 'Bem': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 5 ? 'Permuta': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 6 ? 'Serviço': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 7 ? 'Outro': ''}" />
+                    </p:column>
+
+                    <p:column headerText="Observação" sortBy="#{recebimento.observacao}">
+                        <h:outputText value="#{recebimento.observacao}" />
+                    </p:column>
+
+
+                </p:dataTable>
+                <center>
+                    <h:panelGrid columns="7" id="totalizadores">
+
+                        <h:outputLabel for="totalReceb" value="Total recebido:"/>
+                        <h:inputText class="inputText" id="totalReceb" value="#{relatorioRecebimentosMB.totalPago}" readonly="true" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:inputText>
+                        <p:message for="totalReceb" />
+
+                    </h:panelGrid>
+                </center>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

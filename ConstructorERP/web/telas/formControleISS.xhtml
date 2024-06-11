@@ -1,0 +1,282 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Controle ISS</title>
+    </h:head>
+    <ui:composition template="relatorios.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formRelatorioControleISS')}">
+            <h:form id="formRel">
+                <center>
+                    <h1>Controle ISS</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        
+                        <h:outputLabel for="dataInicioRel"  value="De:"/>                    
+                        <p:calendar styleClass="calendar" id="dataInicioRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{controleISSMB.de}"
+                                    mode="popup" showOn="button" >
+                        </p:calendar>
+                        <p:message for="dataInicioRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataFimRel"  value="Até:"/>                    
+                        <p:calendar styleClass="calendar" id="dataFimRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{controleISSMB.ate}"
+                                    mode="popup" showOn="button" >
+                        </p:calendar>
+                        <p:message for="dataFimRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="exibirParcelasPagas"  value="Parcelas à exibir"/>                    
+                        <p:inputSwitch id="exibirParcelasPagas" value="#{controleISSMB.pagas}" onLabel="Fechadas" offLabel="Abertas"/>
+                        <p:message for="exibirParcelasPagas" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                    <h:commandButton styleClass="button" value="Carregar" action="#{controleISSMB.carregar}" />
+                </center>
+
+            </h:form>
+            <h:form id="formParcelasPagar">
+
+
+                <p:dataTable id="tblISS" var="despesa" value="#{controleISSMB.despesasFiltradas}" selection="#{controleISSMB.despesasSelecionadas}" rowKey="#{despesa.id}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="10" style="margin-bottom:20px" >
+                   <f:facet name="header">
+                        ISS à pagar
+                    </f:facet>
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblISS" fileName="Controle ISS" />
+                        </h:commandLink>
+
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/pdf.png" width="24"/>
+                            <p:dataExporter type="pdf" target="tblISS" fileName="Controle ISS"/>
+                        </h:commandLink>
+
+                    </f:facet>
+
+
+                    <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Data" />
+                        </f:facet>
+                        <h:outputText value="#{despesa.dataContabil}" >
+                            <f:convertDateTime type="date" locale="pt"   timeZone="America/Sao_Paulo" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Valor ISS" />
+                        </f:facet>
+                        <h:outputText value="#{despesa.ISS}"  >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nota" />
+                        </f:facet>
+                        <h:outputText value="#{despesa.codigo}" />
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Fornec." />
+                        </f:facet>
+                        <h:outputText value="#{despesa.fornecedor.pessoaFornecedor.name}" />
+                    </p:column>
+
+                    <p:column headerText="C.C/Bloco">
+                        <h:outputText value="#{despesa.centroDeCusto.name} - #{despesa.bloco.predio.name} - #{despesa.bloco.identificacao}" />
+                    </p:column>
+                    
+                    <p:column headerText="Observação" sortBy="#{despesa.observacao}">
+                        <h:outputText value="#{despesa.observacao}" >
+                        </h:outputText>
+                    </p:column>
+                    
+                    
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="ISS pago" />
+                        </f:facet>
+                        <h:outputText value="#{despesa.ISSPago == true ? 'Sim': 'Não'}" />
+                    </p:column>
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="ISS pago" styleClass="ui-icon ui-icon-check" action="#{controleISSMB.paga(despesa)}" ajax="false"/>
+                    </p:column>
+                    <f:facet name="footer">
+                        <p:commandButton process="tblISS" styleClass="button" value="Salvar como pagas" action="#{controleISSMB.pagarTodas}" ajax="false"/>
+                    </f:facet>
+                </p:dataTable>
+
+                <center>
+                    <h:panelGrid columns="8" id="totalizadores">
+
+                        <h:outputLabel for="dataPagamento"  value="Data Pagamento:"/>                    
+                        <p:calendar styleClass="calendar" id="dataPagamento" locale="pt" pattern="dd/MM/yyyy" value="#{controleISSMB.dataPagamento}" immediate="true" navigator="true" mode="popup" showOn="button"/>
+                        <p:message for="dataPagamento" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="totalISS" value="Total parcelas em aberto:"/>
+                        <h:inputText class="inputText" id="totalISS" value="#{controleISSMB.total}" readonly="true" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:inputText>
+                        <p:message for="totalISS" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+
+                </center>
+                
+              
+
+            </h:form>
+            <h:form id="formNovaParcela">
+                <p:dialog id="novaParcelaDialog" header="Adicionar" widgetVar="novaParcelaDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+
+                    <h:panelGrid  columns="8" id="parcelaNota" >
+
+                        <h:outputLabel for="vencimentoParcela" value="Vencimento:"/>
+                        <p:calendar styleClass="calendar" id="vencimentoParcela" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{parcelaAPagarMB.parcelaEditando.dataVencimento}"
+                                    mode="popup" showOn="button" />
+                        <p:message for="vencimentoParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlParcela" value="Valor:"/>
+                        <h:inputText class="inputText" id="vlParcela" value="#{parcelaAPagarMB.parcelaEditando.valorParcela}"  converter="convertFloat" immediate="true" >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2"/> 
+                        </h:inputText>
+                        <p:message for="vlParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlISS" value="ISS:"/>
+                        <h:inputText class="inputText" id="vlISS" value="#{parcelaAPagarMB.parcelaEditando.ISS}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlISS" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlMDO" value="MDO:"/>
+                        <h:inputText class="inputText" id="vlMDO" value="#{parcelaAPagarMB.parcelaEditando.MDO}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlMDO" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlINSS" value="INSS:"/>
+                        <h:inputText class="inputText" id="vlINSS" value="#{parcelaAPagarMB.parcelaEditando.INSS}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2"  />
+                        </h:inputText>
+                        <p:message for="vlINSS" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlFGTS" value="FGTS:"/>
+                        <h:inputText class="inputText" id="vlFGTS" value="#{parcelaAPagarMB.parcelaEditando.FGTS}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlFGTS" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlExtra" value="Extra:"/>
+                        <h:inputText class="inputText" id="vlExtra" value="#{parcelaAPagarMB.parcelaEditando.extra}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlExtra" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlAjusteContabil" value="Ajuste contábil:"/>
+                        <h:inputText class="inputText" id="vlAjusteContabil" value="#{parcelaAPagarMB.parcelaEditando.ajusteContabil}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlAjusteContabil" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="vlAlmoco" value="Almoço:"/>
+                        <h:inputText class="inputText" id="vlAlmoco" value="#{parcelaAPagarMB.parcelaEditando.almoco}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlAlmoco" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="vlTotal" value="Total:"/>
+                        <h:inputText class="inputText" id="vlTotal" value="#{parcelaAPagarMB.parcelaEditando.valorTotal}" converter="convertFloat"  disabled="true">
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlTotal" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="salario" value="Salario:"/>
+                        <p:selectBooleanCheckbox  id="salario" value="#{parcelaAPagarMB.parcelaEditando.salario}" />
+                        <p:message for="salario" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+
+
+                        <h:outputLabel for="descParcela" value="Descrição:"/>
+                        <p:inputTextarea id="descParcela" value="#{parcelaAPagarMB.parcelaEditando.descricao}" />
+                        <p:message for="descParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="centroCustos" value="Centro de Custo:"/>
+                        <p:treeTable id="centroCustos" value="#{categoriaMB.root}" var="cat" style="margin-top:0" scrollable="true" scrollHeight="150" scrollWidth="250" selectionMode="single"
+                                     selection="#{parcelaAPagarMB.selectedNode}" required="true">
+                            <p:column style="width: 250px">
+                                <h:outputText value="#{cat.name}" />
+                            </p:column>
+                        </p:treeTable>
+                        <p:message for="centroCustos" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="blocos" value="Emp./Bloco:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="blocos" value="#{parcelaAPagarMB.blocoSelecionado}" required="true">
+                            <f:selectItem itemLabel="Selecione um bloco" itemValue="#{null}"/> 
+                            <f:selectItems value="#{blocoMB.blocos}" var="bloco" itemValue="#{bloco}" itemLabel="#{bloco.predio.name} - #{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid> 
+                    <p:commandButton icon="ui-icon-check" value="Salvar" onsuccess="PF('novaParcelaDialog').hide()"   action="#{parcelaAPagarMB.addParcela}" ajax="false"/>
+                </p:dialog>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

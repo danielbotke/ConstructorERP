@@ -1,0 +1,263 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Gerar parcelas</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo"  rendered="#{usuarioMB.temPermissao('formParcelas')}">
+            <h:form id="formParcelas">
+
+                <center>
+                    <h2>Parcelas do Contrato</h2>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="gridTotaisParcela" >
+                        <p:outputLabel for="contrato" value="Contrato:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="contrato" value="#{parcelaMB.contrato}" panelStyle="width:auto;"
+                                         effect="fade" var="c" filter="true" filterMatchMode="startsWith" immediate="true">
+                            <p:ajax event="change" update=":formDataParcelas:parcelas "/>
+                            <f:selectItem itemLabel="Selecione um contrato"/>
+                            <f:selectItems value="#{contratoMB.contratosEmAndamento}" var="contract" itemLabel="#{contract.nomePrimeiroCliente()} - #{contract.apartamentosDesc()}" itemValue="#{contract}" />
+
+                            <p:column headerText="Cliente">
+                                <h:outputText value="#{c.nomePrimeiroCliente()}" />
+                            </p:column>
+                            <p:column headerText="Unidade">
+                                <h:outputText value="#{c.apartamentosDesc()}" />
+                            </p:column>
+                            <p:column headerText="Data contrato">
+                                <h:outputText value="#{c.dataContrato}" >
+                                    <f:convertDateTime type="date" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Valor contrato">
+                                <h:outputText value="#{c.valorTotal}" >
+                                    <f:convertNumber locale="pt_BR" maxFractionDigits="4"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="contrato" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        
+
+                        <tr><td colspan="8" style="text-align: center"><h3>Parcela fixa</h3></td> </tr>
+
+                        <h:outputLabel for="vlrParcela" value="Valor da parcela:"/>
+                        <h:inputText class="inputText" id="vlrParcela" value="#{parcelaMB.bean.valorParcela}" converter="convertFloat" immediate="true">
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                            <f:ajax event="blur" render="dataParcelaFixa" />
+                        </h:inputText>
+                        <p:message for="vlrParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="fatorMultiplicador" value="Fator multiplicador:" />
+                        <h:inputText class="inputText" id="fatorMultiplicador" value="#{parcelaMB.bean.fatorIndice}" converter="convertFloat" immediate="true" >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="4" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="fatorMultiplicador" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel  for="parcRenegociada" value="Renegociada:" rendered="#{parcelaMB.editando}"/>
+                        <p:selectBooleanCheckbox  id="parcRenegociada" value="#{parcelaMB.renegociada}" rendered="#{parcelaMB.editando}" immediate="true"/>
+                        <p:message for="parcRenegociada" rendered="#{parcelaMB.editando}"/>
+
+                        <h:outputText value=" " rendered="#{parcelaMB.editando}"/>
+
+                        <h:outputLabel for="dataParcelaFixa"  value="Data vencimento parcela:"/>                    
+                        <p:calendar styleClass="calendar" id="dataParcelaFixa" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{parcelaMB.bean.dataVencimento}"
+                                    mode="popup" showOn="button" required="#{parcelaMB.bean.valorParcela > 0}"/>
+                        <p:message for="dataParcelaFixa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="valorFixo" value="Valor fixo:"/>
+                        <p:selectBooleanCheckbox  id="valorFixo" value="#{parcelaMB.bean.valorFixo}" />
+                        <p:message for="valorFixo" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="tiposIndice" value="Índice:"/>
+                         <p:selectOneMenu  id="tiposIndice" value="#{parcelaMB.bean.tipoIndice}" styleClass="selectOnMenu" >
+                            <f:selectItems value="#{tipoIndiceMB.tipoIndices}" var="tipo" itemLabel="#{tipo.name}"/>
+                            <f:ajax event="change" render="tiposIndiceGrupo" />
+                        </p:selectOneMenu>
+                        <p:message for="tiposIndice" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <tr><td colspan="8" style="text-align: center"><h3>Grupo de Parcelas</h3></td></tr>                    
+                        <h:outputLabel for="modParcelas"  value="Modalidade da parcela:"/>
+                        <h:selectOneMenu styleClass="selectOnMenu ui-selectonemenu-label ui-inputfield ui-corner-all" id="modParcelas" value="#{parcelaMB.grupoParcelasMB.modalidade}" immediate="true">
+                            <f:selectItem itemValue="0" itemLabel="Selecione uma modalidade"/>
+                            <f:selectItem itemValue="1" itemLabel="Dia do mês"/>
+                            <f:selectItem itemValue="2" itemLabel="Dias entre parcelas"/>
+                            <f:selectItem itemValue="3" itemLabel="Dia da semana (primeiro)"/>
+                            <f:selectItem itemValue="4" itemLabel="Primeiro dia útil"/>
+                            <f:selectItem itemValue="5" itemLabel="Parcelas anuais"/>
+                            <f:ajax event="change" render="identfGrupo diaMesParcela diasEntreParcelas diaDaSemana fatorMultiplicadorGrupo qntParcelas data1aParcela" />
+                        </h:selectOneMenu>
+                        <p:message for="modParcelas" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                         <h:outputLabel for="tiposIndiceGrupo" value="Índice:"/>
+                         <p:selectOneMenu  id="tiposIndiceGrupo" value="#{parcelaMB.bean.tipoIndice}" styleClass="selectOnMenu" >
+                            <f:selectItems value="#{tipoIndiceMB.tipoIndices}" var="tipo" itemLabel="#{tipo.name}"/>
+                            <f:ajax event="change" render="tiposIndice" />
+                        </p:selectOneMenu>
+                        <p:message for="tiposIndiceGrupo" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="identfGrupo" value="Identificador do grupo:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="identfGrupo" value="#{parcelaMB.grupoParcelasMB.bean.identificador}" mask="a" />
+                        <p:message for="identfGrupo" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="diaMesParcela" value="Dia do mês:"/>
+                        <h:inputText class="inputText" id="diaMesParcela" value="#{parcelaMB.grupoParcelasMB.bean.diaMesVencimento}" required="#{parcelaMB.grupoParcelasMB.modalidade == 1}" disabled="#{parcelaMB.grupoParcelasMB.modalidade != 1}" />
+                        <p:message for="diaMesParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="diasEntreParcelas" value="Dias entre parcelas:"/>
+                        <h:inputText class="inputText" id="diasEntreParcelas" value="#{parcelaMB.grupoParcelasMB.bean.diasEntreParcelas}" required="#{parcelaMB.grupoParcelasMB.modalidade == 2}" disabled="#{parcelaMB.grupoParcelasMB.modalidade != 2}" />
+                        <p:message for="diasEntreParcelas" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="diaDaSemana" value="Dia da semana:"/>
+                        <h:selectOneMenu styleClass="selectOnMenu ui-selectonemenu-label ui-inputfield ui-corner-all" id="diaDaSemana" value="#{parcelaMB.grupoParcelasMB.bean.primeiroDiaDaSemana}" required="#{parcelaMB.grupoParcelasMB.modalidade == 3}" disabled="#{parcelaMB.grupoParcelasMB.modalidade != 3}" >
+                            <f:selectItem itemValue="0" itemLabel="Domingo"/>
+                            <f:selectItem itemValue="1" itemLabel="Segunda-feira"/>
+                            <f:selectItem itemValue="2" itemLabel="Terça-feira"/>
+                            <f:selectItem itemValue="3" itemLabel="Quarta-feira"/>
+                            <f:selectItem itemValue="4" itemLabel="Quinta-feira"/>
+                            <f:selectItem itemValue="5" itemLabel="Sexta-feira"/>
+                            <f:selectItem itemValue="6" itemLabel="Sábado"/>
+                        </h:selectOneMenu>
+                        <p:message for="diaDaSemana" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="fatorMultiplicadorGrupo" value="Fator multiplocador:"/>
+                        <h:inputText class="inputText" id="fatorMultiplicadorGrupo" value="#{parcelaMB.grupoParcelasMB.bean.fatorIndicePorParcela}" required="#{parcelaMB.grupoParcelasMB.modalidade != 0}" converter="convertFloat" disabled="#{parcelaMB.grupoParcelasMB.modalidade == 0}">
+                            <f:convertNumber locale="pt_BR"  /> 
+                        </h:inputText>
+                        <p:message for="fatorMultiplicadorGrupo" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="qntParcelas" value="Qnt. Parcelas:"/>
+                        <h:inputText class="inputText" id="qntParcelas" value="#{parcelaMB.grupoParcelasMB.bean.qntParcelas}" required="#{parcelaMB.grupoParcelasMB.modalidade != 0}" disabled="#{parcelaMB.grupoParcelasMB.modalidade == 0}" />
+                        <p:message for="qntParcelas" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="data1aParcela"  value="Data 1ª parcela:"/>                    
+                        <p:calendar styleClass="calendar" id="data1aParcela" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{parcelaMB.grupoParcelasMB.bean.dataInicioParcelas}"
+                                    mode="popup" showOn="button" required="#{parcelaMB.grupoParcelasMB.modalidade > 0}" disabled="#{parcelaMB.grupoParcelasMB.modalidade == 0}"/>
+                        <p:message for="data1aParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="descParcela"  value="Descrição:"/>  
+                        <h:inputText class="inputText" id="descParcela" value="#{parcelaMB.bean.descricao}"  />
+                        <p:message for="descParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    </h:panelGrid>
+
+
+                    <h:commandButton styleClass="button" value="Salvar Parcela(s)" action="#{parcelaMB.salvar}"/>
+                    <span>&nbsp;&nbsp;</span>
+                    <h:commandButton styleClass="button" value="Gerar Numeração" action="#{parcelaMB.gerarNueracao}"/>
+                    <br/>
+                    <h:commandButton styleClass="button" value="Alterar dia parcelas abertas" action="#{parcelaMB.alterarDiaParcelasAbertas}"/>
+                </center>
+            </h:form>
+            <h:form id="formDataParcelas">
+                <p:dataTable id="parcelas" var="parcela" value="#{parcelaMB.contrato.parcelas}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px" rowKey="#{parcela.id}" sortMode="multiple">
+                    <p:column headerText="Grp." sortBy="#{parcela.grupoParcelas.identificador}">
+                        <h:outputText value="#{parcela.grupoParcelas.identificador}" />
+                    </p:column>
+
+                    <p:column headerText="Número" sortBy="#{parcela.numeracao}">
+                        <h:outputText value="#{parcela.numeracao}" />
+                    </p:column>
+
+                    <p:column headerText="Valor" sortBy="#{parcela.valorParcela}">
+                        <h:outputText value="#{parcela.valorParcela}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Fat. Mult." sortBy="#{parcela.fatorIndice}">
+                        <h:outputText value="#{parcela.fatorIndice}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="4"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Vencimento" sortBy="#{parcela.dataVencimento}">
+                        <h:outputText value="#{parcela.dataVencimento}" >
+                            <f:convertDateTime locale="pt"   timeZone="America/Sao_Paulo" pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Desc." sortBy="#{parcela.descricao}">
+                        <h:outputText value="#{parcela.descricao}" />
+                    </p:column>
+
+                    <p:column headerText="Correção" >
+                        <h:outputText value="#{parcela.valorFixo ? 'Fixo': parcela.tipoIndice.name}" />
+                    </p:column>
+
+                    <p:column headerText="Situação" sortBy="#{parcela.situacao}">
+                        <h:outputText value="#{parcela.situacao == 0 ? 'Aberta': ''}" />
+                        <h:outputText value="#{parcela.situacao == 1 ? 'Parcial': ''}"/>
+                        <h:outputText value="#{parcela.situacao == 2 ? 'Paga': ''}" />
+                        <h:outputText value="#{parcela.situacao == 3 ? 'Renegociada': ''}" />
+                        <h:outputText value="#{parcela.situacao == 4 ? 'Cancelada': ''}" />
+                        <h:outputText value="#{parcela.situacao == 5 ? 'Renegociada em C.D.': ''}" />
+                        <h:outputText value="#{parcela.situacao == 6 ? 'Protestada': ''}" />
+                    </p:column>
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" update="parcRenegociada" action="#{parcelaMB.editar(parcela)}" ajax="false" />
+
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{parcelaMB.deletar(parcela)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir esta parcela?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Protestar / Desprotestar" styleClass="ui-icon ui-icon-alert" action="#{parcelaMB.protestar(parcela)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Se a parcela estiver aberta, esta será protetada, se estiver protestada, será aberta. Tem certeza que deseja realizar esta operação?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+

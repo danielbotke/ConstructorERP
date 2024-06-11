@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro serviços</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" >
+            <h:form id="form">
+                <center>
+                    <h1>Cadastro de serviços</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel for="nmServico" value="Nome:"/>
+                        <h:inputText class="inputText" id="nmServico" value="#{servicoMB.bean.name}" />
+                        <p:message for="nmServico" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="categoriaPai" value="Categoria:"/>
+                        <p:treeTable id="categoriaPai" value="#{servicoMB.root}" var="cat"
+                                selectionMode="single"
+                                selection="#{servicoMB.selectedNode}" required="true" widgetVar="categoria" scrollable="true" scrollHeight="100" style="width: 300px;">
+                            <p:column headerText="categoria" >
+                                <h:outputText value="#{cat.name}" />
+                            </p:column>>
+                        </p:treeTable>
+                        <p:message for="categoriaPai" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <p:outputLabel for="unidadePadrao" value="Unidade padrão:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="unidadePadrao" value="#{servicoMB.bean.unidadePadrao}" panelStyle="width:auto;"
+                                         effect="fade" filter="true" filterMatchMode="startsWith" immediate="true"  required="true">
+                            <p:ajax event="change" update=":form:outrasUnidades "/>
+                            <f:selectItem itemLabel="Selecione uma unidade"/>
+                            <f:selectItems value="#{unidadeMB.unidades}" var="unit" itemLabel="#{unit.name}" itemValue="#{unit}" />
+                        </p:selectOneMenu>
+                        <p:message for="unidadePadrao" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <p:outputLabel for="outrasUnidades" value="Outras unidades:" />
+                        <p:selectManyMenu id="outrasUnidades" value="#{servicoMB.outrasUnidadesSelecionadas}" converter="unidadeConverter"
+                                          var="u" filter="true" filterMatchMode="contains" showCheckbox="true" required="false">
+                            <f:selectItems value="#{servicoMB.unidadesNaoSelecionadas}" var="unid" itemLabel="#{unid.name}"  itemValue="#{unid}"/>
+                            <p:column>
+                                <h:outputText value="#{u.name}" />
+                            </p:column>
+                        </p:selectManyMenu>
+                        <p:message for="outrasUnidades" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar Serviço" action="#{servicoMB.salvar}"  />
+                </center>
+            </h:form>
+            <h:form>
+                <p:dataTable id="servicos" var="serv" value="#{servicoMB.servicos}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px" rowKey="#{serv.id}">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{serv.name}" />
+                    </p:column>
+
+                    <p:column headerText="Categoria">
+                        <h:outputText value="#{serv.categoria.name}" />
+                    </p:column>
+
+                    <p:column headerText="Unidade">
+                        <h:outputText value="#{serv.unidadePadrao.name}" />
+                    </p:column>
+
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" action="#{servicoMB.editar(serv)}" ajax="false" />
+
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{servicoMB.deletar(serv)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir esta parcela?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+

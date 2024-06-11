@@ -1,0 +1,443 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro Despesas</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formNotaFiscalCompra')}">
+            <h:form id="formDespesa">
+                <center>
+                    <h1>Cadastro Despesa</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="gridNota1">
+
+
+                        <h:outputLabel for="nmNota" value="Código:"/>
+                        <h:inputText class="inputText" id="nmNota" value="#{notaFiscalCompraMB.bean.codigo}" required="true" immediate="true" />
+                        <p:message for="nmNota" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="dataContabil"  value="Data contábil:"/>                    
+                        <p:calendar styleClass="calendar" id="dataContabil" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{notaFiscalCompraMB.dataContabil}"
+                                    mode="popup" showOn="button" >
+                        </p:calendar>
+                        <p:message for="dataContabil" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataNota"  value="Data Nota:"/>                    
+                        <p:calendar styleClass="calendar" id="dataNota" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{notaFiscalCompraMB.bean.dataNota}"
+                                    mode="popup" showOn="button" >
+                        </p:calendar>
+                        <p:message for="dataNota" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <p:outputLabel for="fornecedor" value="Fornecedor:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="fornecedor" value="#{notaFiscalCompraMB.fornecedorSelecionado}" panelStyle="width:auto;"
+                                         effect="fade" var="forn" filter="true" filterMatchMode="startsWith" immediate="true" >
+                            <f:selectItem itemLabel="Selecione um fornecedor" value="#{null}"/>
+                            <f:selectItems value="#{fornecedorMB.fornecedores}" var="f" itemLabel="#{f.pessoa.name}" itemValue="#{f}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{forn.pessoa.name}" />
+                            </p:column>
+
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{forn.pessoa.cidade.name}" />
+                            </p:column>
+
+                            <p:column headerText="Categoria">
+                                <h:outputText value="#{forn.categoria.name}" />
+                            </p:column>
+
+                            <p:column headerText="Observação">
+                                <h:outputText value="#{forn.observacao}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="fornecedor" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="observacao" value="Observação:"/>
+                        <p:inputTextarea id="observacao" value="#{notaFiscalCompraMB.bean.observacao}" />
+                        <p:message for="observacao" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <tr><td colspan="4" style="text-align: center"><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></td></tr>
+
+                        <h:outputLabel for="vlISS" value="ISS:"/>
+                        <h:inputText class="inputText" id="vlISS" value="#{notaFiscalCompraMB.bean.ISS}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlISS" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlMDO" value="MDO:"/>
+                        <h:inputText class="inputText" id="vlMDO" value="#{notaFiscalCompraMB.bean.MDO}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlMDO" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlFGTS" value="FGTS:"/>
+                        <h:inputText class="inputText" id="vlFGTS" value="#{notaFiscalCompraMB.bean.FGTS}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlFGTS" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="vlINSS" value="INSS:"/>
+                        <h:inputText class="inputText" id="vlINSS" value="#{notaFiscalCompraMB.bean.INSS}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlINSS" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlExtra" value="Extra:"/>
+                        <h:inputText class="inputText" id="vlExtra" value="#{notaFiscalCompraMB.bean.extra}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlExtra" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlAjusteContabil" value="Ajuste contábil:"/>
+                        <h:inputText class="inputText" id="vlAjusteContabil" value="#{notaFiscalCompraMB.bean.ajusteContabil}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlAjusteContabil" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="vlAlmoco" value="Almoço:"/>
+                        <h:inputText class="inputText" id="vlAlmoco" value="#{notaFiscalCompraMB.bean.almoco}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlAlmoco" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlNota" value="Valor:"/>
+                        <h:inputText class="inputText" id="vlNota" value="#{notaFiscalCompraMB.bean.valorTotal}" converter="convertFloat"  >
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlNota" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="salario" value="Salario:"/>
+                        <p:selectBooleanCheckbox  id="salario" value="#{notaFiscalCompraMB.bean.salario}" />
+                        <p:message for="salario" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlTotal" value="Total:"/>
+                        <h:inputText class="inputText" id="vlTotal" value="#{notaFiscalCompraMB.bean.total}" converter="convertFloat"  disabled="true">
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlTotal" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                       
+                        <h:outputLabel  value=" "/>
+                        <h:outputLabel  value=" "/>
+                        <h:outputLabel  value=" "/>
+                        
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        
+                        <h:outputLabel for="centroCustos" value="Centro de Custo:"/>
+                        <p:treeTable id="centroCustos" value="#{categoriaMB.root}" var="cat" style="margin-top:0" scrollable="true" scrollHeight="150" scrollWidth="250" selectionMode="single"
+                                     selection="#{notaFiscalCompraMB.selectedNode}">
+                            <p:column style="width: 250px">
+                                <h:outputText value="#{cat.name}" />
+                            </p:column>
+                        </p:treeTable>
+                        <p:message for="centroCustos" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="blocos" value="Emp./Bloco:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="blocos" value="#{notaFiscalCompraMB.blocoSelecionado}" >
+                            <f:selectItem itemLabel="Selecione um bloco" itemValue="#{null}"/> 
+                            <f:selectItems value="#{blocoMB.blocos}" var="bloco" itemValue="#{bloco}" itemLabel="#{bloco.predio.name} - #{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="filtroDe"  value="De:"/>                    
+                        <p:calendar styleClass="calendar" id="filtroDe" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{notaFiscalCompraMB.dataDe}"
+                                    mode="popup" showOn="button" >
+                        </p:calendar>
+                        <p:message for="filtroDe" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="filtroAte"  value="Até:"/>                    
+                        <p:calendar styleClass="calendar" id="filtroAte" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{notaFiscalCompraMB.dataAte}"
+                                    mode="popup" showOn="button" >
+                        </p:calendar>
+                        <p:message for="filtroAte" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="parcelaUnica" value="Gerar parcela única:"/>
+                        <p:selectBooleanCheckbox  id="parcelaUnica" value="#{notaFiscalCompraMB.parcelaUnica}" />
+                        <p:message for="parcelaUnica" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+
+                    </h:panelGrid>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    <h:panelGrid  columns="8" id="gridParcelas" rendered="#{notaFiscalCompraMB.editandoNota}">
+
+                        <f:facet name="header">
+                            Forma Pagamento
+
+                        </f:facet>
+
+
+                        <h:outputLabel for="qntParcelas" value="Qnt. Parcelas:"/>
+                        <h:inputText class="inputText" id="qntParcelas" value="#{notaFiscalCompraMB.bean.qntParcelas}" immediate="true">
+                            <f:ajax event="blur" render="modParcelas" />
+                        </h:inputText>
+                        <p:message for="qntParcelas" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="modParcelas"  value="Modalidade da parcela:"/>
+                        <h:selectOneMenu styleClass="selectOnMenu ui-selectonemenu-label ui-inputfield ui-corner-all" id="modParcelas" value="#{notaFiscalCompraMB.bean.tipoParcelamento}" immediate="true"   disabled="#{notaFiscalCompraMB.bean.qntParcelas == 0}">
+                            <f:selectItem itemValue="0" itemLabel="Selecione uma modalidade"/>
+                            <f:selectItem itemValue="1" itemLabel="Dia do mês"/>
+                            <f:selectItem itemValue="2" itemLabel="Dias entre parcelas"/>
+                            <f:selectItem itemValue="3" itemLabel="Dia da semana (primeiro)"/>
+                            <f:selectItem itemValue="4" itemLabel="Primeiro dia útil"/>
+                            <f:ajax event="change" render="diaMesParcela diasEntreParcelas diaDaSemana  data1aParcela" />
+                        </h:selectOneMenu>
+                        <p:message for="modParcelas" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="diaMesParcela" value="Dia do mês:"/>
+                        <h:inputText class="inputText" id="diaMesParcela" value="#{notaFiscalCompraMB.bean.diaMesVencimento}" required="#{notaFiscalCompraMB.bean.tipoParcelamento == 1}" disabled="#{notaFiscalCompraMB.bean.tipoParcelamento != 1}" />
+                        <p:message for="diaMesParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="diasEntreParcelas" value="Dias entre parcelas:"/>
+                        <h:inputText class="inputText" id="diasEntreParcelas" value="#{notaFiscalCompraMB.bean.diasEntreParcelas}" required="#{notaFiscalCompraMB.bean.tipoParcelamento == 2}" disabled="#{notaFiscalCompraMB.bean.tipoParcelamento != 2}" />
+                        <p:message for="diasEntreParcelas" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="diaDaSemana" value="Dia da semana:"/>
+                        <h:selectOneMenu styleClass="selectOnMenu ui-selectonemenu-label ui-inputfield ui-corner-all" id="diaDaSemana" value="#{notaFiscalCompraMB.bean.primeiroDiaDaSemana}" required="#{notaFiscalCompraMB.bean.tipoParcelamento == 3}" disabled="#{notaFiscalCompraMB.bean.tipoParcelamento != 3}" >
+                            <f:selectItem itemValue="0" itemLabel="Domingo"/>
+                            <f:selectItem itemValue="1" itemLabel="Segunda-feira"/>
+                            <f:selectItem itemValue="2" itemLabel="Terça-feira"/>
+                            <f:selectItem itemValue="3" itemLabel="Quarta-feira"/>
+                            <f:selectItem itemValue="4" itemLabel="Quinta-feira"/>
+                            <f:selectItem itemValue="5" itemLabel="Sexta-feira"/>
+                            <f:selectItem itemValue="6" itemLabel="Sábado"/>
+                        </h:selectOneMenu>
+                        <p:message for="diaDaSemana" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="data1aParcela"  value="Data 1ª parcela:"/>                    
+                        <p:calendar styleClass="calendar" id="data1aParcela" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{notaFiscalCompraMB.bean.dataInicioParcelas}"
+                                    mode="popup" showOn="button" required="#{notaFiscalCompraMB.bean.tipoParcelamento > 0}" disabled="#{notaFiscalCompraMB.bean.tipoParcelamento == 0}"/>
+                        <p:message for="data1aParcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+
+
+                    </h:panelGrid> 
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <h:commandButton styleClass="button" value="Gerar Parcelas" action="#{notaFiscalCompraMB.gerarParcelas}" disabled="#{notaFiscalCompraMB.bean.id == 0}" rendered="#{notaFiscalCompraMB.editandoNota}"/>
+
+                    <p:dataTable id="parcelas" var="parcela" value="#{notaFiscalCompraMB.bean.parcelas}" editable="true" style="margin-bottom:20px" rendered="#{notaFiscalCompraMB.editandoNota}">
+                        <f:facet name="header">
+                            Parcelas à pagar
+                            <p:commandButton id="addItem" update=":formDespesa:novaParcelaDialog"  actionListener="#{notaFiscalCompraMB.newParcela()}" oncomplete="PF('novaParcelaDialog').show()" icon="ui-icon-plus" title="Nova parcela" disabled="#{notaFiscalCompraMB.bean.id == 0}">
+                            </p:commandButton>
+                        </f:facet>
+
+                        <p:ajax event="rowEdit" listener="#{notaFiscalCompraMB.parcelaEditada(parcela)}" />
+
+
+                        <p:column headerText="Data">
+                            <h:outputText value="#{parcela.dataVencimento}" >
+                                <f:convertDateTime locale="pt"   timeZone="America/Sao_Paulo" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{parcela.valorParcela}" >
+                                <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2"/> 
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Descrição">
+                            <h:outputText value="#{parcela.descricao}" />
+                        </p:column>
+
+
+                        <p:column headerText="Situação">
+                            <h:outputText value="#{parcela.situacao == 0 ? 'Aberta': ''}" />
+                            <h:outputText value="#{parcela.situacao == 1 ? 'Parcial': ''}" />
+                            <h:outputText value="#{parcela.situacao == 2 ? 'Paga': ''}" />
+                            <h:outputText value="#{parcela.situacao == 3 ? 'Renegociada': ''}" />
+                            <h:outputText value="#{parcela.situacao == 4 ? 'Cancelada': ''}" />
+                            <h:outputText value="#{parcela.situacao == 5 ? 'Protestada': ''}" />
+                        </p:column>
+
+
+                        <p:column style="width:24px" >
+
+                            <p:commandLink id="editParc" update=":formDespesa:novaParcelaDialog"  actionListener="#{notaFiscalCompraMB.parcelaEditada(parcela)}" oncomplete="PF('novaParcelaDialog').show()" styleClass="ui-icon ui-icon-pencil" title="Editar parcela" >
+                            </p:commandLink>
+                        </p:column>
+
+
+                        <p:column style="width:24px" >
+                            <p:commandLink title="Remover item" styleClass="ui-icon ui-icon-trash" action="#{notaFiscalCompraMB.removerParcela(parcela)}" ajax="false" >
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:dialog id="novaParcelaDialog" header="Adicionar/Editar parcela" widgetVar="novaParcelaDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+                        <h:panelGrid  columns="8" id="parcelaNota" >
+
+                            <h:outputLabel for="vencimentoParcela" value="Vencimento:"/>
+                            <p:calendar styleClass="calendar" id="vencimentoParcela" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{notaFiscalCompraMB.parcelaEditando.dataVencimento}"
+                                        mode="popup" showOn="button" />
+                            <p:message for="vencimentoParcela" />
+
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                            <h:outputLabel for="vlParcela" value="Valor:"/>
+                            <h:inputText class="inputText" id="vlParcela" value="#{notaFiscalCompraMB.parcelaEditando.valorParcela}"  converter="convertFloat" immediate="true" >
+                                <f:convertNumber locale="pt_BR"  maxFractionDigits="2"/> 
+                            </h:inputText>
+                            <p:message for="vlParcela" />
+
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                            <h:outputLabel for="descParcela" value="Descrição:"/>
+                            <p:inputTextarea id="descParcela" value="#{notaFiscalCompraMB.parcelaEditando.descricao}" />
+                            <p:message for="descParcela" />
+
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        </h:panelGrid> 
+                        <p:commandButton icon="ui-icon-check" value="Salvar" oncomplete="PF('novaParcelaDialog').hide()"   action="#{notaFiscalCompraMB.addParcela}" ajax="false"/>
+
+
+                    </p:dialog>
+
+                    <h:commandButton styleClass="button" value="Salvar" action="#{notaFiscalCompraMB.salvar(false)}"/>
+                    <span>&nbsp;&nbsp;&nbsp;</span>
+                    <h:commandButton styleClass="button" value="Salvar e editar" action="#{notaFiscalCompraMB.salvar(true)}"/>
+                    <span>&nbsp;&nbsp;&nbsp;</span>
+                    <h:commandButton styleClass="button" value="Filtrar" action="#{notaFiscalCompraMB.getNotaFiscalCompras()}"/>
+                </center>
+
+
+
+            </h:form>
+
+            <h:form id="formDataNFs">
+                <p:dataTable id="tblNotas" var="nota" value="#{notaFiscalCompraMB.notaFiscalCompras}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="20" style="margin-bottom:20px" sortMode="multiple">
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblNotas" fileName="Notas Compra" />
+                        </h:commandLink>
+
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/pdf.png" width="24"/>
+                            <p:dataExporter type="pdf" target="tblNotas" fileName="Notas Compra"/>
+                        </h:commandLink>
+
+                    </f:facet>
+
+                    <p:column headerText="Código" sortBy="#{nota.codigo}">
+                        <h:outputText value="#{nota.codigo}" />
+                    </p:column>
+
+                    <p:column headerText="Fornecedor" sortBy="#{nota.fornecedor.pessoa.name}">
+                        <h:outputText value="#{nota.fornecedor.pessoa.name}" />
+                    </p:column>
+
+                    <p:column headerText="Data contábil" sortBy="#{nota.dataContabil}">
+                        <h:outputText value="#{nota.dataContabil}">
+                            <f:convertDateTime type="date" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Observação" sortBy="#{nota.observacao}">
+                        <h:outputText value="#{nota.observacao}" >
+                        </h:outputText>
+                    </p:column>
+
+
+                    <p:column headerText="Valor total" sortBy="#{nota.total}">
+                        <h:outputText value="#{nota.total}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    
+                    
+                   <p:column headerText="C.C/Bloco" sortBy="#{nota.centroDeCusto.name}">
+                        <h:outputText value="#{nota.centroDeCusto.name} - #{nota.bloco.predio.name} - #{nota.bloco.identificacao}" />
+                    </p:column>
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" action="#{notaFiscalCompraMB.editar2(nota)}" ajax="false"/>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{notaFiscalCompraMB.deletar(nota)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir esta nota? Todas as parcelas vinculadas a esta nota serão excluídas." icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

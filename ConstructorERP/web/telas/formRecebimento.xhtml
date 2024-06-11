@@ -1,0 +1,243 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Registrar Recebimento</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formRecebimento')}">
+            <h:form id="formReceb">
+                <center>
+                    <h1>Cadastro de Recebimentos</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <p:outputLabel for="cliente" value="Cliente:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="cliente" value="#{recebimentoMB.clienteSelecionado}" panelStyle="width:auto;"
+                                         effect="fade" var="c" filter="true" filterMatchMode="startsWith" immediate="true">
+                            <p:ajax event="change" update=":formReceb:parcDT :formDataRecebimento:listReceb"/>
+                            <f:selectItem itemLabel="Selecione um cliente"/>
+                            <f:selectItems value="#{clienteMB.clientes}" var="cli" itemLabel="#{cli.pessoa.name}" itemValue="#{cli}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{c.pessoa.name}" />
+                            </p:column>
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{c.pessoa.cidade.name}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{c.pessoa.email}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="cliente" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="parcela" value="Parcela"/>
+                        <h:panelGroup>
+                            <p:inputText id="parcela" value="#{recebimentoMB.bean.parcela.contrato.apartamentosDesc()} - #{recebimentoMB.bean.parcela.valorParcela}" required="true" readonly="true"/>
+                            <p:commandButton update=":formReceb:parcDialog" oncomplete="PF('parcDialog').show()" icon="ui-icon-search" title="Selecionar parcela" />
+                        </h:panelGroup>
+                        <p:message for="parcela" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="formaPagamento"  value="Forma de pagamento:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="formaPagamento" value="#{recebimentoMB.bean.formaPagamento}" >
+                            <f:selectItem itemValue="1" itemLabel="Boleto"/>
+                            <f:selectItem itemValue="2" itemLabel="Dinheiro/Cheque" />
+                            <f:selectItem itemValue="3" itemLabel="Depósito"/>
+                            <f:selectItem itemValue="4" itemLabel="Bem"/>
+                            <f:selectItem itemValue="5" itemLabel="Permuta"/>
+                            <f:selectItem itemValue="6" itemLabel="Serviço"/>
+                            <f:selectItem itemValue="7" itemLabel="Outros"/>
+                        </p:selectOneMenu>
+                        <p:message for="formaPagamento" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="vlRecebido" value="Valor recebido:"/>
+                        <h:inputText class="inputText" id="vlRecebido" value="#{recebimentoMB.bean.valorRecebido}" required="true" converter="convertFloat" immediate="true" />
+                        <p:message for="vlRecebido" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="vlMulta" value="Valor multa:"/>
+                        <h:inputText class="inputText" id="vlMulta" value="#{recebimentoMB.bean.valorMulta}" required="true" converter="convertFloat" immediate="true" />
+                        <p:message for="vlMulta" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlJuros" value="Valor juros:"/>
+                        <h:inputText class="inputText" id="vlJuros" value="#{recebimentoMB.bean.valorJuros}" required="true" converter="convertFloat" immediate="true" />
+                        <p:message for="vlJuros" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlDesconto" value="Valor desconto:"/>
+                        <h:inputText class="inputText" id="vlDesconto" value="#{recebimentoMB.bean.valorDesconto}" required="true" converter="convertFloat" immediate="true" />
+                        <p:message for="vlDesconto" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataRecebimento"  value="Data recebimento:"/>                    
+                        <p:calendar styleClass="calendar" id="dataRecebimento" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{recebimentoMB.bean.dataPagamento}"
+                                    mode="popup" showOn="button" required="true" immediate="true" maxdate="#{recebimentoMB.hoje}"/>
+                        <p:message for="dataRecebimento" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="observacao" value="Observação:" />
+                        <h:inputText class="inputText" id="observacao" value="#{recebimentoMB.bean.observacao}" immediate="true" />
+                        <p:message for="observacao"/>
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                    <h:commandButton styleClass="button" value="Salvar Recebimento" action="#{recebimentoMB.salvar}"/>
+                </center>
+
+                <p:dialog id="parcDialog" header="Selecione uma parcela" widgetVar="parcDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:dataTable id="parcDT" var="parc" value="#{recebimentoMB.parcelasCliente}" selectionMode="single" selection="#{recebimentoMB.bean.parcela}" rowKey="#{parc.id}"
+                                 paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 paginator="true" rows="10" style="margin-bottom:20px">
+                        <f:facet name="header">
+                            Selecione uma parcela
+                        </f:facet>
+                        <p:ajax event="rowSelect" listener="#{recebimentoMB.onRowSelect}" update=":formReceb:parcela"  />
+                        <p:column headerText="Número">
+                            <h:outputText value="#{parc.numeracao}" />
+                        </p:column>
+
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{parc.valorParcela}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Saldo à pagar">
+                            <h:outputText value="#{parc.saldoParcela()}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Fat. Mult." >
+                            <h:outputText value="#{parc.fatorIndice}" >
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="4"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column sortBy="#{parc.valorFixo}">
+                            <f:facet name="header">
+                                <h:outputText value="Correção" />
+                            </f:facet>
+                            <h:outputText value="#{parc.valorFixo ? 'Fixo': parc.tipoIndice.name}" />
+                        </p:column>
+
+
+                        <p:column headerText="Vencimento" >
+                            <h:outputText value="#{parc.dataVencimento}" >
+                                <f:convertDateTime locale="pt"   timeZone="America/Sao_Paulo" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Desc." >
+                            <h:outputText value="#{parc.descricao}" />
+                        </p:column>
+
+                        <p:column headerText="Situação" >
+                            <h:outputText value="#{parc.situacao == 0 ? 'Aberta': ''}" />
+                            <h:outputText value="#{parc.situacao == 1 ? 'Parcial': ''}" />
+                            <h:outputText value="#{parc.situacao == 2 ? 'Paga': ''}" />
+                            <h:outputText value="#{parc.situacao == 3 ? 'Renegociada': ''}" />
+                            <h:outputText value="#{parc.situacao == 4 ? 'Cancelada': ''}" />
+                            <h:outputText value="#{parc.situacao == 5 ? 'Renegociada SD': ''}" />
+                            <h:outputText value="#{parc.situacao == 6 ? 'Protestada': ''}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+
+            </h:form>
+            <h:form id="formDataRecebimento">
+                <p:dataTable id="listReceb" var="recebimento" value="#{recebimentoMB.recebimentosClientes}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px" sortMode="multiple">
+                    <p:column headerText="Parcela" sortBy="#{recebimento.parcela.parcelaDesc()}">
+                        <h:outputText value="#{recebimento.parcela.parcelaDesc()}" />
+                    </p:column>
+
+                    <p:column headerText="Data do recebimento" sortBy="#{recebimento.dataPagamento}">
+                        <h:outputText value="#{recebimento.dataPagamento}" >
+                            <f:convertDateTime locale="pt"   timeZone="America/Sao_Paulo" pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Valor recebido" sortBy="#{recebimento.valorRecebido}">
+                        <h:outputText value="#{recebimento.valorRecebido}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Valor desconto" sortBy="#{recebimento.valorDesconto}">
+                        <h:outputText value="#{recebimento.valorDesconto}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Valor multa" sortBy="#{recebimento.valorMulta}">
+                        <h:outputText value="#{recebimento.valorMulta}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Valor juros" sortBy="#{recebimento.valorJuros}">
+                        <h:outputText value="#{recebimento.valorJuros}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Forma" sortBy="#{recebimento.formaPagamento}">
+                        <h:outputText value="#{recebimento.formaPagamento == 1 ? 'Boleto': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 2 ? 'Dinheiro/Cheque': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 3 ? 'Depósito': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 4 ? 'Bem': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 5 ? 'Permuta': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 6 ? 'Serviço': ''}" />
+                        <h:outputText value="#{recebimento.formaPagamento == 7 ? 'Outro': ''}" />
+                    </p:column>
+
+                    <p:column headerText="Observação" sortBy="#{recebimento.observacao}">
+                        <h:outputText value="#{recebimento.observacao}" />
+                    </p:column>
+                    <!--
+                                        <p:column style="width:24px">
+                                            <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" action="#{recebimentoMB.editar(recebimento.id)}" ajax="false">
+                                                <f:param name="receb" value="#{recebimento.id}"/> 
+                                            </p:commandLink>
+                                        </p:column>-->
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{recebimentoMB.deletar(recebimento.id)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este recebimento?" icon="ui-icon-alert" />
+                            <f:param name="receb" value="#{recebimento.id}"/> 
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

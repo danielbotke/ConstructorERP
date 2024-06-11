@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Ganho Financeiro</title>
+    </h:head>
+    <ui:composition template="relatorios.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formRelatorioGanhoFinanceiro')}">
+            <h:form id="formRel">
+                <center>
+                    <h1>Ganho Financeiro</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <h:outputLabel for="predios" value="Predio:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{historicoGanhoFinanceiroMB.predioSelecionado}" >
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}" />  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}" />
+                            <f:ajax event="change" render="tblGanhoFinanceiro" />
+                            <f:ajax event="change" render="vlAtual" />
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="vlAtual" value="Valor atual:"/>
+                        <h:inputText class="inputText" id="vlAtual" value="#{historicoGanhoFinanceiroMB.calcularAtual}" converter="convertFloat"  disabled="true">
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2" minFractionDigits="2" />
+                        </h:inputText>
+                        <p:message for="vlAtual" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+
+                </center>
+
+           
+
+                <p:dataTable id="tblGanhoFinanceiro" var="item" value="#{historicoGanhoFinanceiroMB.historicosDespesas}"
+                             paginatorTemplate="{Exporters}" paginator="true" rows="10000" style="margin-bottom:20px" sortBy="#{item.mesAno.year}">
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink>
+                            <p:graphicImage value="../resources/images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblDespesasMeses" fileName="Ganho finaneciro" />
+                        </h:commandLink>
+
+                    </f:facet>
+
+
+                    <f:facet name="header">
+                        <p:commandButton id="addItem" update=":formRel:novoHistoricoDialog"  actionListener="#{historicoGanhoFinanceiroMB.newHistorico()}" oncomplete="PF('novoHistoricoDialog').show()" icon="ui-icon-plus" title="Novo ganhoa" />
+                    </f:facet>
+
+                    <p:column headerText="Mês/ano"  >
+                        <h:outputText value="#{item.mesAno}" >
+                            <f:convertDateTime pattern="MMM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Prédio"  >
+                        <h:outputText value="#{item.predio.name}" >
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Valor no mês" >
+                        <h:outputText value="#{item.valorMes}" >
+                            <f:convertNumber  locale="pt_BR" maxFractionDigits="0" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Valor atualizado" >
+                        <h:outputText value="#{item.valorAtualizado}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="0" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Ganho Financeiro" >
+                        <h:outputText value="#{item.ganhoFinanceiro}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="0"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="%" >
+                        <h:outputText value="#{item.percentual}" >
+                            <f:convertNumber  locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column style="width:24px" >
+
+                        <p:commandLink id="editParc" update=":formRel:novoHistoricoDialog"  actionListener="#{historicoGanhoFinanceiroMB.editar(item)}" oncomplete="PF('novoHistoricoDialog').show()" styleClass="ui-icon ui-icon-pencil" title="Editar ganho" >
+                            </p:commandLink>
+                        </p:column>
+
+
+                        <p:column style="width:24px" >
+                            <p:commandLink title="Remover item" styleClass="ui-icon ui-icon-trash" action="#{historicoGanhoFinanceiroMB.deletar(item)}" ajax="false" >
+                            </p:commandLink>
+                        </p:column>
+
+                    <p:summaryRow >
+                        <p:column colspan="4" style="text-align:right">
+                            <h:outputText value="Total #{item.mesAno.year + 1900}:" />
+                        </p:column>
+                        <p:column colspan="4">
+                            <h:outputText value="#{item.totalAno}">
+                                <f:convertNumber type="currency" currencySymbol="R$" locale="pt_BR" maxFractionDigits="0"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:summaryRow>
+                </p:dataTable>
+
+                <p:dialog id="novoHistoricoDialog" header="Adicionar/Editar ganho" widgetVar="novoHistoricoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+                    <h:panelGrid  columns="8" id="ganho" >
+
+                        <h:outputLabel for="mesAno" value="Mês/Ano:"/>
+                        <p:calendar styleClass="calendar" id="mesAno" locale="pt" pattern="MM/yyyy" navigator="true" value="#{historicoGanhoFinanceiroMB.bean.mesAno}"
+                                    mode="popup" showOn="button" />
+                        <p:message for="mesAno" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="predio" value="Predio:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predio" value="#{historicoGanhoFinanceiroMB.bean.predio}" required="true">
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predio" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="vlMes" value="Valor mês:"/>
+                        <h:inputText class="inputText" id="vlMes" value="#{historicoGanhoFinanceiroMB.bean.valorMes}"  converter="convertFloat" immediate="true" required="true">
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2"/> 
+                        </h:inputText>
+                        <p:message for="vlMes" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        
+                        <h:outputLabel for="vlAtt" value="Valor atualizado:"/>
+                        <h:inputText class="inputText" id="vlAtt" value="#{historicoGanhoFinanceiroMB.bean.valorAtualizado}"  converter="convertFloat" immediate="true" required="true">
+                            <f:convertNumber locale="pt_BR"  maxFractionDigits="2"/> 
+                        </h:inputText>
+                        <p:message for="vlAtt" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        
+
+                    </h:panelGrid> 
+                    <p:commandButton icon="ui-icon-check" value="Salvar" oncomplete="PF('novoHistoricoDialog').hide()"   action="#{historicoGanhoFinanceiroMB.salvar}" ajax="false"/>
+
+
+                </p:dialog>
+
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Gerenciar Boletos</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formGerencBoletos')}">
+            <h:form id="form">
+                <center>
+                    <h1>Gerenciar boletos</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <p:outputLabel for="cliente" value="Cliente:"  />
+                        <p:selectOneMenu styleClass="selectOnMenu" id="cliente" value="#{gerarBoletosMB.clienteSelecionado}" panelStyle="width:auto;"
+                                         effect="fade" var="c" filter="true" filterMatchMode="startsWith" immediate="true">
+                            <f:selectItem itemLabel="Selecione um cliente"/>
+                            <f:selectItems value="#{clienteMB.clientes}" var="cli" itemLabel="#{cli.pessoa.name}" itemValue="#{cli}" />
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{c.pessoa.name}" />
+                            </p:column>
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{c.pessoa.cidade.name}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{c.pessoa.email}" />
+                            </p:column>
+                            <p:column headerText="Protestar">
+                                <h:outputText value="#{c.formaPagamento == 1 ? 'Sim': 'Não'}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                        <p:message for="cliente" />
+
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="predios" value="Predio:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{gerarBoletosMB.predioSelecionado}"  >
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataInicioRel"  value="De:"/>                    
+                        <p:calendar styleClass="calendar" id="dataInicioRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{gerarBoletosMB.de}"
+                                    mode="popup" showOn="button" required="true">
+                        </p:calendar>
+                        <p:message for="dataInicioRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="dataFimRel"  value="Até:"/>                    
+                        <p:calendar styleClass="calendar" id="dataFimRel" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{gerarBoletosMB.ate}"
+                                    mode="popup" showOn="button" required="true">
+                        </p:calendar>
+                        <p:message for="dataFimRel" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    </h:panelGrid>
+                    <h:commandButton id="carregar" styleClass="button" value="Carregar" action="#{gerarBoletosMB.carregarBoletos}"/>
+                </center>
+
+            </h:form>
+            <h:form id="formParc">
+                <h3>Boletos filtrados</h3>
+                <p:dataTable id="tblParcelas" var="boleto" value="#{gerarBoletosMB.boletosFiltrados}" rowKey="#{parcela.id}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+
+                    <p:column sortBy="#{boleto.parcela.contrato.nomePrimeiroCliente()}">
+                        <f:facet name="header">
+                            <h:outputText value="Cliente" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.parcela.contrato.nomePrimeiroCliente()}" />
+                    </p:column>
+                    
+                    <p:column sortBy="#{boleto.parcela.contrato.apartamentosDesc()}">
+                        <f:facet name="header">
+                            <h:outputText value="Unidade" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.parcela.contrato.apartamentosDesc()}" />
+                    </p:column>
+
+                    <p:column sortBy="#{boleto.parcela.numeracao}">
+                        <f:facet name="header">
+                            <h:outputText value="Numeração" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.parcela.numeracao}" />
+                    </p:column>
+
+                    <p:column sortBy="#{boleto.valorBoleto}">
+                        <f:facet name="header">
+                            <h:outputText value="Valor do boleto" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.valorBoleto}"  >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column sortBy="#{boleto.dataVencimento}">
+                        <f:facet name="header">
+                            <h:outputText value="Vencimento" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.dataVencimento}" >
+                            <f:convertDateTime type="date" locale="pt"   timeZone="America/Sao_Paulo" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column sortBy="#{boleto.numerosTitulo.nossoNumero}">
+                        <f:facet name="header">
+                            <h:outputText value="Código" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.modalidade}/#{boleto.numerosTitulo.nossoNumero}" />
+                    </p:column>
+
+                    <p:column sortBy="#{boleto.situacao}">
+                        <f:facet name="header">
+                            <h:outputText value="Situação" />
+                        </f:facet>
+                        <h:outputText value="#{boleto.situacao == 0 ? 'Aberto': ''}" />
+                        <h:outputText value="#{boleto.situacao == 1 ? 'Entrada Confirmada': ''}"/>
+                        <h:outputText value="#{boleto.situacao == 2 ? 'Pago': ''}" />
+                        <h:outputText value="#{boleto.situacao == 3 ? 'Cancelado': ''}" />
+                        <h:outputText value="#{boleto.situacao == 4 ? 'Remessa à Cartório': ''}" />
+                        <h:outputText value="#{boleto.situacao == 5 ? 'Protestado': ''}" />
+                        <h:outputText value="#{boleto.situacao == 6 ? 'Entrada Rejeitada': ''}" />
+                        <h:outputText value="#{boleto.situacao == 99 ? 'Situação desconhecida': ''}" />
+                    </p:column>
+                    
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Baixar" styleClass="ui-icon ui-icon-arrow-1-s" action="#{gerarBoletosMB.baixarBoletoExistente(boleto)}" ajax="false"/>
+                    </p:column>
+
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{gerarBoletosMB.deletar(boleto)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este boleto?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+
+
+                </p:dataTable>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<txg:Texgit xmlns:txg="http://gilmatryx.googlepages.com/Texgit"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://gilmatryx.googlepages.com/Texgit file:////home/gilmar/NFM/WORKSPACE/TexgitSchema.xsd"
+            version="1.0-academic">
+
+    <FlatFile>
+        <layout>
+            <name>Arquivo-Remessa_BBCNAB240</name>
+            <version>Version 01, Published: 2012/05/25</version>
+            <description>
+                Layout para Cobrança.
+
+                Arquivo texto - padrão CNAB
+                Meio de Registro Transmissão de Dados 
+                Descrição de Registro - Tamanho 240 Bytes
+                Organização Sequencial
+
+                ARQUIVO FORMATO CNAB REMESSA, REGISTROS:
+				 
+                0 - Header do Arquivo
+                1 - Header do Lote
+                3 - Segmento P
+                3 - Segmento Q
+                5 - Trailler Lote				
+                9 - Trailler Arquivo
+            </description>
+        </layout>
+        <GroupOfRecords>
+            <Record name="HeaderArquivo" description="Header do arquivo" >
+                <GroupOfFields>
+                    <!-- Identificador do registro 0 -->
+                    <IdType name="TipoRegistro" value="0" length="1" position="3" />
+                    <Field name="CodBanco" value="104" length="3"/>
+                    <Field name="LoteServico" value="0000" length="4" padding="ZERO_LEFT"/>										
+                    <Field name="UsoExclusivo1" value="         " length="9" blankAccepted="true"/>
+                    <Field name="TipoInscricao" length="1"/>
+                    <Field name="Inscricao" length="14"/>
+                    <Field name="Brancos1" length="20" type="CHARACTER" padding="ZERO_LEFT"/>					
+                    <Field name="NumAgencia" length="5" type="CHARACTER" padding="ZERO_LEFT"/>
+                    <Field name="DigAgencia" length="1" type="CHARACTER" />
+                    <Field name="CodCedente" length="6" type="CHARACTER" padding="ZERO_LEFT"/>
+                    <Field name="Brancos2" length="8" type="CHARACTER" padding="ZERO_LEFT"/>
+                    <Field name="NomeEmpresa" length="30" type="CHARACTER" />
+                    <Field name="NomeBanco" value="CAIXA ECONOMICA FEDERAL       " length="30" />
+                    <Field name="UsoExclusivo2" value="          " length="10" blankAccepted="true"/>
+                    <Field name="RemessaRetorno" value="1" type="INTEGER" length="1" />
+                    <Field name="DataGeracao" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+                    <Field name="HoraGeracao" length="6" type="INTEGER" padding="ZERO_LEFT" />
+                    <Field name="NumRemessa" type="INTEGER" length="6" padding="ZERO_LEFT" />
+                    <Field name="NumeroVersaoLayout" length="3" value="050" />
+                    <Field name="DensidadeArquivo" value="00000" type="CHARACTER" length="5" padding="ZERO_LEFT" />
+                    <Field name="Brancos3" length="20" blankAccepted="true"/>					
+                    <Field name="Brancos4" length="20" blankAccepted="true"/>					
+                    <Field name="VersaoAplicativo" length="4" blankAccepted="true"/>
+                    <Field name="Brancos5" length="25" blankAccepted="true"/>					
+                </GroupOfFields>
+            </Record>
+            <Record name="HeaderLote" description="Header do lote" >
+                <GroupOfFields>
+                    <!-- Identificador do registro 1 -->
+                    <IdType name="TipoRegistro" value="1" length="1" position="3" />
+                    <Field name="CodBanco" value="104" length="3"/>
+                    <Field name="LoteServico" value="0001" length="4" padding="ZERO_LEFT"/>										
+                    <Field name="TipoOperacao" value="R" length="1" />
+                    <Field name="TipoServico" value="01" length="2" />
+                    <Field name="UsoExclusivo" length="2" padding="ZERO_LEFT" />
+                    <Field name="NumeroVersaoLote" length="3" value ="030" blankAccepted="true" />
+                    <Field name="UsoExclusivo1" length="1" blankAccepted="true" />					
+                    <Field name="TipoInscricao" length="1"/>
+                    <Field name="Inscricao" length="14"/>
+                    <Field name="CodConvenio" length="6" type="CHARACTER" padding="ZERO_LEFT"/>
+                    <Field name="Brancos1" length="14" padding="ZERO_LEFT"/>
+                    <Field name="NumAgencia" length="5" type="CHARACTER" padding="ZERO_LEFT"/>
+                    <Field name="DigAgencia" length="1" type="CHARACTER" />
+                    <Field name="CodCedente" length="6" type="CHARACTER" padding="ZERO_LEFT"/>
+                    <Field name="CodModPersonalizado" length="7" type="CHARACTER" padding="ZERO_LEFT"/>
+                    <Field name="Brancos2" length="1" padding="ZERO_LEFT"/>
+                    <Field name="NomeEmpresa" length="30" type="CHARACTER" />
+                    <Field name="Informacao1" length="40" type="CHARACTER" />
+                    <Field name="Informacao2" length="40" type="CHARACTER" />
+                    <Field name="NumRemessa" length="8" padding="ZERO_LEFT"/>
+                    <Field name="DataGravacao" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+                    <Field name="DataCredito" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+                    <Field name="Brancos3" length="33" blankAccepted="true" />
+                </GroupOfFields>
+            </Record>
+            <Record name="SegmentoP" repeatable="true" description="Dados do título">
+                <GroupOfFields>
+                    <!-- Identificador do registro 3 Segmento P -->
+                    <IdType name="CodSegmento" value="P" length="1" position="5"/>
+                    <Field name="CodBanco" value="104" length="3"/>
+                    <Field name="LoteServico" value="0001" length="4" padding="ZERO_LEFT"/>
+                    <Field name="TipoRegistro" value="3" length="1" />
+                    <Field name="NumSeqRegistro" type="INTEGER" length="5" padding="ZERO_LEFT" />					
+                    <Field name="Brancos1" length="1" value=" " blankAccepted="true"/><!--Enviar 1 Branco -->									
+                    <Field name="NumRemessa" length="2" value="01" />
+                    <Field name="NumAgencia" length="5" type="CHARACTER" padding="ZERO_LEFT"/>
+                    <Field name="DigAgencia" length="1" type="CHARACTER" />
+                    <Field name="CodCedente" length="6" type="CHARACTER" padding="ZERO_LEFT"/>
+                    <Field name="UsoExclusivo" length="11" padding="ZERO_LEFT" />
+                    <Field name="NossoNumero" length="17" type="CHARACTER" />
+                    <Field name="CodCarteira" length="1" type="CHARACTER" />
+                    <Field name="FormaCadastroTitulo" length="1" type="CHARACTER" />
+                    <Field name="TipoDocto" value="2" length="1" type="CHARACTER" />
+                    <Field name="EmissaoBoleto" value="2" length="1" type="CHARACTER" />
+                    <Field name="DistBloquetos" value="3" length="1" type="CHARACTER" />
+                    <Field name="NrDocto" length="11" type="CHARACTER" />
+                    <Field name="Brancos2" length="4" blankAccepted="true"/>
+                    <Field name="Vencimento" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+                    <Field name="Valor" length="15" type="BIGDECIMAL" value="0" format="DECIMAL_DD" padding="ZERO_LEFT" />
+                    <Field name="AgenciaCobradora" length="5" value="00000" padding="ZERO_LEFT" />						
+                    <Field name="DigAgenciaCobradora" value="0" length="1" blankAccepted="true"/>
+                    <Field name="EspecieDeTitulo" length="2" padding="ZERO_LEFT" value="02" />
+                    <Field name="Aceite" length="1" type="CHARACTER" /><!-- A = Aceite N = Não Aceite -->
+                    <Field name="Emissao" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+                    <Field name="CodMora" length="1" type="INTEGER" />
+                    <Field name="DataMora" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+                    <Field name="JurosDeMora" type="BIGDECIMAL" length="15" value="0" format="DECIMAL_DD" padding="ZERO_LEFT" />
+                    <Field name="CodigoDesconto" type="INTEGER" length="1" value="0"/>
+                    <Field name="DataDesconto" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+                    <Field name="DescontoConcedido" type="BIGDECIMAL" length="15" value="0" format="DECIMAL_DD" padding="ZERO_LEFT" />
+                    <Field name="IOF_Devido" type="BIGDECIMAL" length="15" value="0" format="DECIMAL_DD" padding="ZERO_LEFT" />
+                    <Field name="AbatimentoConcedido" type="BIGDECIMAL" length="15" value="0" format="DECIMAL_DD" padding="ZERO_LEFT" />
+                    <Field name="NrDocto2" type="CHARACTER" length="25"/>
+                    <Field name="CodigoProtesto" length="1" type="INTEGER" padding="ZERO_LEFT" />
+                    <Field name="DiasProtesto" length="2" type="INTEGER" padding="ZERO_LEFT" />																																	
+                    <Field name="CodigoBaixa" length="1" type="INTEGER" value="2"/>
+                    <Field name="DiasBaixa" length="3" type="INTEGER" value="0" padding="ZERO_LEFT"/>					
+                    <Field name="Moeda" length="2" type="INTEGER" value="09" padding="ZERO_LEFT" />					
+                    <Field name="UsoExclusivo" length="10" type="INTEGER" value="0000000000" padding="ZERO_LEFT" />
+                    <Field name="Brancos3" length="1" blankAccepted="true" />
+                </GroupOfFields>
+                <GroupOfInnerRecords>
+                    <Record name="SegmentoQ" repeatable="true" description="Dados do Pagador">
+                        <GroupOfFields>
+                            <!-- Identificador do registro 3 Segmento P -->	
+                            <IdType name="CodSegmento" value="Q" length="1" position="5" />
+                            <Field name="CodBanco" value="104" length="3"/>
+                            <Field name="LoteServico" value="0001" length="4" padding="ZERO_LEFT"/>
+                            <Field name="TipoRegistro" value="3" length="1" />
+                            <Field name="NumSeqRegistro" type="INTEGER" length="5" padding="ZERO_LEFT" />
+                            <Field name="Brancos1" length="1" value=" " blankAccepted="true"/><!--Enviar 1 Branco -->
+                            <Field name="CodigoRemessa" length="2" value="01" />												
+                            <Field name="TipoInscricaoSacado" length="1" value="1" type="INTEGER" />
+                            <Field name="NumeroInscricaoSacado" length="15" type="INTEGER" padding="ZERO_LEFT" />
+                            <Field name="NomeSacado" length="40" type="CHARACTER"  />															
+                            <Field name="LogradouroSacado" length="40" type="CHARACTER"  />										
+                            <Field name="BairroSacado" length="15" type="CHARACTER"  />
+                            <Field name="CepSacado" length="5" type="INTEGER"  />
+                            <Field name="SufixoCep" length="3" type="INTEGER"  />
+                            <Field name="Cidade" length="15" type="CHARACTER"  />
+                            <Field name="Estado" length="2" type="CHARACTER"  />		
+                            <Field name="TipoSacadorAvalista" length="1" type="INTEGER" padding="ZERO_LEFT"  />
+                            <Field name="SacadorAvalista" length="15" type="INTEGER" padding="ZERO_LEFT"  />					
+                            <Field name="NomeSacadorAvalista" length="40" type="INTEGER" padding="ZERO_LEFT"/>
+                            <Field name="CodBancoCorresp" length="3" type="INTEGER" padding="ZERO_LEFT"/>
+                            <Field name="NossoNumeroNoBancoCorresp" length="20"/>																	
+                            <Field name="UsoExclusivo" length="8" />	
+                        </GroupOfFields>
+                    </Record>
+					
+                    <Record name="SegmentoR" repeatable="true" description="Dados de Multa/Mora">
+                        <GroupOfFields>
+                            <!-- Identificador do registro 3 Segmento R -->	
+                            <IdType name="CodSegmento" value="R" length="1" position="5" />
+                            <Field name="CodBanco" value="104" length="3"/>
+                            <Field name="LoteServico" value="0001" length="4" padding="ZERO_LEFT"/>
+                            <Field name="TipoRegistro" value="3" length="1" />
+                            <Field name="NumSeqRegistro" type="INTEGER" length="5" padding="ZERO_LEFT" />
+                            <Field name="Brancos1" length="1" value=" " blankAccepted="true"/><!--Enviar 1 Branco -->
+                            <Field name="CodigoRemessa" length="2" value="01" />												
+                            <Field name="CodigoDesconto2" length="1" value="0" />														
+                            <Field name="DataDesconto2" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+                            <Field name="Desconto2" type="BIGDECIMAL" length="15" value="0" format="DECIMAL_DD" padding="ZERO_LEFT"  />															
+                            <Field name="CodigoDesconto3" length="1" value="0" />														
+                            <Field name="DataDesconto3" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+                            <Field name="Desconto3" type="BIGDECIMAL" length="15" value="0" format="DECIMAL_DD" padding="ZERO_LEFT"  />							
+                            <Field name="CodMulta" length="1" type="INTEGER" value="2"/>
+                            <Field name="DataMulta" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT"/>							
+                            <Field name="ValorMulta" type="BIGDECIMAL" length="15" value="0" format="DECIMAL_DD" padding="ZERO_LEFT" />							
+                            <Field name="InformacaoAoSacado" length="10"/>									
+                            <Field name="Mensagem3" length="40" />
+                            <Field name="Mensagem4" length="40" />
+                            <Field name="EmailSacado" length="50" blankAccepted="true"/>
+                            <Field name="UsoExclusivo" length="11" blankAccepted="true"/>					
+                        </GroupOfFields>
+                    </Record>					
+					
+                </GroupOfInnerRecords>
+            </Record>
+            <Record name="TraillerLote" >
+                <GroupOfFields>
+                    <!-- Identificador do registro 5 -->
+                    <IdType  name="TipoRegistro" value="5" length="1" position="3"/>
+                    <Field name="CodBanco" value="001" length="3"/>
+                    <Field name="LoteServico" value="0001" length="4"/>					
+                    <Field name="UsoExclusivo1" length="9" blankAccepted="true" />
+                    <Field name="QtdRegistros" length="6" type="INTEGER" padding="ZERO_LEFT"/>
+                    <Field name="QtdTitulosCobranca" length="6" type="INTEGER" padding="ZERO_LEFT"/>
+                    <Field name="ValorTotalTitulosCarteira" type="BIGDECIMAL" length="17" format="DECIMAL_DD" padding="ZERO_LEFT" />
+                    <Field name="QtdRegistros1" length="6" type="INTEGER" padding="ZERO_LEFT"/>
+                    <Field name="ValorTotalTitulosCarteira1" type="BIGDECIMAL" length="17" format="DECIMAL_DD" padding="ZERO_LEFT" />
+                    <Field name="QtdRegistros2" length="6" type="INTEGER" padding="ZERO_LEFT"/>
+                    <Field name="ValorTotalTitulosCarteira2" type="BIGDECIMAL" length="17" format="DECIMAL_DD" padding="ZERO_LEFT" />
+                    <Field name="UsoExclusivo2" length="148" blankAccepted="true" />							
+                </GroupOfFields>
+            </Record>					
+            <Record name="TraillerArquivo">
+                <GroupOfFields>			
+                    <!-- Identificador do registro 9 -->	
+                    <IdType name="TipoRegistro" value="9" length="1" position="3" />
+                    <Field name="CodBanco" value="104" length="3"  />
+                    <Field name="LoteServico" value="9999" length="4" />					
+                    <Field name="UsoExclusivo1" length="9" blankAccepted="true" />
+                    <Field name="QtdLotes" length="6" type="INTEGER" padding="ZERO_LEFT"/>
+                    <Field name="QtdArquivos" length="6" type="INTEGER" padding="ZERO_LEFT"/>
+                    <Field name="UsoExclusivo2" length="211" blankAccepted="true"  />					
+                </GroupOfFields>
+            </Record>													
+        </GroupOfRecords>
+    </FlatFile>
+</txg:Texgit>

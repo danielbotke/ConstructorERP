@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<txg:Texgit xmlns:txg="http://gilmatryx.googlepages.com/Texgit"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://gilmatryx.googlepages.com/Texgit file:////home/gilmar/NFM/WORKSPACE/TexgitSchema.xsd"
+	version="1.0-academic">
+
+<FlatFile>
+	<layout>
+		<name>Arquivo-Retorno_BBCNAB240</name>
+		<version>Version 01, Published: 2012/05/25</version>
+		<description>
+			Layout para CobranÃ§a.
+			
+			Arquivo texto - padrÃ£o CNAB
+			Meio de Registro TransmissÃ£o de Dados 
+			DescriÃ§Ã£o de Registro - Tamanho 240 Bytes
+			OrganizaÃ§Ã£o Sequencial
+			ARQUIVO FORMATO CNAB REMESSA, REGISTROS:				 
+				0 - Header do Arquivo
+				1 - Header do Lote
+				3 - Segmento P
+				3 - Segmento Q
+				5 - Trailler Lote				
+				9 - Trailler Arquivo
+				
+		</description>
+	</layout>
+	<GroupOfRecords>
+		<Record name="HeaderArquivo" description="Header do arquivo" >
+			<GroupOfFields>
+				<IdType name="TipoRegistro"  position="8" value="0" length="1" />
+				<Field name="CodComp" value="001" length="3" position="1" />
+				<Field name="LoteServico" value="0000" length="4" padding="ZERO_LEFT"/>									
+				<Field name="UsoExclusivo" length="9" blankAccepted="true"/>
+				<Field name="CpfCnpj" length="1" type="INTEGER" />
+				<Field name="NumCpfCnpj" length="14" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="NumConvenio" length="9" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="CobrancaCedente" length="4" value="0014" />
+				<Field name="NumCarteira" length="2" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="NumVarCarteira" length="3" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="Brancos1" length="2" blankAccepted="true"/>					
+				<Field name="NumAgencia" length="5" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="DigAgencia" length="1" type="CHARACTER" />
+				<Field name="NumContaCorrente" length="12" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="DigContaCorrente" length="1" type="CHARACTER" />
+				<Field name="DigAgenciaConta" length="1" blankAccepted="true" />
+			</GroupOfFields>
+		</Record>
+		<Record name="HeaderLote" description="Header do lote" >
+			<GroupOfFields>
+				<IdType name="TipoRegistro"  position="8" value="1" length="1" />
+				<Field name="CodComp" value="001" length="3" position="1" />
+				<Field name="LoteServico" value="0001" length="4" padding="ZERO_LEFT"/>					
+				<Field name="TipoOperacao" value="T" length="1" />
+				<Field name="TipoServico" value="01" length="2" />
+				<Field name="UsoExclusivo" length="2" blankAccepted="true" />
+				<Field name="NumeroVersaoLote" length="3" value ="042" blankAccepted="true" />
+				<Field name="UsoExclusivo1" length="1" blankAccepted="true" />					
+				<Field name="CpfCnpj" length="1" type="INTEGER" />
+				<Field name="NumCpfCnpj" length="15" type="CHARACTER" padding="ZERO_LEFT"/>					
+				<Field name="NumConvenio" length="9" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="CobrancaCedente" length="4" value="0014" />
+				<Field name="NumCarteira" length="2" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="NumVarCarteira" length="3" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="RemessaTeste" length="2"/>					
+				<Field name="NumAgencia" length="5" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="DigAgencia" length="1" type="CHARACTER" />
+				<Field name="NumContaCorrente" length="12" type="CHARACTER" padding="ZERO_LEFT"/>
+				<Field name="DigContaCorrente" length="1" type="CHARACTER" />
+				<Field name="DigAgenciaConta" length="1" type="CHARACTER" blankAccepted="true" />
+				<Field name="NomeEmpresa" length="30" type="CHARACTER" />
+				<Field name="Mensagem1" length="40" blankAccepted="true" />
+				<Field name="Mensagem2" length="40" blankAccepted="true" />
+				<Field name="NumeroRemessa" length="8" type="INTEGER" padding="ZERO_LEFT"/>
+				<Field name="DataGeracao" length="8" type="DATE" format="DATE_DDMMYYYY" padding="ZERO_LEFT" />
+				<Field name="DataCredito" length="8" blankAccepted="true"/>
+				<Field name="UsoExclusivo2" length="33" type="CHARACTER" blankAccepted="true" />									
+			</GroupOfFields>
+		</Record>
+		<!-- SEGMENTO T -->
+		<Record name="SegmentoT" repeatable="true" description="Dados do tÃ­tulo">
+			<GroupOfFields>				
+				<!-- Identificador do registro T -->
+				<IdType name="CodigoSegmento"  position="5" value="T" length="1" />
+				<Field name="CodigoBanco" value="001" length="3" />
+				<Field name="LoteServico" type="INTEGER" value="1" padding="ZERO_LEFT" length="4" />
+				<Field name="TipoRegistro" value="3" length="1" />
+				<Field name="NumeroSequencialRegistro" type="INTEGER" padding="ZERO_LEFT" length="5" />
+				<Field name="DadosIgnorados" length="1" />
+				<Field name="CodigoMovimento" length="2" />					
+				<Field name="AgenciaMantenedora" length="5" />
+				<Field name="DVAgenciaMantenedora" length="1" />					
+				<Field name="NumeroContaConrrente" length="12" />
+				<Field name="DigContaConrrente" length="1" />
+				<Field name="DigitoAgenciaConta" length="1" />					
+				<Field name="NossoNumero" length="20" />					
+				<Field name="CodCarteira" length="1" />
+				<Field name="NumDocumento" length="15" />					
+				<Field name="Vencimento" type="DATE"  format="DATE_DDMMYYYY" length="8" />
+				<Field name="Valor"  type="BIGDECIMAL" format="DECIMAL_DD" padding="ZERO_LEFT" length="15" />
+				<Field name="NumeroBanco" length="3" />
+				<Field name="AgenciaCobradoraRecebedora" length="5" />
+				<Field name="DVAgenciaCobradoraRecebedora" length="1" />
+				<Field name="IdentificacaoTituloEmpresa" length="25" />
+				<Field name="CodigoMoeda" length="2" />
+				<Field name="TipoInscricao" length="1" />
+				<Field name="NumeroInscricao" length="15" />
+				<Field name="Nome" length="40" />
+				<Field name="NumContratoOPCredito" length="10" />
+				<Field name="ValorTarifaCustas" length="15" />
+				<Field name="IdentificacaoRejeicao" length="10" />
+				<Field name="DadosIgnorados2" length="17" />
+			</GroupOfFields>
+			<GroupOfInnerRecords>
+				<!-- SEGMENTO U -->
+				<Record name="SegmentoU" repeatable="true" description="Mais dados do tÃ­tulo">
+					<GroupOfFields>
+						<!-- Identificador do registro U -->
+						<IdType name="CodigoSegmento"  position="5" value="U" length="1" />
+						<Field name="CodigoBanco" value="001" length="3" />
+						<Field name="LoteServico" type="INTEGER" value="1" padding="ZERO_LEFT" length="4" />
+						<Field name="TipoRegistro" value="3" length="1" />
+						<Field name="NumeroSequencialRegistro" type="INTEGER" padding="ZERO_LEFT" length="5" />
+						<Field name="Filler" value=" " length="1" /> 
+						<!-- 02-Entrada Confirmada 03-Entrada Rejeitada 06 - LiquidaÃ§Ã£o 09-Baixa  -->
+						<Field name="CodigoMovimento" type="INTEGER" padding="ZERO_LEFT" length="2" />
+						<!-- Mapeamento de alguns dados importantes -->
+						<Field name="Valor-MultaJuros"  type="BIGDECIMAL" format="DECIMAL_DD" padding="ZERO_LEFT" length="15" />
+						<Field name="Valor-Desconto"  type="BIGDECIMAL" format="DECIMAL_DD" padding="ZERO_LEFT" length="15" />
+						<Field name="Valor-Abatimento"  type="BIGDECIMAL" format="DECIMAL_DD" padding="ZERO_LEFT" length="15" />
+						<Field name="Valor-IOF"  type="BIGDECIMAL" format="DECIMAL_DD" padding="ZERO_LEFT" length="15" />
+						<Field name="Valor-Pago"  type="BIGDECIMAL" format="DECIMAL_DD" padding="ZERO_LEFT" length="15" />
+						<Field name="Valor-LiquidoCreditado"  type="BIGDECIMAL" format="DECIMAL_DD" padding="ZERO_LEFT" length="15" />
+						<Field name="Valor-OutrasDespesas"  type="BIGDECIMAL" format="DECIMAL_DD" padding="ZERO_LEFT" length="15" />
+						<Field name="Valor-OutrosCreditos"  type="BIGDECIMAL" format="DECIMAL_DD" padding="ZERO_LEFT" length="15" />
+						<Field name="Data-Ocorrencia" type="DATE"  format="DATE_DDMMYYYY" length="8" />
+						<Field name="Data-Efetivacao" type="DATE"  format="DATE_DDMMYYYY" length="8" />
+						<Field name="CodigoOcorrencia" length="4" />
+						<Field name="Data-Debito-Tarifa" type="DATE"  format="DATE_DDMMYYYY" length="8" />
+						<Field name="ValorOcorrencia" length="15" />
+						<Field name="Filler" value=" " length="30" />
+						<Field name="CodigoBcoCorr" length="3" />
+						<Field name="NNBcoCorr" length="20" />
+						<Field name="DadosIgnorados" length="7" />
+					</GroupOfFields>
+				</Record>
+			</GroupOfInnerRecords>
+		</Record>
+	</GroupOfRecords>
+</FlatFile>

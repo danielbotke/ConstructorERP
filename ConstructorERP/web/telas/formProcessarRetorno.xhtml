@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Processar retorno</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo" rendered="#{usuarioMB.temPermissao('formProcessarRetorno')}">
+            <h:form enctype="multipart/form-data">
+                <center>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel for="arqRetorno" value="Arquivo de retorno:"/>
+                        <p:fileUpload id="arqRetorno" fileUploadListener="#{retornoMB.doUpload}"   auto="true" oncomplete="PF('resultado').update()" />
+                        <p:message for="arqRetorno" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+                </center>
+            </h:form>
+            <h:form>
+                <center>
+                    <p:panel id="basic" header="Resultado do processamento" style="margin-bottom:20px">
+                        <h:panelGrid columns="1" cellpadding="10">
+                            <h:outputText id="resultado" value="#{retornoMB.resultado}" />
+                        </h:panelGrid>
+                    </p:panel>
+                </center>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

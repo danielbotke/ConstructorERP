@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro de índices</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo"  rendered="#{usuarioMB.temPermissao('formIndices')}">
+            <h:form>
+                <center>
+                    <h1>Cadastro de Tipo de Índice</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel for="nmTipoIndice" value="Nome:"/>
+                        <h:inputText class="inputText" id="nmTipoIndice" value="#{tipoIndiceMB.bean.name}" />
+                        <p:message for="nmTipoIndice" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar Tipo" action="#{tipoIndiceMB.salvar}"/>
+                </center>
+            </h:form>
+            <h:form>
+                <center>
+                    <h1>Cadastro de Valor de Índice</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel for="tipos" value="Tipo:"/>
+                        <p:selectOneMenu  id="tipos" value="#{indiceMB.bean.tipoIndice}" styleClass="selectOnMenu" >
+                            <f:selectItems value="#{tipoIndiceMB.tipoIndices}" var="tipo" itemLabel="#{tipo.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="tipos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="dataIndice"  value="Data do índice:"/>                    
+                        <p:calendar styleClass="calendar" id="dataIndice" locale="pt" pattern="dd/MM/yyyy" navigator="true" value="#{indiceMB.bean.dataIndice}"
+                                    mode="popup" showOn="button" maxdate="#{indiceMB.hoje}"/>
+                        <p:message for="dataIndice" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="vlIndice" value="Valor:"/>
+                        <h:inputText class="inputText" id="vlIndice" value="#{indiceMB.bean.valorIndice}" converter="convertFloat" >
+                            <f:convertNumber locale="pt_BR"/>
+                        </h:inputText>
+                        <p:message for="vlIndice" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar Indice" action="#{indiceMB.salvar}"/>
+                </center>
+            </h:form>
+            <h:form>
+                <p:dataTable var="ind" value="#{indiceMB.indices}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+                    <p:column headerText="Tipo índice">
+                        <h:outputText value="#{ind.tipoIndice.name}" />
+                    </p:column>
+
+                    <p:column headerText="Data" >
+                        <h:outputText value="#{ind.dataIndice}" >
+                            <f:convertDateTime type="date" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Valor" >
+                        <h:outputText value="#{ind.valorIndice}" >
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" action="#{indiceMB.editar}" ajax="false">
+                            <f:param name="indice" value="#{ind.id}"/> 
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{indiceMB.deletar}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este índice?" icon="ui-icon-alert" />
+                            <f:param name="indice" value="#{ind.id}"/> 
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

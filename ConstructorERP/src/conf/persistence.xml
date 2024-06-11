@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+             version="1.0">
+<!--<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">-->
+  <persistence-unit name="SistemaPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <class>modelo.Apartamento</class>
+    <class>modelo.Bloco</class>
+    <class>modelo.Cidade</class>
+    <class>modelo.Cliente</class>
+    <class>modelo.Estado</class>
+    <class>modelo.Historico</class>
+    <class>modelo.Indice</class>
+    <class>modelo.Pais</class>
+    <class>modelo.Pessoa</class>
+    <class>modelo.PessoaFisica</class>
+    <class>modelo.PessoaJuridica</class>
+    <class>modelo.Predio</class>
+    <class>modelo.TipoIndice</class>
+    <class>modelo.Usuario</class>
+    <class>modelo.SaldoCaixa</class>
+    <class>modelo.Vaga</class>
+    <class>modelo.ReservaApto</class>
+    <class>modelo.ContasPagar.Categoria</class>
+    <class>modelo.ContasPagar.Fornecedor</class>
+    <class>modelo.ContasPagar.NotaFiscalCompra</class>
+    <class>modelo.ContasPagar.ParcelaAPagar</class>
+    <class>modelo.ContasPagar.HistoricoDespesas</class>
+    <class>modelo.ContasReceber.Recebimento</class>
+    <class>modelo.ContasReceber.Renegociacao</class>
+    <class>modelo.ContasReceber.SessaoDireitos</class>
+    <class>modelo.ContasReceber.NumerosRemessa</class>
+    <class>modelo.ContasReceber.NumerosTitulo</class>
+    <class>modelo.ContasReceber.Parcela</class>
+    <class>modelo.ContasReceber.GrupoParcelas</class>
+    <class>modelo.ContasReceber.BoletoGerado</class>
+    <class>modelo.ContasReceber.Contrato</class>
+    <class>modelo.ContasReceber.ContratoAluguel</class>
+    <class>modelo.ContasReceber.HistoricoGanhoFinanceiro</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="hibernate.connection.username" value="c3po"/>
+      <property name="hibernate.connection.password" value="r2d2"/>
+      <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/database?allowPublicKeyRetrieval=true&amp;useSSL=false" />
+      <!--<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/database"/>-->
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.SunONETransactionManagerLookup"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+      <!-- Se der erro tirar daqui para baixo (C3p0):-->
+      <property name="connection.provider_class" value="org.hibernate.connection.C3P0ConnectionProvider"/>
+      <property name="c3p0.acquire_increment" value="1"/>
+      <property name="c3p0.idle_test_period" value="100"/>
+      <!-- seconds -->
+      <property name="c3p0.max_size" value="100"/>
+      <property name="c3p0.max_statements" value="0"/>
+      <property name="c3p0.min_size" value="10"/>
+      <property name="c3p0.timeout" value="1800"/>
+      <!-- seconds -->
+    </properties>
+  </persistence-unit>
+</persistence>

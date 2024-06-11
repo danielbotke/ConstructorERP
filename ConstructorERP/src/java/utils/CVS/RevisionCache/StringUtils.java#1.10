@@ -1,0 +1,101 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package utils;
+
+import java.util.StringTokenizer;
+
+/**
+ *
+ * @author daniel.botke
+ */
+public class StringUtils {
+
+    /**
+     * Substitui os caracteres reservados que podem gerar erro no html pelo
+     * respectivo código.
+     *
+     * @param str
+     * @return A String passada como parâmetro com os caracteres tratados.
+     */
+    public static String tratadorCaracteres(String str) {
+        str = str.replaceAll("\\|", "\r\n");
+        /**alteração da 586: 
+         * str = str.replaceAll("\\|", "<br/>"); 
+         * Pula a linha sem que seja necessário incluir <br/> no 0800
+         **/
+        str = str.replaceAll("–", "&ndash;");
+        str = str.replaceAll("-", "&ndash;");
+        str = str.replaceAll("–", "&ndash;");
+        str = str.replaceAll("&#8211;", "&ndash;");
+        str = str.replace("|", "&brvbar;");
+        
+        return str;
+    }
+
+    public static String tratadorAspas(String str) {
+        str = str.replaceAll("\"", "&quot;");
+        return str;
+    }
+
+    
+    public static String tratadorRadicalVersoes(String str) {
+        String versao = "";
+        char aux[] = str.toCharArray();
+        if (aux[0] == 'V') {
+            for (int i = 0; i < aux.length; i++) {
+                if (Character.isDigit(aux[i])) {
+                    versao += aux[i];
+                } else {
+                    if (aux[i] == '_') {
+                        i = aux.length;
+                    }
+                }
+            }
+        } else {
+            StringTokenizer verToken = new StringTokenizer(str, ".");
+            if (verToken.countTokens() > 1) {
+                for (int i = 0; i < 3; i++) {
+                    if (verToken.hasMoreTokens()) {
+                        versao += verToken.nextToken();
+                    }
+                }
+            } else {
+                verToken = new StringTokenizer(str, "-");
+                if (verToken.countTokens() > 1) {
+                    for (int i = 0; i < 3; i++) {
+                        if (verToken.hasMoreTokens()) {
+                            versao += verToken.nextToken();
+                        }
+                    }
+                }
+            }
+        }
+        return versao;
+    }
+    
+    public static String tratadorVersaoFechadaGP(String str){
+        if(str.charAt(0) != 'V'){
+            str = str.replace('-', '.');
+        }
+        return str;
+    }        
+    
+    public static String tratadotCaractereEspeciais (String str){
+        str = str.replaceAll("ç", "c");
+        str = str.replaceAll("ã", "a");
+        str = str.replaceAll("â", "a");
+        str = str.replaceAll("á", "a");
+        str = str.replaceAll("à", "a");
+        str = str.replaceAll("é", "e");
+        str = str.replaceAll("ê", "e");
+        str = str.replaceAll("í", "i");
+        str = str.replaceAll("ó", "o");
+        str = str.replaceAll("õ", "o");
+        str = str.replaceAll("ú", "u");
+        str = str.replaceAll(" ", "_");
+        str = str.replaceAll("|", "");
+        return str;
+    }
+}

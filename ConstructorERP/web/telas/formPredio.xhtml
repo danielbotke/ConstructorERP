@@ -1,0 +1,375 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro de Predio</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo"  rendered="#{usuarioMB.temPermissao('formPredio')}">
+            <h:form>
+                <center>
+                    <h1>Cadastro de Empreendimento</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+                        <h:outputLabel value="Nome:"/>
+                        <h:inputText class="inputText" id="nmPredio" value="#{predioMB.bean.name}" required="true"/>
+                        <p:message for="nmPredio" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel value="Quantidade de blocos:"/>
+                        <h:inputText class="inputText" id="qntBlocos" value="#{predioMB.qntBlocos}" required="true"/>
+                        <p:message for="qntBlocos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar Empreendimento" action="#{predioMB.salvar}"/>
+                </center>
+            </h:form>
+            <p>&nbsp;</p>
+            <hr/>
+            <p>&nbsp;</p>
+            <h:form>
+                <center>
+                    <h2>Cadastro Bloco</h2>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel for="predios" value="Empreendimento:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{blocoMB.bean.predio}"  required="true"  >
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="identificBloco" value="Identificação:"/>
+                        <h:inputText class="inputText" id="identificBloco" value="#{blocoMB.bean.identificacao}" required="true" maxlength="1">
+                        </h:inputText>
+                        <p:message for="identificBloco" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="areaBloco" value="Área total bloco:"/>
+                        <h:inputText class="inputText" id="areaBloco" value="#{blocoMB.bean.area}" required="true" converter="convertFloat">
+                            <f:convertNumber locale="pt_BR"  /> 
+                        </h:inputText>
+                        <p:message for="areaBloco" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="disponivelBloco" value="Disponível venda:"/>
+                        <p:selectBooleanCheckbox  id="disponivelBloco" value="#{blocoMB.bean.disponivelVenda}" />
+                        <p:message for="disponivelBloco" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Salvar Bloco" action="#{blocoMB.salvar}"/>
+                </center>
+            </h:form>
+            <h:form>
+                <p:dataTable var="bloco" value="#{blocoMB.blocos}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+                    <p:column headerText="Predio">
+                        <h:outputText value="#{bloco.predio.name}" />
+                    </p:column>
+
+                    <p:column headerText="Bloco" >
+                        <h:outputText value="#{bloco.identificacao}" />
+                    </p:column>
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" action="#{blocoMB.editar(bloco)}" ajax="false"/>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{blocoMB.deletar(bloco)}" ajax="false" >
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este bloco?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+            <p>&nbsp;</p>
+            <hr/>
+            <p>&nbsp;</p>
+            <h:form>
+                <center>
+                    <h2>Cadastro Apartamentos</h2>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel for="predios" value="Empreendimento:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{apartamentoMB.predioSelecionado}"  required="true"  >
+                            <p:ajax update="blocos" listener="#{apartamentoMB.onPredioSelecionado}" event="change"/>
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="blocos" value="Bloco:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="blocos" value="#{apartamentoMB.blocoSelecionado}" immediate="true" >
+                            <f:selectItem itemLabel="Selecione um bloco" itemValue="#{null}" />  
+                            <f:selectItems value="#{apartamentoMB.blocosPredio}" var="bloco" itemLabel="#{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocos" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel value="De:"/>
+                        <h:inputText class="inputText" id="nmAptoInicio" value="#{apartamentoMB.de}" required="true"/>
+                        <p:message for="nmAptoInicio" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+
+                        <h:outputLabel value="Ate:"/>
+                        <h:inputText class="inputText" id="nmAptoFim" value="#{apartamentoMB.ate}" required="true"/>
+                        <p:message for="nmAptoFim" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="areaPrivativaApart" value="Área privativa:"/>
+                        <h:inputText class="inputText" id="areaPrivativaApart" value="#{apartamentoMB.bean.areaPrivativa}" required="true" converter="convertFloat">
+                            <f:convertNumber locale="pt_BR"  /> 
+                        </h:inputText>
+                        <p:message for="areaPrivativaApart" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="areaComumApart" value="Área de uso Comum:"/>
+                        <h:inputText class="inputText" id="areaComumApart" value="#{apartamentoMB.bean.areaComum}" required="true" converter="convertFloat">
+                            <f:convertNumber locale="pt_BR"  /> 
+                        </h:inputText>
+                        <p:message for="areaComumApart" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="areaTotalApart" value="Área total:"/>
+                        <h:inputText class="inputText" id="areaTotalApart" value="#{apartamentoMB.bean.areaTotal}" required="true" converter="convertFloat">
+                            <f:convertNumber locale="pt_BR"  /> 
+                        </h:inputText>
+                        <p:message for="areaTotalApart" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="coeficProporcApart" value="Coeficiente de Proporcionalidade:"/>
+                        <h:inputText class="inputText" id="coeficProporcApart" value="#{apartamentoMB.bean.coeficienteProporc}"  converter="convertFloat">
+                            <f:convertNumber locale="pt_BR"  /> 
+                        </h:inputText>
+                        <p:message for="coeficProporcApart" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="fracIdealApart" value="Fração Ideal:"/>
+                        <h:inputText class="inputText" id="fracIdealApart" value="#{apartamentoMB.bean.fracaoIdeal}"  converter="convertFloat">
+                            <f:convertNumber locale="pt_BR"  /> 
+                        </h:inputText>
+                        <p:message for="fracIdealApart" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="custoExtimApart" value="Custo extimado:"/>
+                        <h:inputText class="inputText" id="custoExtimApart" value="#{apartamentoMB.bean.custoEstivativo}"  converter="convertFloat">
+                            <f:convertNumber locale="pt_BR"  /> 
+                        </h:inputText>
+                        <p:message for="custoExtimApart" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="disponivelApart" value="Disponível venda:"/>
+                        <p:selectBooleanCheckbox  id="disponivelApart" value="#{apartamentoMB.bean.disponivelVenda}" />
+                        <p:message for="disponivelApart" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p> 
+
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Criar apartamentos" action="#{apartamentoMB.salvar}"/>
+                </center>
+            </h:form>
+            <h:form>
+                <p:dataTable var="apto" value="#{apartamentoMB.apartamentos}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+                    <f:facet name="header">
+                        Unidades
+                        <p:commandButton id="addUnidade" update=":formNovaUnidade:novaUnidadeDialog"  actionListener="#{apartamentoMB.newUnidade()}" oncomplete="PF('novaUnidadeDialog').show()" icon="ui-icon-plus" title="Nova unidade" />
+                    </f:facet>
+
+                    <p:column headerText="Predio">
+                        <h:outputText value="#{apto.bloco.predio.name}" />
+                    </p:column>
+
+                    <p:column headerText="Bloco" >
+                        <h:outputText value="#{apto.bloco.identificacao}" />
+                    </p:column>
+
+                    <p:column headerText="Unidade" >
+                        <h:outputText value="#{apto.name}" />
+                    </p:column>
+
+                    <p:column headerText="Área Total" >
+                        <h:outputText value="#{apto.areaTotal}" />
+                    </p:column>
+
+                    <p:column headerText="Vendido" >
+                        <h:outputText value="#{apto.vendido}" />
+                    </p:column>
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" action="#{apartamentoMB.editar(apto)}" ajax="false"/>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{apartamentoMB.deletar(apto)}" ajax="false" >
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este apartamento?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            <p>&nbsp;</p>
+            <hr/>
+            <p>&nbsp;</p>
+            <h:form>
+                <center>
+                    <h2>Cadastro Vagas</h2>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid">
+
+                        <h:outputLabel for="predios" value="Predio:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predios" value="#{vagaMB.predioSelecionado}"  required="true"  >
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predios" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="nmVagaInicio" value="De:"/>
+                        <h:inputText class="inputText" id="nmVagaInicio" value="#{vagaMB.de}" required="true"/>
+                        <p:message for="nmVagaInicio" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+
+                        <h:outputLabel for="nmVagaFim" value="Ate:"/>
+                        <h:inputText class="inputText" id="nmVagaFim" value="#{vagaMB.ate}" required="true"/>
+                        <p:message for="nmVagaFim" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="m2Vaga" value="m²:"/>
+                        <h:inputText class="inputText" id="m2Vaga" value="#{vagaMB.bean.m2}" required="true" converter="convertFloat">
+                            <f:convertNumber locale="pt_BR"  /> 
+                        </h:inputText>
+                        <p:message for="m2Vaga" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Criar vagas" action="#{vagaMB.salvar}"/>
+                </center>
+            </h:form>
+            <h:form>
+                <p:dataTable var="vaga" value="#{vagaMB.vagas}" paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+
+                    <p:column headerText="Predio">
+                        <h:outputText value="#{vaga.predio.name}" />
+                    </p:column>
+
+                    <p:column headerText="Vaga" >
+                        <h:outputText value="#{vaga.name}" />
+                    </p:column>
+
+                    <p:column headerText="m²" >
+                        <h:outputText value="#{vaga.m2}" />
+                    </p:column>
+
+                    <p:column headerText="Vendido" >
+                        <h:outputText value="#{vaga.vendido}" />
+                    </p:column>
+
+                    <p:column style="width:24px">
+                        <p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" action="#{vagaMB.editar(vaga)}" ajax="false"/>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{vagaMB.deletar(vaga)}" ajax="false" >
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir esta vaga?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+            <h:form id="formNovaUnidade">
+                <p:dialog id="novaUnidadeDialog" header="Adicionar" widgetVar="novaUnidadeDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+
+                    <h:panelGrid  columns="8" id="parcelaNota" >
+                        <h:outputLabel for="predioUnidade" value="Empreendimento:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="predioUnidade" value="#{apartamentoMB.predioSelecionado}"  required="true"  >
+                            <p:ajax update="blocoUnidade" listener="#{apartamentoMB.onPredioSelecionado}" event="change"/>
+                            <f:selectItem itemLabel="Selecione um prédio" itemValue="#{null}"/>  
+                            <f:selectItems value="#{predioMB.predios}" var="predio" itemValue="#{predio}" itemLabel="#{predio.name}"/>
+                        </p:selectOneMenu>
+                        <p:message for="predioUnidade" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="blocoUnidade" value="Bloco:"/>
+                        <p:selectOneMenu styleClass="selectOnMenu" id="blocoUnidade" value="#{apartamentoMB.blocoSelecionado}" immediate="true" >
+                            <f:selectItem itemLabel="Selecione um bloco" itemValue="#{null}" />  
+                            <f:selectItems value="#{apartamentoMB.blocosPredio}" var="bloco" itemLabel="#{bloco.identificacao}"/>
+                        </p:selectOneMenu>
+                        <p:message for="blocoUnidade" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="descUnidade" value="Descrição unidade:"/>
+                        <h:inputText class="inputText" id="descUnidade" value="#{apartamentoMB.apartamentoEditando.name}" required="true"/>
+                        <p:message for="descUnidade" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="areaTotalUnidade" value="Área total:"/>
+                        <h:inputText class="inputText" id="areaTotalUnidade" value="#{apartamentoMB.apartamentoEditando.areaTotal}" required="true" converter="convertFloat">
+                            <f:convertNumber locale="pt_BR"  /> 
+                        </h:inputText>
+                        <p:message for="areaTotalUnidade" />
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+
+                    </h:panelGrid> 
+                    <p:commandButton icon="ui-icon-check" value="Salvar" onsuccess="PF('novaUnidadeDialog').hide()"   action="#{apartamentoMB.addUnidade}" ajax="false"/>
+                </p:dialog>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

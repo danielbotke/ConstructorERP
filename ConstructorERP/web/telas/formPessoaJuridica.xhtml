@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cadastro de pessoa jurídica</title>
+    </h:head>
+    <ui:composition template="template.xhtml">
+        <ui:define name="corpo"  rendered="#{usuarioMB.temPermissao('formPessoaJuridica')}">
+            <h:form id="form">
+                <center>
+                    <h1>Cadastro de Pessoa Jurídica</h1>
+                    <p>&nbsp;</p>
+                    <h:panelGrid  columns="8" id="grid" >
+
+                        <h:outputLabel for="nmPessoa" value="Nome:"/>
+                        <h:inputText class="inputText" id="nmPessoa" value="#{pessoaJuridicaMB.bean.name}" required="true"/>
+                        <p:message for="nmPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cnpjPessoa" value="CNPJ:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="cnpjPessoa" value="#{pessoaJuridicaMB.bean.CNPJ}" mask="99.999.999/9999-99" required="true">
+                            <f:validator validatorId="custom.CNPJValidator" />
+                        </p:inputMask>
+                        <p:message for="cnpjPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="iePessoa" value="Inscrição Estadual:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="iePessoa" value="#{pessoaJuridicaMB.bean.inscricaoEstadual}" mask="999.999.999.?999" required="false"/>
+                        <p:message for="iePessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="endPessoa" value="Endereço:"/>
+                        <h:inputText class="inputText" id="endPessoa" value="#{pessoaJuridicaMB.bean.endereco}" required="true"/>
+                        <p:message for="endPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cepPessoa" value="CEP:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask"  id="cepPessoa" value="#{pessoaJuridicaMB.bean.CEP}" mask="99999-999" required="true"/>
+                        <p:message for="cepPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="bairroPessoa" value="Bairro:"/>
+                        <h:inputText class="inputText" id="bairroPessoa" value="#{pessoaJuridicaMB.bean.bairro}"  required="true"/>
+                        <p:message for="bairroPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="cidades" value="Cidade:"/>
+                        <p:selectOneMenu filter="true" styleClass="selectOnMenu" id="cidades" value="#{pessoaJuridicaMB.bean.cidade}" required="true">
+                            <f:selectItems value="#{cidadeMB.cidades}" var="cidade" itemLabel="#{cidade.name} - #{cidade.estado.sigla}"/>
+                        </p:selectOneMenu>
+                        <p:message for="cidades" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                        <h:outputLabel for="telPessoa" value="Telefone:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="telPessoa" value="#{pessoaJuridicaMB.bean.tel1}" mask="(999) 9999-9999?9"/>
+                        <p:message for="telPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="celPessoa" value="Celular:"/>
+                        <p:inputMask styleClass="inputMask" converter="convertMask" id="celPessoa" value="#{pessoaJuridicaMB.bean.tel2}" mask="(999) 9999-9999?9"/>
+                        <p:message for="celPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="emailPessoa" value="E-mail:"/>
+                        <h:inputText class="inputText" id="emailPessoa" value="#{pessoaJuridicaMB.bean.email}" />
+                        <p:message for="emailPessoa" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                        <h:outputLabel for="representantes" value="Representantes:"/>
+                        <h:panelGroup>
+                            <p:inputText id="representantes" value="#{pessoaJuridicaMB.representantes}" readonly="true"/>
+                            <p:commandButton update=":form:representantesDialog" oncomplete="PF('representantesDialog').show()" icon="ui-icon-search" title="Selecionar representante(s)" />
+                        </h:panelGroup>
+                        <p:message for="representantes" />
+
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+                    </h:panelGrid>
+                    <h:commandButton styleClass="button" value="Salvar Pessoa" action="#{pessoaJuridicaMB.salvar}" />
+                </center>
+                <p:dialog id="representantesDialog" header="Selecione o(s) representante(s)" widgetVar="representantesDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:dataTable id="representantesDT" var="rep" value="#{pessoaFisicaMB.pessoaFisicas}" selection="#{pessoaJuridicaMB.bean.representantes}" rowKey="#{rep.id}"
+                                 paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 paginator="true" rows="10" style="margin-bottom:20px">
+                        <f:facet name="header">
+                            Selecione o(s) representante(s)
+                        </f:facet>
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                        <p:column headerText="Nome">
+                            <h:outputText value="#{rep.name}" />
+                        </p:column>
+
+                        <p:column headerText="Endereço" >
+                            <h:outputText value="#{rep.endereco}" />
+                        </p:column>
+
+                        <p:column headerText="Celular" >
+                            <h:outputText value="#{rep.tel2}" />
+                        </p:column>
+
+                        <p:column headerText="email" >
+                            <h:outputText value="#{rep.email}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton process="representantesDT" icon="ui-icon-check" value="Selecionar" oncomplete="PF('representantesDialog').hide()" update=":form:representantes" />
+                        </f:facet>
+                    </p:dataTable>
+                </p:dialog>
+
+            </h:form>
+            <h:form>
+                <p:dataTable var="p" value="#{pessoaJuridicaMB.pessoaJuridicas}" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="10" style="margin-bottom:20px">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{p.name}" />
+                    </p:column>
+
+                    <p:column headerText="Endereço" >
+                        <h:outputText value="#{p.endereco}" />
+                    </p:column>
+
+                    <p:column headerText="Celular" >
+                        <h:outputText value="#{p.tel2}" />
+                    </p:column>
+
+                    <p:column headerText="email" >
+                        <h:outputText value="#{p.email}" />
+                    </p:column>
+
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Editar" styleClass="ui-icon ui-icon-pencil" action="#{pessoaJuridicaMB.editar(p)}" ajax="false"/>
+                    </p:column>
+                    <p:column style="width:24px" >
+                        <p:commandLink title="Excluir" styleClass="ui-icon ui-icon-trash" action="#{pessoaJuridicaMB.deletar(p)}" ajax="false">
+                            <p:confirm header="Confirmação" message="Tem certeza que deseja excluir este cliente?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+
+
+        </ui:define>
+    </ui:composition>
+</html>
+
